@@ -5,13 +5,13 @@ import { getFirestore } from 'firebase/firestore';
 // TODO: Vervang deze waarden met je eigen Firebase config
 // Ga naar Firebase Console > Project Settings > General > Your apps
 const firebaseConfig = {
-  apiKey: "AIzaSyABnGquRagO6-j1T7FaXiSqnOwX2qT7gMg",
-  authDomain: "wielermanager-6a4c3.firebaseapp.com",
-  projectId: "wielermanager-6a4c3",
-  storageBucket: "wielermanager-6a4c3.firebasestorage.app",
-  messagingSenderId: "678066753848",
-  appId: "1:678066753848:web:7b86285be85af9b70d31cd",
-  measurementId: "G-WQWTFMDEV3"
+  apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
+  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
+  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
+  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
+  appId: import.meta.env.VITE_FIREBASE_APP_ID,
+  measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID
 };
 
 const app = initializeApp(firebaseConfig);
