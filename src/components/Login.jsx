@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { signInWithEmailAndPassword, createUserWithEmailAndPassword, signInWithPopup, GoogleAuthProvider } from 'firebase/auth';
 import { auth } from '../firebase/config';
-import '../css/Login.css';
+import '../css/login.css';
 
 export default function Login({ setUser, onClose }) {
     const [email, setEmail] = useState('');
