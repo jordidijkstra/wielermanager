@@ -17,7 +17,7 @@ function TeamBuilder({ user }) {
   const [currentPage, setCurrentPage] = useState(1);
   const [maxPrice, setMaxPrice] = useState('');
   const [teamFilter, setTeamFilter] = useState('');
-  const ridersPerPage = 12;
+  const ridersPerPage = 13;
 
   const getRemainingBudget = () => budget - getTotalSpent();
   const formatPrice = (price) => '€' + (price / 1000000).toFixed(1) + 'M';
