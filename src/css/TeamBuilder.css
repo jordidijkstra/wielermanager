@@ -1,0 +1,385 @@
+.team-builder {
+  padding: 20px;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.team-header {
+  margin-bottom: 30px;
+}
+
+.team-header h1 {
+  margin: 0 0 20px 0;
+  color: #333;
+}
+
+.budget-info {
+  display: flex;
+  gap: 30px;
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.budget-stat {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.budget-stat .label {
+  font-size: 12px;
+  color: #666;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.budget-stat .value {
+  font-size: 24px;
+  font-weight: 700;
+  color: #333;
+}
+
+.budget-stat .value.spent {
+  color: #667eea;
+}
+
+.budget-stat .value.over-budget {
+  color: #dc3545;
+}
+
+.team-content {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+.selected-team,
+.available-riders {
+  background: white;
+  padding: 25px;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.available-riders {
+  position: relative;
+}
+
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.section-header h2 {
+  margin: 0;
+  color: #333;
+}
+
+.btn-save {
+  padding: 10px 20px;
+  background: #28a745;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background 0.2s;
+}
+
+.btn-save:hover {
+  background: #218838;
+}
+
+.btn-download {
+  padding: 10px 20px;
+  background: none;
+  color: #14213d;
+  border: 1px solid #14213d;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.1s;
+}
+
+.btn-download:hover {
+  transform: scale(1.05);
+}
+
+.save-status {
+  background: #d4edda;
+  color: #155724;
+  padding: 10px;
+  border-radius: 6px;
+  margin-bottom: 15px;
+  text-align: center;
+  font-weight: 500;
+}
+
+.empty-team {
+  text-align: center;
+  padding: 60px 20px;
+  color: #999;
+}
+
+.empty-team p {
+  margin: 10px 0;
+}
+
+.selected-riders-list{
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5em;
+  justify-content: center;
+}
+
+.selected-rider.placeholder {
+  background: #f6f6f6;
+  border: 2px dashed #e0e0e0;
+  min-height: 118px;
+  min-width: 150px;
+  box-sizing: border-box;
+  opacity: 0.5;
+}
+
+.selected-rider{
+  width: 150px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 1em;
+  border: 2px solid #14213d;
+  border-radius: 8px;
+  background: #ffffff;
+  position: relative;
+}
+
+.selected-rider-jersey {
+  width: 40px;
+  height: 40px;
+  object-fit: contain;
+  flex-shrink: 0;
+}
+
+.selected-rider-name {
+  width: 80%;
+  font-size: clamp(.5em, 3vw, 0.8em);
+  font-weight: 600;
+  color: #333;
+  white-space: nowrap; 
+}
+
+.selected-rider-price {
+  font-size: 0.8em;
+  font-weight: 400;
+  color: #667eea;
+}
+
+.riders-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  overflow-y: auto;
+}
+
+.rider-card {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px;
+  border: 2px solid #e0e0e0;
+  border-radius: 8px;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.rider-info {
+  flex: 1;
+}
+
+.rider-name {
+  font-size: 1em;
+  font-weight: 600;
+  color: #333;
+}
+
+.rider-price {
+  font-size: 1.2em;
+  font-weight: 700;
+  color: #667eea;
+  min-width: 70px;
+  text-align: right;
+  padding-right: 0.5em;
+}
+
+.btn-add{
+  width: 32px;
+  height: 32px;
+  border: none;
+  border-radius: 6px;
+  font-size: 1em;
+  cursor: pointer;
+  transition: transform 0.2s, background 0.2s;
+  padding: 0;
+}
+
+.btn-remove{
+  border-radius: 0 6px 0 0;
+  width: 20px;
+  height: 20px;
+  font-size: 0.5em;
+  padding: 0;
+  position: absolute;
+  top: 0;
+  right: 0;
+  background: #dc3545;
+  color: white;
+  transition: background 0.2s;
+}
+
+.btn-add {
+  background: #28a745;
+  color: white;
+}
+
+.btn-add:hover:not(:disabled) {
+  background: #218838;
+  transform: scale(1.1);
+}
+
+.btn-add:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+}
+
+.btn-remove:hover {
+  background: #c82333;
+  transform: none;
+}
+
+.search-input {
+  width: 100%;
+  padding: 12px;
+  border: 2px solid #e0e0e0;
+  border-radius: 6px;
+  font-size: 1em;
+  box-sizing: border-box;
+}
+
+.search-input:focus {
+  outline: none;
+  border-color: #667eea;
+}
+
+.filter-selects {
+  display: flex;
+  gap: 0.5em;
+  padding: 0.5em 0;
+}
+
+.filter-select {
+  padding: 0.5em;
+  border: 2px solid #e0e0e0;
+  border-radius: 6px;
+  font-size: 1em;
+  background: #fff;
+  min-width: 120px;
+}
+
+.max-price-select {
+  width: 30%;
+}
+
+.team-select {
+  width: 70%;
+}
+
+.rider-jersey {
+  width: 40px;
+  height: 40px;
+  object-fit: contain;
+  flex-shrink: 0;
+}
+
+.rider-card{
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.rider-card .rider-info,.rider-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 1em 0;
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  left: 0;
+}
+
+.pagination-btn {
+  padding: 0;
+  color: #14213d;
+  background: #ffffff;
+  border: 2px solid #14213d;
+  border-radius: 6px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s;
+  width: 40px;
+  height: 40px;
+}
+
+.pagination-btn.active{
+  background-color: #14213d;
+  color: #ffffff;
+}
+
+.pagination-btn:hover:not(:disabled) {
+  transform: translateY(-2px);
+}
+
+.pagination-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.pagination-pages {
+  display: flex;
+  gap: 5px;
+}
+
+.pagination-info {
+  font-size: 14px;
+  color: #666;
+  margin-left: 10px;
+}
+
+.pagination-ellipsis {
+  padding: 8px 12px;
+  color: #666;
+  font-weight: 600;
+  user-select: none;
+}
+
+@media (max-width: 1024px) {
+  .team-content {
+    grid-template-columns: 1fr;
+  }
+  
+  .budget-info {
+    flex-wrap: wrap;
+  }
+}

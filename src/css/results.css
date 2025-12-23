@@ -1,0 +1,123 @@
+.container-select{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.container-months, .container-races, .container-stages {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #14213d;
+  padding: 1.5em;
+}
+
+.container-months label, .container-races label, .container-stages label { 
+  margin-right: 0.5em;
+  font-size: 1.2em;
+}
+
+.container-months select, .container-races select, .container-stages select {
+  font-family: "Oswald", sans-serif;
+  padding: 0.5em;
+  font-size: 1em;
+  border: none;
+  background-color: #fca311;
+  color: white;
+  cursor: pointer;
+  min-width: 200px;
+}
+
+.container-months select:hover, .container-races select:hover {
+  background-color: #ff9500;
+}
+
+.container-results {
+  width: 100%;
+  min-height: 90dvh;
+  background-color: #14213d;
+  padding-bottom: 2em;
+  position: relative;
+  top: 10dvh;
+  text-align: center;
+}
+
+.container-results h2 {
+  margin: 0.5em 0;
+  font-size: 2em;
+}
+
+.container-race-results h3{
+  margin: 1em 0;
+  font-size: 1.5em;
+}
+
+.container-race-results table {
+  width: 90%;
+  margin: 0 auto;
+  background-color: white;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  border-collapse: collapse;
+}
+
+.container-race-results thead {
+  background-color: #fca311;
+  color: white;
+}
+
+.container-race-results th {
+  padding: 1em;
+  text-align: left;
+  font-size: 1.1em;
+  font-weight: 600;
+}
+
+.container-race-results td {
+  padding: 1em;
+  text-align: left;
+  border-bottom: 1px solid #e5e5e5;
+  color: #333;
+}
+
+.container-race-results tbody tr {
+  transition: background-color 0.2s ease;
+}
+
+.container-race-results tbody tr:last-child td {
+  border-bottom: none;
+}
+
+/* Kleuren voor top 3 posities */
+.container-race-results tbody tr:nth-child(1) {
+  background: linear-gradient(135deg, #FFE57F 0%, #FFD54F 100%);
+}
+
+.container-race-results tbody tr:nth-child(2) {
+  background: linear-gradient(135deg, #E0E0E0 0%, #BDBDBD 100%);
+}
+
+.container-race-results tbody tr:nth-child(3) {
+  background: linear-gradient(135deg, #D7A86E 0%, #C89666 100%);
+}
+
+/* Speciale styling voor goud, zilver, brons rijen */
+.container-race-results tbody tr:nth-child(1) td,
+.container-race-results tbody tr:nth-child(2) td,
+.container-race-results tbody tr:nth-child(3) td {
+  font-weight: 600;
+  border-bottom: none;
+  font-size: 1.5em;
+}
+
+/* Positie kolom styling */
+.container-race-results td:first-child {
+  font-weight: bold;
+  font-size: 1.1em;
+}
+
+/* Punten kolom styling */
+.container-race-results td:last-child {
+  font-weight: 600;
+  color: #14213d;
+}

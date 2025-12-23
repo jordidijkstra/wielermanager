@@ -1,0 +1,84 @@
+.intro{
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    top:0;
+    height: 100dvh;
+    position: sticky;
+    background: url(src/assets/manager.png) no-repeat 5% bottom /25%;
+}
+
+.intro h1{
+    font-size: 2.5em;
+    padding-bottom: 0.5em;
+}
+
+.intro p{
+    font-size: 1.2em;
+    font-weight: 100;
+    line-height: 1.5em;
+    width: 40%;
+}
+
+.intro button, .how-to-play button{
+    font-family: "BBH Bartle", sans-serif;
+    margin: 2em 0;
+    border-radius: 0;
+    transition: transform 0.25s;
+    color: #ffffff;
+}
+
+.intro button:hover, .how-to-play button:hover{
+    border-color: transparent;
+    transform: scale(1.05);
+}
+
+.how-to-play{
+    text-align: center;
+    top: 10dvh;
+    position: sticky;
+    height: 80dvh;
+    background: linear-gradient(135deg, #e5e5e5 0%, #ffffff 50%, #e5e5e5 100%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 -10px 30px rgba(0, 0, 0, 0.2);
+}
+
+.steps{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px;
+    width: 80%;
+    margin: 0 auto;
+}
+
+.step-container{
+    display: flex;
+    width: 40%;
+}
+
+.step-container img {
+    width: auto;
+    height: 150px;
+    background: linear-gradient(135deg, #fca311 0%, #ff9500 100%);
+    border-radius: 10px 0 0 10px;
+    box-shadow: 0 4px 10px rgba(252, 163, 17, 0.3);
+}
+
+.step{
+    padding: 1em;
+    background: linear-gradient(135deg, #ffffff 0%, #f5f5f5 100%);
+    color: #14213d;
+    border-radius: 0 10px 10px 0;
+    text-align: left;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.step p{
+    font-weight: 100;
+}
