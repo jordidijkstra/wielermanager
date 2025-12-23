@@ -120,7 +120,7 @@ function TeamBuilder({ user }) {
                     src={getTeamJerseyPath(rider.teamId)}
                     alt="jersey" 
                     className="selected-rider-jersey"
-                    onError={(e) => e.target.src = 'src/assets/default.webp'}
+                    onError={(e) => e.target.src = '/assets/default.webp'}
                   />
                   <div className="selected-rider-info">
                     <div className="selected-rider-name">{getFullName(rider)}</div>
@@ -212,7 +212,7 @@ function TeamBuilder({ user }) {
                     src={getTeamJerseyPath(rider.teamId)}
                     alt="jersey" 
                     className="rider-jersey"
-                    onError={(e) => e.target.src = 'src/assets/default.webp'}
+                    onError={(e) => e.target.src = '/assets/default.webp'}
                   />
                   <div className="rider-info">
                     <div className="rider-name">{getFullName(rider)}</div>

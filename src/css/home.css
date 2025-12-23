@@ -7,7 +7,7 @@
     top:0;
     height: 100dvh;
     position: sticky;
-    background: url(src/assets/manager.png) no-repeat 5% bottom /25%;
+    background: url(/assets/manager.png) no-repeat 5% bottom /25%;
 }
 
 .intro h1{
