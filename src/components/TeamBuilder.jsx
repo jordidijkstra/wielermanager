@@ -114,10 +114,13 @@ function TeamBuilder({ user }) {
             </div>
           ) : (
             <div className="selected-riders-list">
-              {selectedRiders.map(rider => (
+              {selectedRiders.map(rider => {
+                const jerseyPath = getTeamJerseyPath(rider.teamId);
+                console.log('Jersey path:', jerseyPath);
+                return (
                 <div key={rider.id} className="selected-rider">
                   <img 
-                    src={getTeamJerseyPath(rider.teamId)}
+                    src={jerseyPath}
                     alt="jersey" 
                     className="selected-rider-jersey"
                     onError={(e) => e.target.src = '/assets/default.webp'}
@@ -135,7 +138,7 @@ function TeamBuilder({ user }) {
                     </button>
                   </div>
                 </div>
-              ))}
+              )})}
               {Array.from({ length: 30 - selectedRiders.length }).map((_, idx) => (
                 <div key={`placeholder-${idx}`} className="selected-rider placeholder"></div>
               ))}
