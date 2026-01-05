@@ -12,6 +12,8 @@ dist
 dist-ssr
 *.local
 
+firestore_import/
+
 # Environment variables
 .env
 

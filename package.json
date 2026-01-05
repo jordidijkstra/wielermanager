@@ -13,9 +13,12 @@
     "@fortawesome/fontawesome-free": "^7.1.0",
     "@fortawesome/fontawesome-svg-core": "^7.1.0",
     "@fortawesome/react-fontawesome": "^3.1.1",
+    "csv-parser": "^3.2.0",
     "firebase": "^12.6.0",
-    "react": "^19.2.0",
-    "react-dom": "^19.2.0"
+    "firebase-admin": "^13.6.0",
+    "next": "^16.1.1",
+    "react": "^19.2.3",
+    "react-dom": "^19.2.3"
   },
   "devDependencies": {
     "@eslint/js": "^9.39.1",
@@ -27,5 +30,18 @@
     "eslint-plugin-react-refresh": "^0.4.24",
     "globals": "^16.5.0",
     "vite": "^7.2.4"
-  }
+  },
+  "description": "Een interactieve wielermanager game gebouwd met React en Firebase.",
+  "main": "eslint.config.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jordidijkstra/wielermanager.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/jordidijkstra/wielermanager/issues"
+  },
+  "homepage": "https://github.com/jordidijkstra/wielermanager#readme"
 }
