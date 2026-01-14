@@ -25,18 +25,24 @@ export const useAuth = () => {
       setUser(firebaseUser);
 
       const userRef = doc(db, 'users', firebaseUser.uid);
-      const snap = await getDoc(userRef);
+      try {
+        const snap = await getDoc(userRef);
 
-      // 🔹 User bestaat nog niet in Firestore → aanmaken
-      if (!snap.exists()) {
-        await setDoc(userRef, {
-          email: firebaseUser.email,
-          role: 'user',
-          createdAt: serverTimestamp()
-        });
+        // 🔹 User bestaat nog niet in Firestore → aanmaken
+        if (!snap.exists()) {
+          await setDoc(userRef, {
+            email: firebaseUser.email,
+            role: 'user',
+            createdAt: serverTimestamp()
+          });
+          setRole('user');
+        } else {
+          setRole(snap.data().role ?? 'user');
+        }
+      } catch (err) {
+        console.error('Fout bij Firestore user check:', err);
+        // Als Firestore niet werkt, stel role in als user
         setRole('user');
-      } else {
-        setRole(snap.data().role ?? 'user');
       }
 
       setLoading(false);

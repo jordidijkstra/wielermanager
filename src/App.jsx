@@ -26,7 +26,7 @@ function App() {
   }
 
   if (loading) {
-    return <div>Loading...</div>;
+    return <div style={{ padding: '20px', textAlign: 'center' }}>Loading...</div>;
   }
 
   const renderPage = () => {

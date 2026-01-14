@@ -6,6 +6,8 @@ export function useUserTeam(user, budget) {
   const [saveStatus, setSaveStatus] = useState('');
 
   useEffect(() => {
+    if (!user) return; // Only run if user exists
+    
     const loadTeam = async () => {
       try {
         const teamData = await getUserTeam(user.uid);
@@ -16,7 +18,7 @@ export function useUserTeam(user, budget) {
         console.error('Fout bij laden team:', err);
       }
     };
-    if (user) loadTeam();
+    loadTeam();
   }, [user]);
 
   const getTotalSpent = () => selectedRiders.reduce((sum, r) => sum + r.price, 0);

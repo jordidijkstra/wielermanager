@@ -8,15 +8,14 @@ service cloud.firestore {
 
     function isAdmin() {
       return isLoggedIn()
-        && exists(/databases/$(database)/documents/users/$(request.auth.uid))
         && get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin';
     }
 
-    // Users collectie - alleen ingelogde users kunnen hun eigen document lezen
+    // Users collectie - create allowed for new users, read/write for self
     match /users/{userId} {
+      allow create: if isLoggedIn();
       allow read: if isLoggedIn() && request.auth.uid == userId;
       allow write: if isLoggedIn() && request.auth.uid == userId;
-      allow create: if isLoggedIn();
     }
 
     // Race Teams per user - subcollection teams
@@ -35,46 +34,47 @@ service cloud.firestore {
       allow delete: if isLoggedIn() && request.auth.uid == userId;
     }
 
-    // Riders - iedereen kan lezen, alleen admins kunnen schrijven
+    // Riders - iedereen ingelogd kan lezen, alleen admins kunnen schrijven
     match /riders/{document=**} {
       allow read: if isLoggedIn();
       allow write: if isAdmin();
     }
 
-    // Cycling Teams - iedereen kan lezen, alleen admins kunnen schrijven
+    // Cycling Teams - iedereen ingelogd kan lezen, alleen admins kunnen schrijven
     match /cyclingTeams/{document=**} {
       allow read: if isLoggedIn();
       allow write: if isAdmin();
     }
 
-    // Races - iedereen kan lezen, alleen admins kunnen schrijven
+    // Races - iedereen ingelogd kan lezen, alleen admins kunnen schrijven
     match /races/{document=**} {
       allow read: if isLoggedIn();
       allow write: if isAdmin();
     }
 
-    // Race Categories - iedereen kan lezen, alleen admins kunnen schrijven
+    // Race Categories - iedereen ingelogd kan lezen, alleen admins kunnen schrijven
     match /raceCategories/{document=**} {
       allow read: if isLoggedIn();
       allow write: if isAdmin();
     }
 
-    // Points by Category - iedereen kan lezen, alleen admins kunnen schrijven
+    // Points by Category - iedereen ingelogd kan lezen, alleen admins kunnen schrijven
     match /pointsPerCategory/{document=**} {
       allow read: if isLoggedIn();
       allow write: if isAdmin();
     }
 
-    // Results - iedereen kan lezen, alleen admins kunnen schrijven
+    // Results - iedereen ingelogd kan lezen, alleen admins kunnen schrijven
     match /results/{document=**} {
       allow read: if isLoggedIn();
       allow write: if isAdmin();
     }
 
-    // Race Participants - iedereen kan lezen, alleen admins kunnen schrijven
+    // Race Participants - iedereen ingelogd kan lezen, alleen admins kunnen schrijven
     match /raceParticipants/{document=**} {
       allow read: if isLoggedIn();
       allow write: if isAdmin();
     }
   }
 }
+
