@@ -7,6 +7,7 @@ import Admin from './components/Admin';
 import Login from './components/Login';
 import TeamBuilder from './components/TeamBuilder';
 import RaceTeamSelector from './components/RaceTeamSelector';
+import PointsTables from './components/PointsTables';
 import Footer from './components/Footer';
 import '@fortawesome/fontawesome-free/css/all.min.css';
 
@@ -55,6 +56,8 @@ function App() {
         return <TeamBuilder user={user}/>;
       case 'raceTeams':
         return <RaceTeamSelector user={user} selectedRiders={selectedRiders}/>;
+      case 'pointsTables':
+        return <PointsTables />;
       case 'settings':
         return <Home user={user} setCurrentPage={setCurrentPage} setShowLoginModal={setShowLoginModal} />; // Placeholder voor instellingen
       default:

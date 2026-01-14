@@ -21,6 +21,7 @@ export default function RacesTab() {
   const [resultEntries, setResultEntries] = useState([]);
   const [riderSearchFilters, setRiderSearchFilters] = useState({});
   const [openRiderDropdowns, setOpenRiderDropdowns] = useState({});
+  const [selectedCategoryFilter, setSelectedCategoryFilter] = useState(null);
   const racesPerPage = 50;
   const [newRace, setNewRace] = useState({
     name: '',
@@ -222,9 +223,14 @@ export default function RacesTab() {
     return dateA - dateB;
   });
 
+  // Filter by category if selected
+  const filteredRaces = selectedCategoryFilter
+    ? sortedRaces.filter(race => race.categoryId === selectedCategoryFilter)
+    : sortedRaces;
+
   // Pagination logic
-  const totalPages = Math.ceil(sortedRaces.length / racesPerPage);
-  const paginatedRaces = sortedRaces.slice(
+  const totalPages = Math.ceil(filteredRaces.length / racesPerPage);
+  const paginatedRaces = filteredRaces.slice(
     (currentPage - 1) * racesPerPage,
     currentPage * racesPerPage
   );
@@ -412,7 +418,27 @@ export default function RacesTab() {
       )}
 
       <div className="admin-stats">
-        <p>Totaal Races: <strong>{races.length}</strong></p>
+        <p>Totaal Races: <strong>{filteredRaces.length}</strong></p>
+      </div>
+
+      {/* Category Filter Dropdown */}
+      <div className="category-filter">
+        <label htmlFor="category-filter">Filter op categorie:</label>
+        <select
+          id="category-filter"
+          value={selectedCategoryFilter || ''}
+          onChange={(e) => {
+            setSelectedCategoryFilter(e.target.value ? parseInt(e.target.value) : null);
+            setCurrentPage(1);
+          }}
+        >
+          <option value="">-- Alle categorieën --</option>
+          {categories.map(category => (
+            <option key={category.id} value={category.id}>
+              {category.name}
+            </option>
+          ))}
+        </select>
       </div>
 
       <div className="riders-table">
@@ -423,6 +449,7 @@ export default function RacesTab() {
               <th>Naam</th>
               <th>Startdatum</th>
               <th>Einddatum</th>
+              <th>Categorie</th>
               <th>Max renners</th>
               <th>Status</th>
               <th>Acties</th>
@@ -463,6 +490,21 @@ export default function RacesTab() {
                     />
                   ) : (
                     race.endDate || '-'
+                  )}
+                </td>
+                <td>
+                  {editingRaceId === race.id ? (
+                    <select
+                      value={editRaceData.categoryId || ''}
+                      onChange={(e) => setEditRaceData({ ...editRaceData, categoryId: e.target.value ? parseInt(e.target.value) : null })}
+                    >
+                      <option value="">-- Selecteer --</option>
+                      {categories.map(cat => (
+                        <option key={cat.id} value={cat.id}>{cat.name}</option>
+                      ))}
+                    </select>
+                  ) : (
+                    categories.find(c => c.id === race.categoryId)?.name || '-'
                   )}
                 </td>
                 <td>

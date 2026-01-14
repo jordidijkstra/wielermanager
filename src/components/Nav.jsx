@@ -42,6 +42,7 @@ export default function Nav({ setCurrentPage, setShowLoginModal}) {
                     <li><a href="#" onClick={() => handleNavClick('home')}>Home</a></li>
                     {user && <li><a href="#" onClick={() => handleNavClick('team')}>Jouw team</a></li>}
                     {user && <li><a href="#" onClick={() => handleNavClick('raceTeams')}>Race selecties</a></li>}
+                    <li><a href="#" onClick={() => handleNavClick('pointsTables')}>Puntentabellen</a></li>
                     <li><a href="#" onClick={() => handleNavClick('rankings')}>Rankings</a></li>
                     
                     {user ? (
@@ -88,6 +89,7 @@ export default function Nav({ setCurrentPage, setShowLoginModal}) {
                     <li><a href="#" onClick={() => handleNavClick('home')}>Home</a></li>
                     {user && <li><a href="#" onClick={() => handleNavClick('team')}>Jouw team</a></li>}
                     {user && <li><a href="#" onClick={() => handleNavClick('raceTeams')}>Race selecties</a></li>}
+                    <li><a href="#" onClick={() => handleNavClick('pointsTables')}>Puntentabellen</a></li>
                     <li><a href="#" onClick={() => handleNavClick('rankings')}>Rankings</a></li>
                     
                     {user ? (

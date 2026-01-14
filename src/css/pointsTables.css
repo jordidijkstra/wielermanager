@@ -1,0 +1,180 @@
+.points-tables-container {
+  padding: 20px;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.points-tables-container h1 {
+  text-align: center;
+  margin-bottom: 30px;
+  font-size: 2.5em;
+  color: var(--primary-color, #1a1a1a);
+}
+
+/* Race Selector */
+.race-selector {
+  margin-bottom: 30px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 15px;
+  flex-wrap: wrap;
+}
+
+.race-selector label {
+  font-weight: 600;
+  font-size: 1.1em;
+}
+
+.race-dropdown {
+  padding: 12px 20px;
+  border: 2px solid #ddd;
+  background: white;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 1em;
+  min-width: 300px;
+  transition: all 0.3s ease;
+}
+
+.race-dropdown:hover {
+  border-color: #666;
+  background: #f5f5f5;
+}
+
+.race-dropdown:focus {
+  outline: none;
+  border-color: #333;
+  background: white;
+}
+
+/* Points Table */
+.points-table-wrapper {
+  margin-top: 30px;
+}
+
+.points-table-wrapper h2 {
+  text-align: center;
+  margin-bottom: 20px;
+  font-size: 1.8em;
+}
+
+.category-label {
+  text-align: center;
+  color: #666;
+  margin-bottom: 20px;
+  font-style: italic;
+}
+
+.points-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: white;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.points-table thead {
+  background: #f5f5f5;
+  border-bottom: 2px solid #ddd;
+}
+
+.points-table th {
+  padding: 15px;
+  text-align: left;
+  font-weight: 600;
+  color: #333;
+}
+
+.points-table td {
+  padding: 12px 15px;
+  border-bottom: 1px solid #eee;
+}
+
+.points-table tbody tr:hover {
+  background: #f9f9f9;
+}
+
+.points-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.points-table .no-data {
+  text-align: center;
+  padding: 30px !important;
+  color: #999;
+  font-style: italic;
+}
+
+/* Error State */
+.points-tables-container .error {
+  color: #d32f2f;
+  text-align: center;
+  padding: 20px;
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+  .points-tables-container {
+    padding: 15px;
+  }
+
+  .points-tables-container h1 {
+    font-size: 2em;
+    margin-bottom: 20px;
+  }
+
+  .race-selector {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .race-dropdown {
+    min-width: 100%;
+  }
+
+  .points-table-wrapper h2 {
+    font-size: 1.5em;
+  }
+
+  .points-table th,
+  .points-table td {
+    padding: 10px;
+  }
+}
+
+@media (max-width: 480px) {
+  .points-tables-container {
+    padding: 10px;
+  }
+
+  .points-tables-container h1 {
+    font-size: 1.6em;
+    margin-bottom: 15px;
+  }
+
+  .race-selector {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .race-selector label {
+    font-size: 1em;
+  }
+
+  .race-dropdown {
+    min-width: 100%;
+    font-size: 0.9em;
+  }
+
+  .points-table-wrapper h2 {
+    font-size: 1.3em;
+  }
+
+  .points-table th,
+  .points-table td {
+    padding: 8px;
+    font-size: 0.95em;
+  }
+}

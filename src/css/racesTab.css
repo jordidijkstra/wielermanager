@@ -319,3 +319,28 @@
     font-size: 0.8em;
   }
 }
+
+/* Category Filter */
+.category-filter {
+  margin: 20px 0;
+  padding: 15px;
+  background: #f5f5f5;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  flex-wrap: wrap;
+}
+
+.category-filter label {
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.category-filter select {
+  padding: 8px 12px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 1em;
+  min-width: 200px;
+}
