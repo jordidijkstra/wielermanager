@@ -1,7 +1,7 @@
 import '../css/home.css';
 import { howToPlay } from '../data/howToPlay';
 
-export default function Home() {
+export default function Home({ setCurrentPage, setShowLoginModal, user }) {
 
     const steps = howToPlay.map((step, index) => {
         return (
@@ -20,6 +20,16 @@ export default function Home() {
         howToPlaySection.scrollIntoView({ behavior: 'smooth' });
     }
 
+    function handleMaakEenPloeg() {
+        if (user) {
+            // User is logged in, go to team page
+            setCurrentPage('team');
+        } else {
+            // User not logged in, show login modal then go to team
+            setShowLoginModal(true);
+        }
+    }
+
     return (
         <main className="home-container">
             
@@ -36,7 +46,7 @@ export default function Home() {
                 <div className="steps">
                     {steps}
                 </div>
-                <button>Maak een ploeg</button>
+                <button onClick={handleMaakEenPloeg}>Maak een ploeg</button>
             </section>
 
         </main>

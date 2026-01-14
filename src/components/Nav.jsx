@@ -2,14 +2,12 @@ import '../css/nav.css';
 import { useState } from 'react';
 import { useAuth } from '../hooks/useAuth';
 import { useLogout } from '../hooks/useLogout';
-import Login from './Login';
 
-export default function Nav({ setCurrentPage}) {
+export default function Nav({ setCurrentPage, setShowLoginModal}) {
     const { user, isAdmin } = useAuth();
     const logout = useLogout();
     const [showProfileMenu, setShowProfileMenu] = useState(false);
     const [showMobileMenu, setShowMobileMenu] = useState(false);
-    const [showLoginModal, setShowLoginModal] = useState(false);
 
     const handleProfileClick = (page) => {
         setCurrentPage(page);
@@ -125,9 +123,6 @@ export default function Nav({ setCurrentPage}) {
                     )}
                 </ul>
             )}
-            
-            {/* Login Modal */}
-            {showLoginModal && <Login onClose={() => setShowLoginModal(false)} />}
         </nav>
     );
 }

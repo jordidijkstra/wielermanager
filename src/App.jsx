@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useAuth } from './hooks/useAuth';
 import { useUserTeam } from './hooks/useUserTeam';
 import Nav from './components/Nav';
@@ -16,6 +16,7 @@ const ADMIN_EMAIL = 'dijkstrajordi@gmail.com';
 function App() {
   const { user, loading } = useAuth();
   const [currentPage, setCurrentPage] = useState('home');
+  const [showLoginModal, setShowLoginModal] = useState(false);
   const { selectedRiders } = useUserTeam(user, BUDGET);
   const isAdmin = user && user.email === ADMIN_EMAIL;
 
@@ -23,6 +24,14 @@ function App() {
   if (!user && currentPage !== 'home') {
     setCurrentPage('home');
   }
+
+  // When user logs in while login modal is open, go to team page and close modal
+  useEffect(() => {
+    if (user && showLoginModal) {
+      setShowLoginModal(false);
+      setCurrentPage('team');
+    }
+  }, [user, showLoginModal]);
 
   if (loading) {
     return <div style={{ padding: '20px', textAlign: 'center' }}>Loading...</div>;
@@ -39,24 +48,25 @@ function App() {
 
     switch (currentPage) {
       case 'home':
-        return <Home />;
+        return <Home user={user} setCurrentPage={setCurrentPage} setShowLoginModal={setShowLoginModal} />;
       case 'admin':
-        return isAdmin ? <Admin /> : <Home />;
+        return isAdmin ? <Admin /> : <Home user={user} setCurrentPage={setCurrentPage} setShowLoginModal={setShowLoginModal} />;
       case 'team':
         return <TeamBuilder user={user}/>;
       case 'raceTeams':
         return <RaceTeamSelector user={user} selectedRiders={selectedRiders}/>;
       case 'settings':
-        return <Home />; // Placeholder voor instellingen
+        return <Home user={user} setCurrentPage={setCurrentPage} setShowLoginModal={setShowLoginModal} />; // Placeholder voor instellingen
       default:
-        return <Home />;
+        return <Home user={user} setCurrentPage={setCurrentPage} setShowLoginModal={setShowLoginModal} />;
     }
   };
 
   return (
     <>
-      <Nav setCurrentPage={setCurrentPage} />
+      <Nav setCurrentPage={setCurrentPage} setShowLoginModal={setShowLoginModal} />
       {renderPage()}
+      {showLoginModal && <Login onClose={() => setShowLoginModal(false)} />}
       <Footer />
     </>
   );
