@@ -15,7 +15,13 @@ dist-ssr
 firestore_import/
 firestore_export/
 
-# Environment variables
+# Test files
+*.test.js
+*.test.jsx
+*.spec.js
+*.spec.jsx
+__tests__/
+coverage/
 .env
 
 # Editor directories and files
