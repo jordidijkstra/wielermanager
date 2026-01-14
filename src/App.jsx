@@ -20,6 +20,11 @@ function App() {
   const { selectedRiders } = useUserTeam(user, BUDGET);
   const isAdmin = user && user.email === ADMIN_EMAIL;
 
+  // Reset to home when user logs out
+  if (!user && currentPage !== 'home') {
+    setCurrentPage('home');
+  }
+
   if (loading) {
     return <div>Loading...</div>;
   }
@@ -29,6 +34,14 @@ function App() {
   }
 
   const renderPage = () => {
+    // Protected pages - only render if user is logged in
+    const protectedPages = ['team', 'raceTeams', 'admin'];
+    
+    // If trying to access protected page without being logged in, show home
+    if (protectedPages.includes(currentPage) && !user) {
+      return <Home />;
+    }
+
     switch (currentPage) {
       case 'home':
         return <Home />;

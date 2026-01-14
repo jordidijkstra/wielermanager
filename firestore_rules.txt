@@ -7,8 +7,9 @@ service cloud.firestore {
     }
 
     function isAdmin() {
-      return isLoggedIn() && 
-             get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin';
+      return isLoggedIn()
+        && exists(/databases/$(database)/documents/users/$(request.auth.uid))
+        && get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin';
     }
 
     // Users collectie - alleen ingelogde users kunnen hun eigen document lezen
@@ -58,7 +59,7 @@ service cloud.firestore {
       allow write: if isAdmin();
     }
 
-    // Points per Category - iedereen kan lezen, alleen admins kunnen schrijven
+    // Points by Category - iedereen kan lezen, alleen admins kunnen schrijven
     match /pointsPerCategory/{document=**} {
       allow read: if isLoggedIn();
       allow write: if isAdmin();
