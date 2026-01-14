@@ -1,18 +1,25 @@
 import { collection, getDocs } from 'firebase/firestore';
 import { db } from '../firebase/config';
 
+let teamsCache = null;
+
 export const getCyclingTeams = async () => {
-  const snapshot = await getDocs(collection(db, 'cyclingTeams'));
-  return snapshot.docs.map(doc => ({
-    id: doc.id,
-    ...doc.data()
-  }));
+  try {
+    const snapshot = await getDocs(collection(db, 'cyclingTeams'));
+    const teams = snapshot.docs.map(doc => ({
+      id: doc.id,
+      ...doc.data()
+    }));
+    teamsCache = teams;
+    return teams;
+  } catch (err) {
+    console.error('Error loading cycling teams:', err);
+    return teamsCache || [];
+  }
 };
 
-const teams = await getCyclingTeams();
-
 export const getTeamJerseyPath = (teamId) => {
-  const team = teams.find(t => t.id === teamId);
+  const team = teamsCache?.find(t => t.id === teamId);
   return team?.cyclingKit
     ? `/assets/${team.cyclingKit}`
     : '/assets/default.webp';

@@ -4,7 +4,6 @@ import { useUserTeam } from './hooks/useUserTeam';
 import Nav from './components/Nav';
 import Home from './components/Home';
 import Admin from './components/Admin';
-import Results from './components/Results';
 import Login from './components/Login';
 import TeamBuilder from './components/TeamBuilder';
 import RaceTeamSelector from './components/RaceTeamSelector';
