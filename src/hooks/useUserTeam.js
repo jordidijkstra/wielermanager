@@ -33,8 +33,12 @@ export function useUserTeam(user, budget) {
   };
 
   const saveTeam = async () => {
-  setSaveStatus('Opslaan...');
-  console.log('Saving team for user:', user.uid);
+    if (!user || !user.uid) {
+      setSaveStatus('Fout: Gebruiker niet ingelogd');
+      return;
+    }
+    setSaveStatus('Opslaan...');
+    console.log('Saving team for user:', user.uid);
     try {
       await saveUserTeam({
         userId: user.uid,

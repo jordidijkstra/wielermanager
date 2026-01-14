@@ -29,10 +29,6 @@ function App() {
     return <div>Loading...</div>;
   }
 
-  if (!user) {
-    return <Login />;
-  }
-
   const renderPage = () => {
     // Protected pages - only render if user is logged in
     const protectedPages = ['team', 'raceTeams', 'admin'];
