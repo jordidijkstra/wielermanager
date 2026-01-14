@@ -48,10 +48,8 @@
 }
 
 .steps{
-    display: flex;
-    flex-direction: column;
-    flex-wrap: wrap;
-    justify-content: center;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
     gap: 20px;
     width: 80%;
     margin: 0 auto;
@@ -59,15 +57,18 @@
 
 .step-container{
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
+    width: 100%;
 }
 
 .step-container img {
-    width: 100%;
-    height: auto;
+    width: 150px;
+    height: 150px;
+    object-fit: contain;
     background: linear-gradient(135deg, #fca311 0%, #ff9500 100%);
     border-radius: 10px 0 0 10px;
     box-shadow: 0 4px 10px rgba(252, 163, 17, 0.3);
+    flex-shrink: 0;
 }
 
 .step{
@@ -104,14 +105,8 @@
     margin: 1.5em 0;
   }
 
-  .how-to-play {
-    height: auto;
-    min-height: 70dvh;
-    padding: 40px 20px;
-  }
-
-  .step {
-    padding: 20px;
+  .steps {
+    grid-template-columns: 1fr;
   }
 }
 
@@ -143,8 +138,21 @@
     top: 50px;
   }
 
+  .step-container {
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .step-container img {
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+    border-radius: 10px 10px 0 0;
+  }
+
   .step {
     padding: 15px;
+    border-radius: 0 0 10px 10px;
   }
 
   .step h2 {

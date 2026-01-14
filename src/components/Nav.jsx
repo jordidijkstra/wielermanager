@@ -26,6 +26,7 @@ export default function Nav({ setCurrentPage}) {
                 <p>Wielermanager</p>
             </div>
             
+            {/* Hamburger Menu Button */}
             <button 
                 className={`hamburger-menu ${showMobileMenu ? 'active' : ''}`}
                 onClick={() => setShowMobileMenu(!showMobileMenu)}
@@ -35,14 +36,15 @@ export default function Nav({ setCurrentPage}) {
                 <i className={showMobileMenu ? 'fa-solid fa-xmark' : 'fa-solid fa-bars'}></i>
             </button>
 
-            <ul className={`nav-menu ${showMobileMenu ? 'active' : ''}`}>
-                <li><a href="#" onClick={() => handleNavClick('home')}>Home</a></li>
-                {user && <li><a href="#" onClick={() => handleNavClick('team')}>Jouw team</a></li>}
-                {user && <li><a href="#" onClick={() => handleNavClick('raceTeams')}>Race selecties</a></li>}
-                <li><a href="#" onClick={() => handleNavClick('rankings')}>Rankings</a></li>
-                
-                {user ? (
-                    <>
+            {/* Desktop Menu */}
+            {!showMobileMenu && (
+                <ul className="nav-menu desktop">
+                    <li><a href="#" onClick={() => handleNavClick('home')}>Home</a></li>
+                    {user && <li><a href="#" onClick={() => handleNavClick('team')}>Jouw team</a></li>}
+                    {user && <li><a href="#" onClick={() => handleNavClick('raceTeams')}>Race selecties</a></li>}
+                    <li><a href="#" onClick={() => handleNavClick('rankings')}>Rankings</a></li>
+                    
+                    {user ? (
                         <li className="profile-menu">
                             <button 
                                 className="btn-profile"
@@ -64,7 +66,6 @@ export default function Nav({ setCurrentPage}) {
                                         className="btn-logout-dropdown"
                                         onClick={() => {
                                             setShowProfileMenu(false);
-                                            setShowMobileMenu(false);
                                             logout();
                                         }}
                                     >
@@ -73,40 +74,55 @@ export default function Nav({ setCurrentPage}) {
                                 </div>
                             )}
                         </li>
-                        {showMobileMenu && (
-                            <>
-                                {isAdmin && (
-                                    <li className="profile-submenu">
-                                        <a href="#" onClick={() => handleProfileClick('admin')}>
-                                            ⚙️ Admin
-                                        </a>
-                                    </li>
-                                )}
+                    ) : (
+                        <li>
+                            <button onClick={() => handleNavClick('login')} className="btn-login">Inloggen</button>
+                        </li>
+                    )}
+                </ul>
+            )}
+
+            {/* Mobile Menu */}
+            {showMobileMenu && (
+                <ul className="nav-menu mobile">
+                    <li><a href="#" onClick={() => handleNavClick('home')}>Home</a></li>
+                    {user && <li><a href="#" onClick={() => handleNavClick('team')}>Jouw team</a></li>}
+                    {user && <li><a href="#" onClick={() => handleNavClick('raceTeams')}>Race selecties</a></li>}
+                    <li><a href="#" onClick={() => handleNavClick('rankings')}>Rankings</a></li>
+                    
+                    {user ? (
+                        <>
+                            {isAdmin && (
                                 <li className="profile-submenu">
-                                    <a href="#" onClick={() => handleProfileClick('settings')}>
-                                        🔧 Instellingen
+                                    <a href="#" onClick={() => handleProfileClick('admin')}>
+                                        ⚙️ Admin
                                     </a>
                                 </li>
-                                <li className="profile-submenu">
-                                    <button 
-                                        className="btn-logout-submenu"
-                                        onClick={() => {
-                                            setShowMobileMenu(false);
-                                            logout();
-                                        }}
-                                    >
-                                        🚪 Uitloggen
-                                    </button>
-                                </li>
-                            </>
-                        )}
-                    </>
-                ) : (
-                    <li>
-                        <button onClick={() => handleNavClick('login')} className="btn-login">Inloggen</button>
-                    </li>
-                )}
-            </ul>
+                            )}
+                            <li className="profile-submenu">
+                                <a href="#" onClick={() => handleProfileClick('settings')}>
+                                    🔧 Instellingen
+                                </a>
+                            </li>
+                            <li className="profile-submenu">
+                                <button 
+                                    className="btn-logout-submenu"
+                                    onClick={() => {
+                                        setShowMobileMenu(false);
+                                        logout();
+                                    }}
+                                >
+                                    🚪 Uitloggen
+                                </button>
+                            </li>
+                        </>
+                    ) : (
+                        <li>
+                            <button onClick={() => handleNavClick('login')} className="btn-login">Inloggen</button>
+                        </li>
+                    )}
+                </ul>
+            )}
         </nav>
     );
 }
