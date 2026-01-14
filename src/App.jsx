@@ -1,16 +1,24 @@
 import { useState } from 'react';
 import { useAuth } from './hooks/useAuth';
+import { useUserTeam } from './hooks/useUserTeam';
 import Nav from './components/Nav';
 import Home from './components/Home';
+import Admin from './components/Admin';
 import Results from './components/Results';
 import Login from './components/Login';
 import TeamBuilder from './components/TeamBuilder';
+import RaceTeamSelector from './components/RaceTeamSelector';
 import Footer from './components/Footer';
 import '@fortawesome/fontawesome-free/css/all.min.css';
+
+const BUDGET = 200000000; // €200 miljoen
+const ADMIN_EMAIL = 'dijkstrajordi@gmail.com';
 
 function App() {
   const { user, loading } = useAuth();
   const [currentPage, setCurrentPage] = useState('home');
+  const { selectedRiders } = useUserTeam(user, BUDGET);
+  const isAdmin = user && user.email === ADMIN_EMAIL;
 
   if (loading) {
     return <div>Loading...</div>;
@@ -24,10 +32,14 @@ function App() {
     switch (currentPage) {
       case 'home':
         return <Home />;
-      case 'results':
-        return isAdmin ? <Results /> : <Home />;
+      case 'admin':
+        return isAdmin ? <Admin /> : <Home />;
       case 'team':
         return <TeamBuilder user={user}/>;
+      case 'raceTeams':
+        return <RaceTeamSelector user={user} selectedRiders={selectedRiders}/>;
+      case 'settings':
+        return <Home />; // Placeholder voor instellingen
       default:
         return <Home />;
     }

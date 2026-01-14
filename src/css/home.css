@@ -23,7 +23,6 @@
 }
 
 .intro button, .how-to-play button{
-    font-family: "BBH Bartle", sans-serif;
     margin: 2em 0;
     border-radius: 0;
     transition: transform 0.25s;
@@ -50,6 +49,7 @@
 
 .steps{
     display: flex;
+    flex-direction: column;
     flex-wrap: wrap;
     justify-content: center;
     gap: 20px;
@@ -59,12 +59,12 @@
 
 .step-container{
     display: flex;
-    width: 40%;
+    flex-direction: column;
 }
 
 .step-container img {
-    width: auto;
-    height: 150px;
+    width: 100%;
+    height: auto;
     background: linear-gradient(135deg, #fca311 0%, #ff9500 100%);
     border-radius: 10px 0 0 10px;
     box-shadow: 0 4px 10px rgba(252, 163, 17, 0.3);
@@ -81,4 +81,77 @@
 
 .step p{
     font-weight: 100;
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+  .intro {
+    margin-top: 10dvh;
+    background-size: 40%;
+  }
+
+  .intro h1 {
+    font-size: 2em;
+  }
+
+  .intro p {
+    font-size: 1em;
+    width: 85%;
+  }
+
+  .intro button,
+  .how-to-play button {
+    margin: 1.5em 0;
+  }
+
+  .how-to-play {
+    height: auto;
+    min-height: 70dvh;
+    padding: 40px 20px;
+  }
+
+  .step {
+    padding: 20px;
+  }
+}
+
+@media (max-width: 480px) {
+  .intro {
+    margin-top: 50px;
+    height: auto;
+    min-height: 100dvh;
+    padding: 20px;
+    background: url(/assets/manager.png) no-repeat -20% bottom /50%;
+  }
+
+  .intro h1 {
+    font-size: 3em;
+  }
+
+  .intro p {
+    font-size: 2em;
+    width: 90%;
+  }
+
+  .intro button{
+    font-size: 2em;
+  }
+
+  .how-to-play {
+    height: auto;
+    padding: 30px 15px;
+    top: 50px;
+  }
+
+  .step {
+    padding: 15px;
+  }
+
+  .step h2 {
+    font-size: 1.95em;
+  }
+
+  .step p {
+    font-size: 1.4em;
+  }
 }

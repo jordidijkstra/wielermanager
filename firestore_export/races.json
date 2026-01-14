@@ -1,0 +1,7634 @@
+[
+  {
+    "id": 1,
+    "name": "Tour De France 2026",
+    "startDate": "2026-07-04",
+    "endDate": "2026-07-26",
+    "categoryId": 1,
+    "tourId": null,
+    "maxRiders": 8
+  },
+  {
+    "id": 10,
+    "name": "Il Lombardia",
+    "startDate": "2026-10-10",
+    "endDate": "2026-10-10",
+    "categoryId": 5,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 100,
+    "name": "Gran Piemonte",
+    "startDate": "2026-10-08",
+    "endDate": "2026-10-08",
+    "categoryId": 10,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 101,
+    "name": "Paris - Tours Elite",
+    "startDate": "2026-10-11",
+    "endDate": "2026-10-11",
+    "categoryId": 10,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 102,
+    "name": "Giro del Veneto",
+    "startDate": "2026-10-14",
+    "endDate": "2026-10-14",
+    "categoryId": 10,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 103,
+    "name": "Utsunomiya Japan Cup Road Race",
+    "startDate": "2026-10-18",
+    "endDate": "2026-10-18",
+    "categoryId": 10,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 104,
+    "name": "Veneto Classic",
+    "startDate": "2026-10-18",
+    "endDate": "2026-10-18",
+    "categoryId": 10,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 105,
+    "name": "Tour De France 2026 - Stage 1 (TTT) | Barcelona - Barcelona",
+    "startDate": "2026-07-04",
+    "endDate": "2026-07-04",
+    "categoryId": 11,
+    "tourId": 1,
+    "maxRiders": 7
+  },
+  {
+    "id": 106,
+    "name": "Tour De France 2026 - Stage 2 | Tarragona - Barcelona",
+    "startDate": "2026-07-05",
+    "endDate": "2026-07-05",
+    "categoryId": 11,
+    "tourId": 1,
+    "maxRiders": 7
+  },
+  {
+    "id": 107,
+    "name": "Tour De France 2026 - Stage 3 | Granollers - Les Angles",
+    "startDate": "2026-07-06",
+    "endDate": "2026-07-06",
+    "categoryId": 11,
+    "tourId": 1,
+    "maxRiders": 7
+  },
+  {
+    "id": 108,
+    "name": "Tour De France 2026 - Stage 4 | Carcassonne - Foix",
+    "startDate": "2026-07-07",
+    "endDate": "2026-07-07",
+    "categoryId": 11,
+    "tourId": 1,
+    "maxRiders": 7
+  },
+  {
+    "id": 109,
+    "name": "Tour De France 2026 - Stage 5 | Lannemezan - Pau",
+    "startDate": "2026-07-08",
+    "endDate": "2026-07-08",
+    "categoryId": 11,
+    "tourId": 1,
+    "maxRiders": 7
+  },
+  {
+    "id": 11,
+    "name": "Tour of Guangxi",
+    "startDate": "2026-10-13",
+    "endDate": "2026-10-18",
+    "categoryId": 6,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 110,
+    "name": "Tour De France 2026 - Stage 6 | Pau - Gavarnie-Gèdre",
+    "startDate": "2026-07-10",
+    "endDate": "2026-07-10",
+    "categoryId": 11,
+    "tourId": 1,
+    "maxRiders": 7
+  },
+  {
+    "id": 111,
+    "name": "Tour De France 2026 - Stage 7 | Hagetmau - Bordeaux",
+    "startDate": "2026-07-11",
+    "endDate": "2026-07-11",
+    "categoryId": 11,
+    "tourId": 1,
+    "maxRiders": 7
+  },
+  {
+    "id": 112,
+    "name": "Tour De France 2026 - Stage 8 | Périgueux - Bergerac",
+    "startDate": "2026-07-12",
+    "endDate": "2026-07-12",
+    "categoryId": 11,
+    "tourId": 1,
+    "maxRiders": 7
+  },
+  {
+    "id": 113,
+    "name": "Tour De France 2026 - Stage 9 | Malemort - Ussel",
+    "startDate": "2026-07-13",
+    "endDate": "2026-07-13",
+    "categoryId": 11,
+    "tourId": 1,
+    "maxRiders": 7
+  },
+  {
+    "id": 114,
+    "name": "Tour De France 2026 - Stage 10 | Aurillac - Le Lioran",
+    "startDate": "2026-07-14",
+    "endDate": "2026-07-14",
+    "categoryId": 11,
+    "tourId": 1,
+    "maxRiders": 7
+  },
+  {
+    "id": 115,
+    "name": "Tour De France 2026 - Stage 11 | Vichy - Nevers",
+    "startDate": "2026-07-15",
+    "endDate": "2026-07-15",
+    "categoryId": 11,
+    "tourId": 1,
+    "maxRiders": 7
+  },
+  {
+    "id": 116,
+    "name": "Tour De France 2026 - Stage 12 | Circuit de Nevers Magny-Cours - Chalon-sur-Saône",
+    "startDate": "2026-07-16",
+    "endDate": "2026-07-16",
+    "categoryId": 11,
+    "tourId": 1,
+    "maxRiders": 7
+  },
+  {
+    "id": 117,
+    "name": "Tour De France 2026 - Stage 13 | Dole - Belfort",
+    "startDate": "2026-07-17",
+    "endDate": "2026-07-17",
+    "categoryId": 11,
+    "tourId": 1,
+    "maxRiders": 7
+  },
+  {
+    "id": 118,
+    "name": "Tour De France 2026 - Stage 14 | Mulhouse - Le Markstein",
+    "startDate": "2026-07-18",
+    "endDate": "2026-07-18",
+    "categoryId": 11,
+    "tourId": 1,
+    "maxRiders": 7
+  },
+  {
+    "id": 119,
+    "name": "Tour De France 2026 - Stage 15 | Champagnole - Plateau de Solaison",
+    "startDate": "2026-07-19",
+    "endDate": "2026-07-19",
+    "categoryId": 11,
+    "tourId": 1,
+    "maxRiders": 7
+  },
+  {
+    "id": 12,
+    "name": "Renewi Tour",
+    "startDate": "2026-08-19",
+    "endDate": "2026-08-23",
+    "categoryId": 6,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 120,
+    "name": "Tour De France 2026 - Stage 16 (ITT) | Évian Les-Bains - Thonon Les-Bains",
+    "startDate": "2026-07-21",
+    "endDate": "2026-07-21",
+    "categoryId": 11,
+    "tourId": 1,
+    "maxRiders": 7
+  },
+  {
+    "id": 121,
+    "name": "Tour De France 2026 - Stage 17 | Chambéry - Voiron",
+    "startDate": "2026-07-22",
+    "endDate": "2026-07-22",
+    "categoryId": 11,
+    "tourId": 1,
+    "maxRiders": 7
+  },
+  {
+    "id": 122,
+    "name": "Tour De France 2026 - Stage 18 | Voiron - Orcières Merlette",
+    "startDate": "2026-07-23",
+    "endDate": "2026-07-23",
+    "categoryId": 11,
+    "tourId": 1,
+    "maxRiders": 7
+  },
+  {
+    "id": 123,
+    "name": "Tour De France 2026 - Stage 19 | Gap - Alpe d'Huez",
+    "startDate": "2026-07-24",
+    "endDate": "2026-07-24",
+    "categoryId": 11,
+    "tourId": 1,
+    "maxRiders": 7
+  },
+  {
+    "id": 124,
+    "name": "Tour De France 2026 - Stage 20 | Le Bourg d'Oisans - Alpe d'Huez",
+    "startDate": "2026-07-25",
+    "endDate": "2026-07-25",
+    "categoryId": 11,
+    "tourId": 1,
+    "maxRiders": 7
+  },
+  {
+    "id": 125,
+    "name": "Tour De France 2026 - Stage 21 | Thoiry - Paris",
+    "startDate": "2026-07-26",
+    "endDate": "2026-07-26",
+    "categoryId": 11,
+    "tourId": 1,
+    "maxRiders": 7
+  },
+  {
+    "id": 126,
+    "name": "Tour De France 2026 - King Of the Mountains",
+    "startDate": "2026-07-04",
+    "endDate": "2026-07-26",
+    "categoryId": 12,
+    "tourId": 1,
+    "maxRiders": 7
+  },
+  {
+    "id": 127,
+    "name": "Tour El Salvador",
+    "startDate": "2026-01-17",
+    "endDate": "2026-01-21",
+    "categoryId": 13,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 128,
+    "name": "Tour Colombia",
+    "startDate": "2026-02-03",
+    "endDate": "2026-02-08",
+    "categoryId": 13,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 129,
+    "name": "Etoile de Bessèges - Tour du Gard",
+    "startDate": "2026-02-04",
+    "endDate": "2026-02-08",
+    "categoryId": 13,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 13,
+    "name": "Tour de Pologne",
+    "startDate": "2026-08-03",
+    "endDate": "2026-08-09",
+    "categoryId": 6,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 130,
+    "name": "Jayco Herald Sun Tour",
+    "startDate": "2026-02-04",
+    "endDate": "2026-02-08",
+    "categoryId": 13,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 131,
+    "name": "Tour de la Provence",
+    "startDate": "2026-02-13",
+    "endDate": "2026-02-15",
+    "categoryId": 13,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 132,
+    "name": "Tour du Rwanda",
+    "startDate": "2026-02-22",
+    "endDate": "2026-03-01",
+    "categoryId": 13,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 133,
+    "name": "Giro di Sardegna",
+    "startDate": "2026-02-25",
+    "endDate": "2026-03-01",
+    "categoryId": 13,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 134,
+    "name": "Guido Reybrouck Classic",
+    "startDate": "2026-03-21",
+    "endDate": "2026-03-22",
+    "categoryId": 13,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 135,
+    "name": "Tour de Taiwan",
+    "startDate": "2026-03-22",
+    "endDate": "2026-03-26",
+    "categoryId": 13,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 136,
+    "name": "Settimana Internazionale Coppi e Bartali",
+    "startDate": "2026-03-24",
+    "endDate": "2026-03-28",
+    "categoryId": 13,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 137,
+    "name": "The Princess Maha Chakri Sirindhorn's Cup Tour of Thailand",
+    "startDate": "2026-03-24",
+    "endDate": "2026-03-29",
+    "categoryId": 13,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 138,
+    "name": "STER Van Zuid Limburg",
+    "startDate": "2026-04-03",
+    "endDate": "2026-04-06",
+    "categoryId": 13,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 139,
+    "name": "Giro della Magna Grecia",
+    "startDate": "2026-04-12",
+    "endDate": "2026-04-16",
+    "categoryId": 13,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 14,
+    "name": "Tour de Suisse",
+    "startDate": "2026-06-17",
+    "endDate": "2026-06-21",
+    "categoryId": 6,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 140,
+    "name": "O Gran Camiño - The Historical Route",
+    "startDate": "2026-04-14",
+    "endDate": "2026-04-18",
+    "categoryId": 13,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 141,
+    "name": "Penn Ar Bed - Bro An Hirwazh",
+    "startDate": "2026-04-18",
+    "endDate": "2026-04-19",
+    "categoryId": 13,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 142,
+    "name": "Grand Prix Samarkand",
+    "startDate": "2026-04-20",
+    "endDate": "2026-04-21",
+    "categoryId": 13,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 143,
+    "name": "Vuelta Asturias Julio Alvarez Mendo",
+    "startDate": "2026-04-23",
+    "endDate": "2026-04-26",
+    "categoryId": 13,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 144,
+    "name": "Course de Cujavie-Poméranie pour la Coupe du Président de la Ville de Grudziądz",
+    "startDate": "2026-04-30",
+    "endDate": "2026-05-03",
+    "categoryId": 13,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 145,
+    "name": "Grande Prémio Anicolor",
+    "startDate": "2026-05-01",
+    "endDate": "2026-05-03",
+    "categoryId": 13,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 146,
+    "name": "Grand Prix West Bohemia",
+    "startDate": "2026-05-02",
+    "endDate": "2026-05-03",
+    "categoryId": 13,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 147,
+    "name": "ΔΕΗ Tour of Hellas",
+    "startDate": "2026-05-06",
+    "endDate": "2026-05-10",
+    "categoryId": 13,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 148,
+    "name": "Baku-Khankendi Azerbaijan Cycling race",
+    "startDate": "2026-05-10",
+    "endDate": "2026-05-14",
+    "categoryId": 13,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 149,
+    "name": "Flèche du Sud",
+    "startDate": "2026-05-13",
+    "endDate": "2026-05-17",
+    "categoryId": 13,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 15,
+    "name": "Critérium du Dauphiné",
+    "startDate": "2026-06-07",
+    "endDate": "2026-06-14",
+    "categoryId": 6,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 150,
+    "name": "Grande Prémio Internacional Beiras e Serra da Estrela",
+    "startDate": "2026-05-20",
+    "endDate": "2026-05-24",
+    "categoryId": 13,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 151,
+    "name": "Gipuzkoa Klasikoa",
+    "startDate": "2026-05-30",
+    "endDate": "2026-05-31",
+    "categoryId": 13,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 152,
+    "name": "Tour of Estonia",
+    "startDate": "2026-06-04",
+    "endDate": "2026-06-06",
+    "categoryId": 13,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 153,
+    "name": "Velo Bank Tour Of Ślęża – Dolny Śląsk",
+    "startDate": "2026-06-11",
+    "endDate": "2026-06-11",
+    "categoryId": 13,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 154,
+    "name": "La Route d'Occitanie - CIC",
+    "startDate": "2026-06-19",
+    "endDate": "2026-06-21",
+    "categoryId": 13,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 155,
+    "name": "BESTRONICS Acht van Bladel",
+    "startDate": "2026-06-25",
+    "endDate": "2026-06-28",
+    "categoryId": 13,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 156,
+    "name": "Lyon - Torino",
+    "startDate": "2026-07-01",
+    "endDate": "2026-07-03",
+    "categoryId": 13,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 157,
+    "name": "Sint Martinusprijs Kontich",
+    "startDate": "2026-07-02",
+    "endDate": "2026-07-05",
+    "categoryId": 13,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 158,
+    "name": "Sibiu Cycling Tour",
+    "startDate": "2026-07-04",
+    "endDate": "2026-07-07",
+    "categoryId": 13,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 159,
+    "name": "Tour of Austria",
+    "startDate": "2026-07-08",
+    "endDate": "2026-07-12",
+    "categoryId": 13,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 16,
+    "name": "Tour de Romandie",
+    "startDate": "2026-04-28",
+    "endDate": "2026-05-03",
+    "categoryId": 6,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 160,
+    "name": "Ain Bugey Valromey Tour",
+    "startDate": "2026-07-10",
+    "endDate": "2026-07-14",
+    "categoryId": 13,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 161,
+    "name": "Tour de l'Ain",
+    "startDate": "2026-07-28",
+    "endDate": "2026-07-30",
+    "categoryId": 13,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 162,
+    "name": "Giro Giovani",
+    "startDate": "2026-07-29",
+    "endDate": "2026-08-01",
+    "categoryId": 13,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 163,
+    "name": "China Xizang Trans-Himalaya",
+    "startDate": "2026-08-02",
+    "endDate": "2026-08-06",
+    "categoryId": 13,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 164,
+    "name": "Volta a Portugal em Bicicleta",
+    "startDate": "2026-08-05",
+    "endDate": "2026-08-16",
+    "categoryId": 13,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 165,
+    "name": "Aubel-Thimister-Stavelot",
+    "startDate": "2026-08-07",
+    "endDate": "2026-08-09",
+    "categoryId": 13,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 166,
+    "name": "Tour du Limousin-Périgord - Nouvelle Aquitaine",
+    "startDate": "2026-08-18",
+    "endDate": "2026-08-21",
+    "categoryId": 13,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 167,
+    "name": "Tour du Limousin-Périgord - Nouvelle Aquitaine",
+    "startDate": "2026-08-25",
+    "endDate": "2026-08-28",
+    "categoryId": 13,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 168,
+    "name": "Tour de Korea",
+    "startDate": "2026-08-31",
+    "endDate": "2026-09-04",
+    "categoryId": 13,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 169,
+    "name": "ZLM Tour",
+    "startDate": "2026-09-02",
+    "endDate": "2026-09-06",
+    "categoryId": 13,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 17,
+    "name": "Itzulia Basque Country",
+    "startDate": "2026-04-06",
+    "endDate": "2026-04-11",
+    "categoryId": 6,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 170,
+    "name": "Giro Della Lunigiana",
+    "startDate": "2026-09-03",
+    "endDate": "2026-09-06",
+    "categoryId": 13,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 171,
+    "name": "Grand Prix Rüebliland",
+    "startDate": "2026-09-03",
+    "endDate": "2026-09-06",
+    "categoryId": 13,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 172,
+    "name": "Vuelta a Cantabria - GP. Gobierno de Cantabria",
+    "startDate": "2026-09-04",
+    "endDate": "2026-09-06",
+    "categoryId": 13,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 173,
+    "name": "Tour of Binzhou",
+    "startDate": "2026-09-08",
+    "endDate": "2026-09-09",
+    "categoryId": 13,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 174,
+    "name": "Tour of Taihu Lake",
+    "startDate": "2026-09-12",
+    "endDate": "2026-09-16",
+    "categoryId": 13,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 175,
+    "name": "Il Giro d'Abruzzo",
+    "startDate": "2026-09-15",
+    "endDate": "2026-09-18",
+    "categoryId": 13,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 176,
+    "name": "Okolo Slovenska / Tour de Slovaquie",
+    "startDate": "2026-09-16",
+    "endDate": "2026-09-20",
+    "categoryId": 13,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 177,
+    "name": "Tour of Huangshan",
+    "startDate": "2026-09-18",
+    "endDate": "2026-09-20",
+    "categoryId": 13,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 178,
+    "name": "Tour de Kyushu",
+    "startDate": "2026-10-10",
+    "endDate": "2026-10-12",
+    "categoryId": 13,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 179,
+    "name": "Tour De France 2026 - Points Classification",
+    "startDate": "2026-07-04",
+    "endDate": "2026-07-26",
+    "categoryId": 14,
+    "tourId": 1,
+    "maxRiders": 7
+  },
+  {
+    "id": 18,
+    "name": "Volta Ciclista a Catalunya",
+    "startDate": "2026-03-23",
+    "endDate": "2026-03-29",
+    "categoryId": 6,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 180,
+    "name": "Giro D'Italia 2026 - Stage 1 | Nessebar - Burgas",
+    "startDate": "2026-05-08",
+    "endDate": "2026-05-08",
+    "categoryId": 15,
+    "tourId": 2,
+    "maxRiders": 7
+  },
+  {
+    "id": 181,
+    "name": "Giro D'Italia 2026 - Stage 2 | Burgas - Valiko Tarnovo",
+    "startDate": "2026-05-09",
+    "endDate": "2026-05-09",
+    "categoryId": 15,
+    "tourId": 2,
+    "maxRiders": 7
+  },
+  {
+    "id": 182,
+    "name": "Giro D'Italia 2026 - Stage 3 | Plovdiv - Sofia",
+    "startDate": "2026-05-10",
+    "endDate": "2026-05-10",
+    "categoryId": 15,
+    "tourId": 2,
+    "maxRiders": 7
+  },
+  {
+    "id": 183,
+    "name": "Giro D'Italia 2026 - Stage 4 | Catanzaro - Cosenza",
+    "startDate": "2026-05-12",
+    "endDate": "2026-05-12",
+    "categoryId": 15,
+    "tourId": 2,
+    "maxRiders": 7
+  },
+  {
+    "id": 184,
+    "name": "Giro D'Italia 2026 - Stage 5 | Praia a Mare - Potenza",
+    "startDate": "2026-05-13",
+    "endDate": "2026-05-13",
+    "categoryId": 15,
+    "tourId": 2,
+    "maxRiders": 7
+  },
+  {
+    "id": 185,
+    "name": "Giro D'Italia 2026 - Stage 6 | Paestum - Naples",
+    "startDate": "2026-05-14",
+    "endDate": "2026-05-14",
+    "categoryId": 15,
+    "tourId": 2,
+    "maxRiders": 7
+  },
+  {
+    "id": 186,
+    "name": "Giro D'Italia 2026 - Stage 7 | Formia - Blockhaus",
+    "startDate": "2026-05-15",
+    "endDate": "2026-05-15",
+    "categoryId": 15,
+    "tourId": 2,
+    "maxRiders": 7
+  },
+  {
+    "id": 187,
+    "name": "Giro D'Italia 2026 - Stage 8 | Chieti - Fermo",
+    "startDate": "2026-05-16",
+    "endDate": "2026-05-16",
+    "categoryId": 15,
+    "tourId": 2,
+    "maxRiders": 7
+  },
+  {
+    "id": 188,
+    "name": "Giro D'Italia 2026 - Stage 9 | Cervia - Corno alle Scale",
+    "startDate": "2026-05-17",
+    "endDate": "2026-05-17",
+    "categoryId": 15,
+    "tourId": 2,
+    "maxRiders": 7
+  },
+  {
+    "id": 189,
+    "name": "Giro D'Italia 2026 - Stage 10 (ITT) | Viareggio - Massa",
+    "startDate": "2026-05-19",
+    "endDate": "2026-05-19",
+    "categoryId": 15,
+    "tourId": 2,
+    "maxRiders": 7
+  },
+  {
+    "id": 19,
+    "name": "Tirreno-Adriatico",
+    "startDate": "2026-03-09",
+    "endDate": "2026-03-15",
+    "categoryId": 6,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 190,
+    "name": "Giro D'Italia 2026 - Stage 11 | Porcari (Paper District) - Chiavari",
+    "startDate": "2026-05-20",
+    "endDate": "2026-05-20",
+    "categoryId": 15,
+    "tourId": 2,
+    "maxRiders": 7
+  },
+  {
+    "id": 191,
+    "name": "Giro D'Italia 2026 - Stage 12 | Imperia - Novi Ligure",
+    "startDate": "2026-05-21",
+    "endDate": "2026-05-21",
+    "categoryId": 15,
+    "tourId": 2,
+    "maxRiders": 7
+  },
+  {
+    "id": 192,
+    "name": "Giro D'Italia 2026 - Stage 13 | Alessandria - Verbania",
+    "startDate": "2026-05-22",
+    "endDate": "2026-05-22",
+    "categoryId": 15,
+    "tourId": 2,
+    "maxRiders": 7
+  },
+  {
+    "id": 193,
+    "name": "Giro D'Italia 2026 - Stage 14 | Aosta - Pila",
+    "startDate": "2026-05-23",
+    "endDate": "2026-05-23",
+    "categoryId": 15,
+    "tourId": 2,
+    "maxRiders": 7
+  },
+  {
+    "id": 194,
+    "name": "Giro D'Italia 2026 - Stage 15 | Voghera - Milan",
+    "startDate": "2026-05-24",
+    "endDate": "2026-05-24",
+    "categoryId": 15,
+    "tourId": 2,
+    "maxRiders": 7
+  },
+  {
+    "id": 195,
+    "name": "Giro D'Italia 2026 - Stage 16 | Bellinzona - Carì",
+    "startDate": "2026-05-26",
+    "endDate": "2026-05-26",
+    "categoryId": 15,
+    "tourId": 2,
+    "maxRiders": 7
+  },
+  {
+    "id": 196,
+    "name": "Giro D'Italia 2026 - Stage 17 | Cassano d'Adda - Andalo",
+    "startDate": "2026-05-27",
+    "endDate": "2026-05-27",
+    "categoryId": 15,
+    "tourId": 2,
+    "maxRiders": 7
+  },
+  {
+    "id": 197,
+    "name": "Giro D'Italia 2026 - Stage 18 | Fai della Paganella - Pieve di Soligo",
+    "startDate": "2026-05-28",
+    "endDate": "2026-05-28",
+    "categoryId": 15,
+    "tourId": 2,
+    "maxRiders": 7
+  },
+  {
+    "id": 198,
+    "name": "Giro D'Italia 2026 - Stage 19 | Feltre - Alleghe (Piani di Pezzè)",
+    "startDate": "2026-05-29",
+    "endDate": "2026-05-29",
+    "categoryId": 15,
+    "tourId": 2,
+    "maxRiders": 7
+  },
+  {
+    "id": 199,
+    "name": "Giro D'Italia 2026 - Stage 20 | Gemona del Friuli 1976-2026 - Piancavallo",
+    "startDate": "2026-05-30",
+    "endDate": "2026-05-30",
+    "categoryId": 15,
+    "tourId": 2,
+    "maxRiders": 7
+  },
+  {
+    "id": 2,
+    "name": "Giro D'Italia 2026",
+    "startDate": "2026-05-08",
+    "endDate": "2026-05-31",
+    "categoryId": 2,
+    "tourId": null,
+    "maxRiders": 8
+  },
+  {
+    "id": 20,
+    "name": "Paris-Nice",
+    "startDate": "2026-03-08",
+    "endDate": "2026-03-15",
+    "categoryId": 6,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 200,
+    "name": "Giro D'Italia 2026 - Stage 21 | Rome - Rome",
+    "startDate": "2026-05-31",
+    "endDate": "2026-05-31",
+    "categoryId": 15,
+    "tourId": 2,
+    "maxRiders": 7
+  },
+  {
+    "id": 201,
+    "name": "Vuelta A España 2026 - Stage 1 (ITT) | Monte-Carlo - Monte-Carlo",
+    "startDate": "2026-08-22",
+    "endDate": "2026-08-22",
+    "categoryId": 15,
+    "tourId": 3,
+    "maxRiders": 7
+  },
+  {
+    "id": 202,
+    "name": "Vuelta A España 2026 - Stage 2",
+    "startDate": "2026-08-23",
+    "endDate": "2026-08-23",
+    "categoryId": 15,
+    "tourId": 3,
+    "maxRiders": 7
+  },
+  {
+    "id": 203,
+    "name": "Vuelta A España 2026 - Stage 3",
+    "startDate": "2026-08-24",
+    "endDate": "2026-08-24",
+    "categoryId": 15,
+    "tourId": 3,
+    "maxRiders": 7
+  },
+  {
+    "id": 204,
+    "name": "Vuelta A España 2026 - Stage 4",
+    "startDate": "2026-08-25",
+    "endDate": "2026-08-25",
+    "categoryId": 15,
+    "tourId": 3,
+    "maxRiders": 7
+  },
+  {
+    "id": 205,
+    "name": "Vuelta A España 2026 - Stage 5",
+    "startDate": "2026-08-26",
+    "endDate": "2026-08-26",
+    "categoryId": 15,
+    "tourId": 3,
+    "maxRiders": 7
+  },
+  {
+    "id": 206,
+    "name": "Vuelta A España 2026 - Stage 6",
+    "startDate": "2026-08-27",
+    "endDate": "2026-08-27",
+    "categoryId": 15,
+    "tourId": 3,
+    "maxRiders": 7
+  },
+  {
+    "id": 207,
+    "name": "Vuelta A España 2026 - Stage 7",
+    "startDate": "2026-08-28",
+    "endDate": "2026-08-28",
+    "categoryId": 15,
+    "tourId": 3,
+    "maxRiders": 7
+  },
+  {
+    "id": 208,
+    "name": "Vuelta A España 2026 - Stage 8",
+    "startDate": "2026-08-29",
+    "endDate": "2026-08-29",
+    "categoryId": 15,
+    "tourId": 3,
+    "maxRiders": 7
+  },
+  {
+    "id": 209,
+    "name": "Vuelta A España 2026 - Stage 9",
+    "startDate": "2026-08-30",
+    "endDate": "2026-08-30",
+    "categoryId": 15,
+    "tourId": 3,
+    "maxRiders": 7
+  },
+  {
+    "id": 21,
+    "name": "UAE Tour",
+    "startDate": "2026-02-16",
+    "endDate": "2026-02-22",
+    "categoryId": 6,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 210,
+    "name": "Vuelta A España 2026 - Stage 10",
+    "startDate": "2026-08-31",
+    "endDate": "2026-08-31",
+    "categoryId": 15,
+    "tourId": 3,
+    "maxRiders": 7
+  },
+  {
+    "id": 211,
+    "name": "Vuelta A España 2026 - Stage 11",
+    "startDate": "2026-09-01",
+    "endDate": "2026-09-01",
+    "categoryId": 15,
+    "tourId": 3,
+    "maxRiders": 7
+  },
+  {
+    "id": 212,
+    "name": "Vuelta A España 2026 - Stage 12",
+    "startDate": "2026-09-02",
+    "endDate": "2026-09-02",
+    "categoryId": 15,
+    "tourId": 3,
+    "maxRiders": 7
+  },
+  {
+    "id": 213,
+    "name": "Vuelta A España 2026 - Stage 13",
+    "startDate": "2026-09-03",
+    "endDate": "2026-09-03",
+    "categoryId": 15,
+    "tourId": 3,
+    "maxRiders": 7
+  },
+  {
+    "id": 214,
+    "name": "Vuelta A España 2026 - Stage 14",
+    "startDate": "2026-09-04",
+    "endDate": "2026-09-04",
+    "categoryId": 15,
+    "tourId": 3,
+    "maxRiders": 7
+  },
+  {
+    "id": 215,
+    "name": "Vuelta A España 2026 - Stage 15",
+    "startDate": "2026-09-05",
+    "endDate": "2026-09-05",
+    "categoryId": 15,
+    "tourId": 3,
+    "maxRiders": 7
+  },
+  {
+    "id": 216,
+    "name": "Vuelta A España 2026 - Stage 16",
+    "startDate": "2026-09-06",
+    "endDate": "2026-09-06",
+    "categoryId": 15,
+    "tourId": 3,
+    "maxRiders": 7
+  },
+  {
+    "id": 217,
+    "name": "Vuelta A España 2026 - Stage 17",
+    "startDate": "2026-09-07",
+    "endDate": "2026-09-07",
+    "categoryId": 15,
+    "tourId": 3,
+    "maxRiders": 7
+  },
+  {
+    "id": 218,
+    "name": "Vuelta A España 2026 - Stage 18",
+    "startDate": "2026-09-08",
+    "endDate": "2026-09-08",
+    "categoryId": 15,
+    "tourId": 3,
+    "maxRiders": 7
+  },
+  {
+    "id": 219,
+    "name": "Vuelta A España 2026 - Stage 19",
+    "startDate": "2026-09-09",
+    "endDate": "2026-09-09",
+    "categoryId": 15,
+    "tourId": 3,
+    "maxRiders": 7
+  },
+  {
+    "id": 22,
+    "name": "Santos Tour Down Under",
+    "startDate": "2026-01-20",
+    "endDate": "2026-01-25",
+    "categoryId": 6,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 220,
+    "name": "Vuelta A España 2026 - Stage 20",
+    "startDate": "2026-09-10",
+    "endDate": "2026-09-10",
+    "categoryId": 15,
+    "tourId": 3,
+    "maxRiders": 7
+  },
+  {
+    "id": 221,
+    "name": "Vuelta A España 2026 - Stage 21",
+    "startDate": "2026-09-11",
+    "endDate": "2026-09-11",
+    "categoryId": 15,
+    "tourId": 3,
+    "maxRiders": 7
+  },
+  {
+    "id": 222,
+    "name": "Giro D'Italia 2026 - King Of the Mountains",
+    "startDate": "2026-05-08",
+    "endDate": "2026-05-31",
+    "categoryId": 16,
+    "tourId": 2,
+    "maxRiders": 7
+  },
+  {
+    "id": 223,
+    "name": "Vuelta A España 2026 - King Of the Mountains",
+    "startDate": "2026-08-22",
+    "endDate": "2026-09-11",
+    "categoryId": 16,
+    "tourId": 3,
+    "maxRiders": 7
+  },
+  {
+    "id": 224,
+    "name": "Vuelta A España 2026 - Points Classification",
+    "startDate": "2026-08-22",
+    "endDate": "2026-09-11",
+    "categoryId": 17,
+    "tourId": 3,
+    "maxRiders": 7
+  },
+  {
+    "id": 225,
+    "name": "Giro D'Italia 2026 - Points Classification",
+    "startDate": "2026-05-08",
+    "endDate": "2026-05-31",
+    "categoryId": 17,
+    "tourId": 2,
+    "maxRiders": 7
+  },
+  {
+    "id": 226,
+    "name": "Classica Camp de Morvedre",
+    "startDate": "2026-01-23",
+    "endDate": "2026-01-23",
+    "categoryId": 18,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 227,
+    "name": "Gran Premio Castellón - Ruta de la Cerámica",
+    "startDate": "2026-01-24",
+    "endDate": "2026-01-24",
+    "categoryId": 18,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 228,
+    "name": "Clàssica Comunitat Valenciana - Gran Premi València",
+    "startDate": "2026-01-25",
+    "endDate": "2026-01-25",
+    "categoryId": 18,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 229,
+    "name": "Trofeo Calvià",
+    "startDate": "2026-01-28",
+    "endDate": "2026-01-28",
+    "categoryId": 18,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 23,
+    "name": "Grand Prix Cycliste de Montréal",
+    "startDate": "2026-09-13",
+    "endDate": "2026-09-13",
+    "categoryId": 7,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 230,
+    "name": "Trofeo Ses Salines",
+    "startDate": "2026-01-29",
+    "endDate": "2026-01-29",
+    "categoryId": 18,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 231,
+    "name": "Trofeo Serra Tramuntana",
+    "startDate": "2026-01-30",
+    "endDate": "2026-01-30",
+    "categoryId": 18,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 232,
+    "name": "Trofeo Andratx - Pollença",
+    "startDate": "2026-01-31",
+    "endDate": "2026-01-31",
+    "categoryId": 18,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 233,
+    "name": "Grand Prix Cycliste de Marseille La Marseillaise",
+    "startDate": "2026-02-01",
+    "endDate": "2026-02-01",
+    "categoryId": 18,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 234,
+    "name": "Trofeo Palma",
+    "startDate": "2026-02-01",
+    "endDate": "2026-02-01",
+    "categoryId": 18,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 235,
+    "name": "Aveiro Region Champions Classic",
+    "startDate": "2026-02-08",
+    "endDate": "2026-02-08",
+    "categoryId": 18,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 236,
+    "name": "Clásica Jaén",
+    "startDate": "2026-02-16",
+    "endDate": "2026-02-16",
+    "categoryId": 18,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 237,
+    "name": "Classic Var",
+    "startDate": "2026-02-21",
+    "endDate": "2026-02-21",
+    "categoryId": 18,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 238,
+    "name": "Tour des Alpes-Maritimes",
+    "startDate": "2026-02-22",
+    "endDate": "2026-02-22",
+    "categoryId": 18,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 239,
+    "name": "Visit South Aegean GP",
+    "startDate": "2026-02-28",
+    "endDate": "2026-02-28",
+    "categoryId": 18,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 24,
+    "name": "Grand Prix Cycliste de Québec",
+    "startDate": "2026-09-11",
+    "endDate": "2026-09-11",
+    "categoryId": 7,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 240,
+    "name": "Region on Dodecanese GP",
+    "startDate": "2026-03-01",
+    "endDate": "2026-03-01",
+    "categoryId": 18,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 241,
+    "name": "Ename Samyn Classic",
+    "startDate": "2026-03-03",
+    "endDate": "2026-03-03",
+    "categoryId": 18,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 242,
+    "name": "Clásica Terres de l'Ebre",
+    "startDate": "2026-03-21",
+    "endDate": "2026-03-21",
+    "categoryId": 18,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 243,
+    "name": "Grote prijs Jean-Pierre Monseré",
+    "startDate": "2026-03-22",
+    "endDate": "2026-03-22",
+    "categoryId": 18,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 244,
+    "name": "G.P. Emilia",
+    "startDate": "2026-03-29",
+    "endDate": "2026-03-29",
+    "categoryId": 18,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 245,
+    "name": "La Roue Tourangelle Centre Val de Loire - Groupama P.V.L.",
+    "startDate": "2026-03-29",
+    "endDate": "2026-03-29",
+    "categoryId": 18,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 246,
+    "name": "Paris - Camembert",
+    "startDate": "2026-03-31",
+    "endDate": "2026-03-31",
+    "categoryId": 18,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 247,
+    "name": "Classic Velox - Adélie de Vitré",
+    "startDate": "2026-04-03",
+    "endDate": "2026-04-03",
+    "categoryId": 18,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 248,
+    "name": "NXT Classic",
+    "startDate": "2026-04-04",
+    "endDate": "2026-04-04",
+    "categoryId": 18,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 249,
+    "name": "Cholet Agglo Tour",
+    "startDate": "2026-04-06",
+    "endDate": "2026-04-06",
+    "categoryId": 18,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 25,
+    "name": "Bretagne Classic - Ouest-France",
+    "startDate": "2026-08-30",
+    "endDate": "2026-08-30",
+    "categoryId": 7,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 250,
+    "name": "Giro Ciclistico della Città Metropolitana di Reggio Calabria",
+    "startDate": "2026-04-10",
+    "endDate": "2026-04-10",
+    "categoryId": 18,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 251,
+    "name": "Ronde van Limburg",
+    "startDate": "2026-04-15",
+    "endDate": "2026-04-15",
+    "categoryId": 18,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 252,
+    "name": "Classic Grand Besançon Doubs",
+    "startDate": "2026-04-17",
+    "endDate": "2026-04-17",
+    "categoryId": 18,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 253,
+    "name": "Tour du Jura Cycliste",
+    "startDate": "2026-04-18",
+    "endDate": "2026-04-18",
+    "categoryId": 18,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 254,
+    "name": "Tour du Doubs",
+    "startDate": "2026-04-19",
+    "endDate": "2026-04-19",
+    "categoryId": 18,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 255,
+    "name": "Giro dell'Appennino",
+    "startDate": "2026-05-03",
+    "endDate": "2026-05-03",
+    "categoryId": 18,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 256,
+    "name": "Lotto Famenne Ardenne Classic",
+    "startDate": "2026-05-03",
+    "endDate": "2026-05-03",
+    "categoryId": 18,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 257,
+    "name": "Circuit de Wallonie",
+    "startDate": "2026-05-14",
+    "endDate": "2026-05-14",
+    "categoryId": 18,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 258,
+    "name": "Tour du Finistère Pays de Quimper",
+    "startDate": "2026-05-16",
+    "endDate": "2026-05-16",
+    "categoryId": 18,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 259,
+    "name": "Boucles de l'Aulne - Châteaulin",
+    "startDate": "2026-05-17",
+    "endDate": "2026-05-17",
+    "categoryId": 18,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 26,
+    "name": "ADAC Cyclassics",
+    "startDate": "2026-08-16",
+    "endDate": "2026-08-16",
+    "categoryId": 7,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 260,
+    "name": "Rund um Köln",
+    "startDate": "2026-05-17",
+    "endDate": "2026-05-17",
+    "categoryId": 18,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 261,
+    "name": "Veenendaal-Veenendaal",
+    "startDate": "2026-05-23",
+    "endDate": "2026-05-23",
+    "categoryId": 18,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 262,
+    "name": "Grand Prix Criquielion",
+    "startDate": "2026-05-24",
+    "endDate": "2026-05-24",
+    "categoryId": 18,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 263,
+    "name": "Antwerp Port Epic / Sels Trophy",
+    "startDate": "2026-05-25",
+    "endDate": "2026-05-25",
+    "categoryId": 18,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 264,
+    "name": "Mercan'Tour Classic Alpes-Maritimes",
+    "startDate": "2026-06-03",
+    "endDate": "2026-06-03",
+    "categoryId": 18,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 265,
+    "name": "Heylen Vastgoed Heistse Pijl",
+    "startDate": "2026-06-06",
+    "endDate": "2026-06-06",
+    "categoryId": 18,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 266,
+    "name": "Duracell Dwars door het Hageland",
+    "startDate": "2026-06-13",
+    "endDate": "2026-06-13",
+    "categoryId": 18,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 267,
+    "name": "Elfstedenronde",
+    "startDate": "2026-06-14",
+    "endDate": "2026-06-14",
+    "categoryId": 18,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 268,
+    "name": "GP Gippingen",
+    "startDate": "2026-06-14",
+    "endDate": "2026-06-14",
+    "categoryId": 18,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 269,
+    "name": "Andorra MoraBanc Clàssica",
+    "startDate": "2026-06-21",
+    "endDate": "2026-06-21",
+    "categoryId": 18,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 27,
+    "name": "Donostia San Sebastian Klasikoa",
+    "startDate": "2026-08-01",
+    "endDate": "2026-08-01",
+    "categoryId": 7,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 270,
+    "name": "Clásica de Ordizia - Ordiziako Klasikoa",
+    "startDate": "2026-07-25",
+    "endDate": "2026-07-25",
+    "categoryId": 18,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 271,
+    "name": "Clasica Castilla y Leon",
+    "startDate": "2026-07-26",
+    "endDate": "2026-07-26",
+    "categoryId": 18,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 272,
+    "name": "Circuito de Getxo - Memorial Hermanos Otxoa",
+    "startDate": "2026-08-02",
+    "endDate": "2026-08-02",
+    "categoryId": 18,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 273,
+    "name": "La Polynormande",
+    "startDate": "2026-08-16",
+    "endDate": "2026-08-16",
+    "categoryId": 18,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 274,
+    "name": "Muur Classic Geraardsbergen",
+    "startDate": "2026-08-26",
+    "endDate": "2026-08-26",
+    "categoryId": 18,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 275,
+    "name": "GP Kranj",
+    "startDate": "2026-08-30",
+    "endDate": "2026-08-30",
+    "categoryId": 18,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 276,
+    "name": "Philadelphia Cycling Class p/b AmeriGas",
+    "startDate": "2026-08-30",
+    "endDate": "2026-08-30",
+    "categoryId": 18,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 277,
+    "name": "Giro della Toscana - Memorial Alfredo Martini",
+    "startDate": "2026-09-09",
+    "endDate": "2026-09-09",
+    "categoryId": 18,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 278,
+    "name": "Memorial Marco Pantani",
+    "startDate": "2026-09-12",
+    "endDate": "2026-09-12",
+    "categoryId": 18,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 279,
+    "name": "Trofeo Matteotti",
+    "startDate": "2026-09-13",
+    "endDate": "2026-09-13",
+    "categoryId": 18,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 28,
+    "name": "Copenhagen Sprint",
+    "startDate": "2026-06-14",
+    "endDate": "2026-06-14",
+    "categoryId": 7,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 280,
+    "name": "Kampioenschap van Vlaanderen",
+    "startDate": "2026-09-18",
+    "endDate": "2026-09-18",
+    "categoryId": 18,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 281,
+    "name": "Gran Premio del Lazio",
+    "startDate": "2026-09-19",
+    "endDate": "2026-09-19",
+    "categoryId": 18,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 282,
+    "name": "Giro Della Romagna",
+    "startDate": "2026-09-20",
+    "endDate": "2026-09-20",
+    "categoryId": 18,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 283,
+    "name": "Gooikse pijl p/b Lotto",
+    "startDate": "2026-09-20",
+    "endDate": "2026-09-20",
+    "categoryId": 18,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 284,
+    "name": "Grand Prix d'Isbergues - Pas de Calais",
+    "startDate": "2026-09-20",
+    "endDate": "2026-09-20",
+    "categoryId": 18,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 285,
+    "name": "Omloop van het Houtland",
+    "startDate": "2026-09-23",
+    "endDate": "2026-09-23",
+    "categoryId": 18,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 286,
+    "name": "Paris-Chauny",
+    "startDate": "2026-09-27",
+    "endDate": "2026-09-27",
+    "categoryId": 18,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 287,
+    "name": "Coppa Agostoni - Giro delle Brianze",
+    "startDate": "2026-10-04",
+    "endDate": "2026-10-04",
+    "categoryId": 18,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 288,
+    "name": "Tour de Vendée",
+    "startDate": "2026-10-04",
+    "endDate": "2026-10-04",
+    "categoryId": 18,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 289,
+    "name": "Binche - Chimay - Binche / Mémorial Frank Vandenbroucke",
+    "startDate": "2026-10-06",
+    "endDate": "2026-10-06",
+    "categoryId": 18,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 29,
+    "name": "Eschborn-Frankfurt",
+    "startDate": "2026-05-01",
+    "endDate": "2026-05-01",
+    "categoryId": 7,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 290,
+    "name": "Trofeo Tessile & Moda - Valdengo Oropa",
+    "startDate": "2026-10-11",
+    "endDate": "2026-10-11",
+    "categoryId": 18,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 291,
+    "name": "Chrono des Nations",
+    "startDate": "2026-10-18",
+    "endDate": "2026-10-18",
+    "categoryId": 18,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 292,
+    "name": "European Championships Time Trial",
+    "startDate": "2026-xx-xx",
+    "endDate": "2026-xx-xx",
+    "categoryId": 19,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 293,
+    "name": "Asian Championships Time Trial",
+    "startDate": "2026-xx-xx",
+    "endDate": "2026-xx-xx",
+    "categoryId": 19,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 294,
+    "name": "African Championships Time Trial",
+    "startDate": "2026-xx-xx",
+    "endDate": "2026-xx-xx",
+    "categoryId": 19,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 295,
+    "name": "Pan American Championships Time Trial",
+    "startDate": "2026-xx-xx",
+    "endDate": "2026-xx-xx",
+    "categoryId": 19,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 296,
+    "name": "Santos Tour Down Under - Stage 1",
+    "startDate": "2026-01-20",
+    "endDate": "2026-01-20",
+    "categoryId": 20,
+    "tourId": 22,
+    "maxRiders": 7
+  },
+  {
+    "id": 297,
+    "name": "Santos Tour Down Under - Stage 2",
+    "startDate": "2026-01-21",
+    "endDate": "2026-01-21",
+    "categoryId": 20,
+    "tourId": 22,
+    "maxRiders": 7
+  },
+  {
+    "id": 298,
+    "name": "Santos Tour Down Under - Stage 3",
+    "startDate": "2026-01-22",
+    "endDate": "2026-01-22",
+    "categoryId": 20,
+    "tourId": 22,
+    "maxRiders": 7
+  },
+  {
+    "id": 299,
+    "name": "Santos Tour Down Under - Stage 4",
+    "startDate": "2026-01-23",
+    "endDate": "2026-01-23",
+    "categoryId": 20,
+    "tourId": 22,
+    "maxRiders": 7
+  },
+  {
+    "id": 3,
+    "name": "Vuelta A España 2026",
+    "startDate": "2026-08-22",
+    "endDate": "2026-09-13",
+    "categoryId": 2,
+    "tourId": null,
+    "maxRiders": 8
+  },
+  {
+    "id": 30,
+    "name": "La Flèche Wallonne",
+    "startDate": "2026-04-22",
+    "endDate": "2026-04-22",
+    "categoryId": 7,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 300,
+    "name": "Santos Tour Down Under - Stage 5",
+    "startDate": "2026-01-24",
+    "endDate": "2026-01-24",
+    "categoryId": 20,
+    "tourId": 22,
+    "maxRiders": 7
+  },
+  {
+    "id": 301,
+    "name": "Santos Tour Down Under - Stage 6",
+    "startDate": "2026-01-25",
+    "endDate": "2026-01-25",
+    "categoryId": 20,
+    "tourId": 22,
+    "maxRiders": 7
+  },
+  {
+    "id": 302,
+    "name": "UAE Tour - Stage 1",
+    "startDate": "2026-02-16",
+    "endDate": "2026-02-16",
+    "categoryId": 20,
+    "tourId": 21,
+    "maxRiders": 7
+  },
+  {
+    "id": 303,
+    "name": "UAE Tour - Stage 2",
+    "startDate": "2026-02-17",
+    "endDate": "2026-02-17",
+    "categoryId": 20,
+    "tourId": 21,
+    "maxRiders": 7
+  },
+  {
+    "id": 304,
+    "name": "UAE Tour - Stage 3",
+    "startDate": "2026-02-18",
+    "endDate": "2026-02-18",
+    "categoryId": 20,
+    "tourId": 21,
+    "maxRiders": 7
+  },
+  {
+    "id": 305,
+    "name": "UAE Tour - Stage 4",
+    "startDate": "2026-02-19",
+    "endDate": "2026-02-19",
+    "categoryId": 20,
+    "tourId": 21,
+    "maxRiders": 7
+  },
+  {
+    "id": 306,
+    "name": "UAE Tour - Stage 5",
+    "startDate": "2026-02-20",
+    "endDate": "2026-02-20",
+    "categoryId": 20,
+    "tourId": 21,
+    "maxRiders": 7
+  },
+  {
+    "id": 307,
+    "name": "UAE Tour - Stage 6",
+    "startDate": "2026-02-21",
+    "endDate": "2026-02-21",
+    "categoryId": 20,
+    "tourId": 21,
+    "maxRiders": 7
+  },
+  {
+    "id": 308,
+    "name": "UAE Tour - Stage 7",
+    "startDate": "2026-02-22",
+    "endDate": "2026-02-22",
+    "categoryId": 20,
+    "tourId": 21,
+    "maxRiders": 7
+  },
+  {
+    "id": 309,
+    "name": "Paris-Nice - Stage 1",
+    "startDate": "2026-03-08",
+    "endDate": "2026-03-08",
+    "categoryId": 20,
+    "tourId": 20,
+    "maxRiders": 7
+  },
+  {
+    "id": 31,
+    "name": "Amstel Gold Race",
+    "startDate": "2026-04-19",
+    "endDate": "2026-04-19",
+    "categoryId": 7,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 310,
+    "name": "Paris-Nice - Stage 2",
+    "startDate": "2026-03-09",
+    "endDate": "2026-03-09",
+    "categoryId": 20,
+    "tourId": 20,
+    "maxRiders": 7
+  },
+  {
+    "id": 311,
+    "name": "Paris-Nice - Stage 3",
+    "startDate": "2026-03-10",
+    "endDate": "2026-03-10",
+    "categoryId": 20,
+    "tourId": 20,
+    "maxRiders": 7
+  },
+  {
+    "id": 312,
+    "name": "Paris-Nice - Stage 4",
+    "startDate": "2026-03-11",
+    "endDate": "2026-03-11",
+    "categoryId": 20,
+    "tourId": 20,
+    "maxRiders": 7
+  },
+  {
+    "id": 313,
+    "name": "Paris-Nice - Stage 5",
+    "startDate": "2026-03-12",
+    "endDate": "2026-03-12",
+    "categoryId": 20,
+    "tourId": 20,
+    "maxRiders": 7
+  },
+  {
+    "id": 314,
+    "name": "Paris-Nice - Stage 6",
+    "startDate": "2026-03-13",
+    "endDate": "2026-03-13",
+    "categoryId": 20,
+    "tourId": 20,
+    "maxRiders": 7
+  },
+  {
+    "id": 315,
+    "name": "Paris-Nice - Stage 7",
+    "startDate": "2026-03-14",
+    "endDate": "2026-03-14",
+    "categoryId": 20,
+    "tourId": 20,
+    "maxRiders": 7
+  },
+  {
+    "id": 316,
+    "name": "Paris-Nice - Stage 8",
+    "startDate": "2026-03-15",
+    "endDate": "2026-03-15",
+    "categoryId": 20,
+    "tourId": 20,
+    "maxRiders": 7
+  },
+  {
+    "id": 317,
+    "name": "Tirreno-Adriatico - Stage 1",
+    "startDate": "2026-03-09",
+    "endDate": "2026-03-09",
+    "categoryId": 20,
+    "tourId": 19,
+    "maxRiders": 7
+  },
+  {
+    "id": 318,
+    "name": "Tirreno-Adriatico - Stage 2",
+    "startDate": "2026-03-10",
+    "endDate": "2026-03-10",
+    "categoryId": 20,
+    "tourId": 19,
+    "maxRiders": 7
+  },
+  {
+    "id": 319,
+    "name": "Tirreno-Adriatico - Stage 3",
+    "startDate": "2026-03-11",
+    "endDate": "2026-03-11",
+    "categoryId": 20,
+    "tourId": 19,
+    "maxRiders": 7
+  },
+  {
+    "id": 32,
+    "name": "Dwars door Vlaanderen - A travers la Flandre",
+    "startDate": "2026-04-01",
+    "endDate": "2026-04-01",
+    "categoryId": 7,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 320,
+    "name": "Tirreno-Adriatico - Stage 4",
+    "startDate": "2026-03-12",
+    "endDate": "2026-03-12",
+    "categoryId": 20,
+    "tourId": 19,
+    "maxRiders": 7
+  },
+  {
+    "id": 321,
+    "name": "Tirreno-Adriatico - Stage 5",
+    "startDate": "2026-03-13",
+    "endDate": "2026-03-13",
+    "categoryId": 20,
+    "tourId": 19,
+    "maxRiders": 7
+  },
+  {
+    "id": 322,
+    "name": "Tirreno-Adriatico - Stage 6",
+    "startDate": "2026-03-14",
+    "endDate": "2026-03-14",
+    "categoryId": 20,
+    "tourId": 19,
+    "maxRiders": 7
+  },
+  {
+    "id": 323,
+    "name": "Tirreno-Adriatico - Stage 7",
+    "startDate": "2026-03-15",
+    "endDate": "2026-03-15",
+    "categoryId": 20,
+    "tourId": 19,
+    "maxRiders": 7
+  },
+  {
+    "id": 324,
+    "name": "Volta Ciclista a Catalunya - Stage 1",
+    "startDate": "2026-03-23",
+    "endDate": "2026-03-23",
+    "categoryId": 20,
+    "tourId": 18,
+    "maxRiders": 7
+  },
+  {
+    "id": 325,
+    "name": "Volta Ciclista a Catalunya - Stage 2",
+    "startDate": "2026-03-24",
+    "endDate": "2026-03-24",
+    "categoryId": 20,
+    "tourId": 18,
+    "maxRiders": 7
+  },
+  {
+    "id": 326,
+    "name": "Volta Ciclista a Catalunya - Stage 3",
+    "startDate": "2026-03-25",
+    "endDate": "2026-03-25",
+    "categoryId": 20,
+    "tourId": 18,
+    "maxRiders": 7
+  },
+  {
+    "id": 327,
+    "name": "Volta Ciclista a Catalunya - Stage 4",
+    "startDate": "2026-03-26",
+    "endDate": "2026-03-26",
+    "categoryId": 20,
+    "tourId": 18,
+    "maxRiders": 7
+  },
+  {
+    "id": 328,
+    "name": "Volta Ciclista a Catalunya - Stage 5",
+    "startDate": "2026-03-27",
+    "endDate": "2026-03-27",
+    "categoryId": 20,
+    "tourId": 18,
+    "maxRiders": 7
+  },
+  {
+    "id": 329,
+    "name": "Volta Ciclista a Catalunya - Stage 6",
+    "startDate": "2026-03-28",
+    "endDate": "2026-03-28",
+    "categoryId": 20,
+    "tourId": 18,
+    "maxRiders": 7
+  },
+  {
+    "id": 33,
+    "name": "Gent-Wevelgem in Flanders Fields",
+    "startDate": "2026-03-29",
+    "endDate": "2026-03-29",
+    "categoryId": 7,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 330,
+    "name": "Volta Ciclista a Catalunya - Stage 7",
+    "startDate": "2026-03-29",
+    "endDate": "2026-03-29",
+    "categoryId": 20,
+    "tourId": 18,
+    "maxRiders": 7
+  },
+  {
+    "id": 331,
+    "name": "Itzulia Basque Country - Stage 1",
+    "startDate": "2026-04-06",
+    "endDate": "2026-04-06",
+    "categoryId": 20,
+    "tourId": 17,
+    "maxRiders": 7
+  },
+  {
+    "id": 332,
+    "name": "Itzulia Basque Country - Stage 2",
+    "startDate": "2026-04-07",
+    "endDate": "2026-04-07",
+    "categoryId": 20,
+    "tourId": 17,
+    "maxRiders": 7
+  },
+  {
+    "id": 333,
+    "name": "Itzulia Basque Country - Stage 3",
+    "startDate": "2026-04-08",
+    "endDate": "2026-04-08",
+    "categoryId": 20,
+    "tourId": 17,
+    "maxRiders": 7
+  },
+  {
+    "id": 334,
+    "name": "Itzulia Basque Country - Stage 4",
+    "startDate": "2026-04-09",
+    "endDate": "2026-04-09",
+    "categoryId": 20,
+    "tourId": 17,
+    "maxRiders": 7
+  },
+  {
+    "id": 335,
+    "name": "Itzulia Basque Country - Stage 5",
+    "startDate": "2026-04-10",
+    "endDate": "2026-04-10",
+    "categoryId": 20,
+    "tourId": 17,
+    "maxRiders": 7
+  },
+  {
+    "id": 336,
+    "name": "Itzulia Basque Country - Stage 6",
+    "startDate": "2026-04-11",
+    "endDate": "2026-04-11",
+    "categoryId": 20,
+    "tourId": 17,
+    "maxRiders": 7
+  },
+  {
+    "id": 337,
+    "name": "Tour de Romandie - Stage 1",
+    "startDate": "2026-04-28",
+    "endDate": "2026-04-28",
+    "categoryId": 20,
+    "tourId": 16,
+    "maxRiders": 7
+  },
+  {
+    "id": 338,
+    "name": "Tour de Romandie - Stage 2",
+    "startDate": "2026-04-29",
+    "endDate": "2026-04-29",
+    "categoryId": 20,
+    "tourId": 16,
+    "maxRiders": 7
+  },
+  {
+    "id": 339,
+    "name": "Tour de Romandie - Stage 3",
+    "startDate": "2026-04-30",
+    "endDate": "2026-04-30",
+    "categoryId": 20,
+    "tourId": 16,
+    "maxRiders": 7
+  },
+  {
+    "id": 34,
+    "name": "E3 Saxo Classic",
+    "startDate": "2026-03-29",
+    "endDate": "2026-03-29",
+    "categoryId": 7,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 340,
+    "name": "Tour de Romandie - Stage 4",
+    "startDate": "2026-05-01",
+    "endDate": "2026-05-01",
+    "categoryId": 20,
+    "tourId": 16,
+    "maxRiders": 7
+  },
+  {
+    "id": 341,
+    "name": "Tour de Romandie - Stage 5",
+    "startDate": "2026-05-02",
+    "endDate": "2026-05-02",
+    "categoryId": 20,
+    "tourId": 16,
+    "maxRiders": 7
+  },
+  {
+    "id": 342,
+    "name": "Tour de Romandie - Stage 6",
+    "startDate": "2026-05-03",
+    "endDate": "2026-05-03",
+    "categoryId": 20,
+    "tourId": 16,
+    "maxRiders": 7
+  },
+  {
+    "id": 343,
+    "name": "Critérium du Dauphiné - Stage 1",
+    "startDate": "2026-06-07",
+    "endDate": "2026-06-07",
+    "categoryId": 20,
+    "tourId": 15,
+    "maxRiders": 7
+  },
+  {
+    "id": 344,
+    "name": "Critérium du Dauphiné - Stage 2",
+    "startDate": "2026-06-08",
+    "endDate": "2026-06-08",
+    "categoryId": 20,
+    "tourId": 15,
+    "maxRiders": 7
+  },
+  {
+    "id": 345,
+    "name": "Critérium du Dauphiné - Stage 3",
+    "startDate": "2026-06-09",
+    "endDate": "2026-06-09",
+    "categoryId": 20,
+    "tourId": 15,
+    "maxRiders": 7
+  },
+  {
+    "id": 346,
+    "name": "Critérium du Dauphiné - Stage 4",
+    "startDate": "2026-06-10",
+    "endDate": "2026-06-10",
+    "categoryId": 20,
+    "tourId": 15,
+    "maxRiders": 7
+  },
+  {
+    "id": 347,
+    "name": "Critérium du Dauphiné - Stage 5",
+    "startDate": "2026-06-11",
+    "endDate": "2026-06-11",
+    "categoryId": 20,
+    "tourId": 15,
+    "maxRiders": 7
+  },
+  {
+    "id": 348,
+    "name": "Critérium du Dauphiné - Stage 6",
+    "startDate": "2026-06-12",
+    "endDate": "2026-06-12",
+    "categoryId": 20,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 349,
+    "name": "Critérium du Dauphiné - Stage 7",
+    "startDate": "2026-06-13",
+    "endDate": "2026-06-13",
+    "categoryId": 20,
+    "tourId": 15,
+    "maxRiders": 7
+  },
+  {
+    "id": 35,
+    "name": "Ronde Van Brugge - Tour of Bruges",
+    "startDate": "2026-03-25",
+    "endDate": "2026-03-25",
+    "categoryId": 7,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 350,
+    "name": "Critérium du Dauphiné - Stage 8",
+    "startDate": "2026-06-14",
+    "endDate": "2026-06-14",
+    "categoryId": 20,
+    "tourId": 15,
+    "maxRiders": 7
+  },
+  {
+    "id": 351,
+    "name": "Tour de Suisse - Stage 1",
+    "startDate": "2026-06-17",
+    "endDate": "2026-06-17",
+    "categoryId": 20,
+    "tourId": 14,
+    "maxRiders": 7
+  },
+  {
+    "id": 352,
+    "name": "Tour de Suisse - Stage 2",
+    "startDate": "2026-06-18",
+    "endDate": "2026-06-18",
+    "categoryId": 20,
+    "tourId": 14,
+    "maxRiders": 7
+  },
+  {
+    "id": 353,
+    "name": "Tour de Suisse - Stage 3",
+    "startDate": "2026-06-19",
+    "endDate": "2026-06-19",
+    "categoryId": 20,
+    "tourId": 14,
+    "maxRiders": 7
+  },
+  {
+    "id": 354,
+    "name": "Tour de Suisse - Stage 4",
+    "startDate": "2026-06-20",
+    "endDate": "2026-06-20",
+    "categoryId": 20,
+    "tourId": 14,
+    "maxRiders": 7
+  },
+  {
+    "id": 355,
+    "name": "Tour de Suisse - Stage 5",
+    "startDate": "2026-06-21",
+    "endDate": "2026-06-21",
+    "categoryId": 20,
+    "tourId": 14,
+    "maxRiders": 7
+  },
+  {
+    "id": 356,
+    "name": "Renewi Tour - Stage 1",
+    "startDate": "2026-08-19",
+    "endDate": "2026-08-19",
+    "categoryId": 20,
+    "tourId": 12,
+    "maxRiders": 7
+  },
+  {
+    "id": 357,
+    "name": "Renewi Tour - Stage 2",
+    "startDate": "2026-08-20",
+    "endDate": "2026-08-20",
+    "categoryId": 20,
+    "tourId": 12,
+    "maxRiders": 7
+  },
+  {
+    "id": 358,
+    "name": "Renewi Tour - Stage 3",
+    "startDate": "2026-08-21",
+    "endDate": "2026-08-21",
+    "categoryId": 20,
+    "tourId": 12,
+    "maxRiders": 7
+  },
+  {
+    "id": 359,
+    "name": "Renewi Tour - Stage 4",
+    "startDate": "2026-08-22",
+    "endDate": "2026-08-22",
+    "categoryId": 20,
+    "tourId": 12,
+    "maxRiders": 7
+  },
+  {
+    "id": 36,
+    "name": "Strade Bianche",
+    "startDate": "2026-03-07",
+    "endDate": "2026-03-07",
+    "categoryId": 7,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 360,
+    "name": "Renewi Tour - Stage 5",
+    "startDate": "2026-08-23",
+    "endDate": "2026-08-23",
+    "categoryId": 20,
+    "tourId": 12,
+    "maxRiders": 7
+  },
+  {
+    "id": 361,
+    "name": "Tour de Pologne - Stage 1",
+    "startDate": "2026-08-03",
+    "endDate": "2026-08-03",
+    "categoryId": 20,
+    "tourId": 13,
+    "maxRiders": 7
+  },
+  {
+    "id": 362,
+    "name": "Tour de Pologne - Stage 2",
+    "startDate": "2026-08-04",
+    "endDate": "2026-08-04",
+    "categoryId": 20,
+    "tourId": 13,
+    "maxRiders": 7
+  },
+  {
+    "id": 363,
+    "name": "Tour de Pologne - Stage 3",
+    "startDate": "2026-08-05",
+    "endDate": "2026-08-05",
+    "categoryId": 20,
+    "tourId": 13,
+    "maxRiders": 7
+  },
+  {
+    "id": 364,
+    "name": "Tour de Pologne - Stage 4",
+    "startDate": "2026-08-06",
+    "endDate": "2026-08-06",
+    "categoryId": 20,
+    "tourId": 13,
+    "maxRiders": 7
+  },
+  {
+    "id": 365,
+    "name": "Tour de Pologne - Stage 5",
+    "startDate": "2026-08-07",
+    "endDate": "2026-08-07",
+    "categoryId": 20,
+    "tourId": 13,
+    "maxRiders": 7
+  },
+  {
+    "id": 366,
+    "name": "Tour de Pologne - Stage 6",
+    "startDate": "2026-08-08",
+    "endDate": "2026-08-08",
+    "categoryId": 20,
+    "tourId": 13,
+    "maxRiders": 7
+  },
+  {
+    "id": 367,
+    "name": "Tour de Pologne - Stage 7",
+    "startDate": "2026-08-09",
+    "endDate": "2026-08-09",
+    "categoryId": 20,
+    "tourId": 13,
+    "maxRiders": 7
+  },
+  {
+    "id": 368,
+    "name": "Tour of Guangxi - Stage 1",
+    "startDate": "2026-10-13",
+    "endDate": "2026-10-13",
+    "categoryId": 20,
+    "tourId": 11,
+    "maxRiders": 7
+  },
+  {
+    "id": 369,
+    "name": "Tour of Guangxi - Stage 2",
+    "startDate": "2026-10-14",
+    "endDate": "2026-10-14",
+    "categoryId": 20,
+    "tourId": 11,
+    "maxRiders": 7
+  },
+  {
+    "id": 37,
+    "name": "Omloop Nieuwsblad",
+    "startDate": "2026-02-28",
+    "endDate": "2026-02-28",
+    "categoryId": 7,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 370,
+    "name": "Tour of Guangxi - Stage 3",
+    "startDate": "2026-10-15",
+    "endDate": "2026-10-15",
+    "categoryId": 20,
+    "tourId": 11,
+    "maxRiders": 7
+  },
+  {
+    "id": 371,
+    "name": "Tour of Guangxi - Stage 4",
+    "startDate": "2026-10-16",
+    "endDate": "2026-10-16",
+    "categoryId": 20,
+    "tourId": 11,
+    "maxRiders": 7
+  },
+  {
+    "id": 372,
+    "name": "Tour of Guangxi - Stage 5",
+    "startDate": "2026-10-17",
+    "endDate": "2026-10-17",
+    "categoryId": 20,
+    "tourId": 11,
+    "maxRiders": 7
+  },
+  {
+    "id": 373,
+    "name": "Tour of Guangxi - Stage 6",
+    "startDate": "2026-10-18",
+    "endDate": "2026-10-18",
+    "categoryId": 20,
+    "tourId": 11,
+    "maxRiders": 7
+  },
+  {
+    "id": 374,
+    "name": "Tour of Taihu Lake - Stage 1",
+    "startDate": "2026-11-05",
+    "endDate": "2026-11-05",
+    "categoryId": 23,
+    "tourId": 43,
+    "maxRiders": 7
+  },
+  {
+    "id": 375,
+    "name": "Tour of Taihu Lake - Stage 2",
+    "startDate": "2026-11-06",
+    "endDate": "2026-11-06",
+    "categoryId": 23,
+    "tourId": 43,
+    "maxRiders": 7
+  },
+  {
+    "id": 376,
+    "name": "Tour of Taihu Lake - Stage 3",
+    "startDate": "2026-11-07",
+    "endDate": "2026-11-07",
+    "categoryId": 23,
+    "tourId": 43,
+    "maxRiders": 7
+  },
+  {
+    "id": 377,
+    "name": "Tour of Taihu Lake - Stage 4",
+    "startDate": "2026-11-08",
+    "endDate": "2026-11-08",
+    "categoryId": 23,
+    "tourId": 43,
+    "maxRiders": 7
+  },
+  {
+    "id": 378,
+    "name": "Tour of Taihu Lake - Stage 5",
+    "startDate": "2026-11-09",
+    "endDate": "2026-11-09",
+    "categoryId": 23,
+    "tourId": 43,
+    "maxRiders": 7
+  },
+  {
+    "id": 379,
+    "name": "Petronas Le Tour de Langkawi - Stage 1",
+    "startDate": "2026-09-27",
+    "endDate": "2026-09-27",
+    "categoryId": 23,
+    "tourId": 44,
+    "maxRiders": 7
+  },
+  {
+    "id": 38,
+    "name": "Cadel Evans Great Ocean Road Race - Men",
+    "startDate": "2026-02-02",
+    "endDate": "2026-02-02",
+    "categoryId": 7,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 380,
+    "name": "Petronas Le Tour de Langkawi - Stage 2",
+    "startDate": "2026-09-28",
+    "endDate": "2026-09-28",
+    "categoryId": 23,
+    "tourId": 44,
+    "maxRiders": 7
+  },
+  {
+    "id": 381,
+    "name": "Petronas Le Tour de Langkawi - Stage 3",
+    "startDate": "2026-09-29",
+    "endDate": "2026-09-29",
+    "categoryId": 23,
+    "tourId": 44,
+    "maxRiders": 7
+  },
+  {
+    "id": 382,
+    "name": "Petronas Le Tour de Langkawi - Stage 4",
+    "startDate": "2026-09-30",
+    "endDate": "2026-09-30",
+    "categoryId": 23,
+    "tourId": 44,
+    "maxRiders": 7
+  },
+  {
+    "id": 383,
+    "name": "Petronas Le Tour de Langkawi - Stage 5",
+    "startDate": "2026-10-01",
+    "endDate": "2026-10-01",
+    "categoryId": 23,
+    "tourId": 44,
+    "maxRiders": 7
+  },
+  {
+    "id": 384,
+    "name": "Petronas Le Tour de Langkawi - Stage 6",
+    "startDate": "2026-10-02",
+    "endDate": "2026-10-02",
+    "categoryId": 23,
+    "tourId": 44,
+    "maxRiders": 7
+  },
+  {
+    "id": 385,
+    "name": "Petronas Le Tour de Langkawi - Stage 7",
+    "startDate": "2026-10-03",
+    "endDate": "2026-10-03",
+    "categoryId": 23,
+    "tourId": 44,
+    "maxRiders": 7
+  },
+  {
+    "id": 386,
+    "name": "Petronas Le Tour de Langkawi - Stage 8",
+    "startDate": "2026-10-04",
+    "endDate": "2026-10-04",
+    "categoryId": 23,
+    "tourId": 44,
+    "maxRiders": 7
+  },
+  {
+    "id": 387,
+    "name": "Skoda Tour de Luxembourg - Stage 1",
+    "startDate": "2026-09-16",
+    "endDate": "2026-09-16",
+    "categoryId": 23,
+    "tourId": 45,
+    "maxRiders": 7
+  },
+  {
+    "id": 388,
+    "name": "Skoda Tour de Luxembourg - Stage 2",
+    "startDate": "2026-09-17",
+    "endDate": "2026-09-17",
+    "categoryId": 23,
+    "tourId": 45,
+    "maxRiders": 7
+  },
+  {
+    "id": 389,
+    "name": "Skoda Tour de Luxembourg - Stage 3",
+    "startDate": "2026-09-18",
+    "endDate": "2026-09-18",
+    "categoryId": 23,
+    "tourId": 45,
+    "maxRiders": 7
+  },
+  {
+    "id": 39,
+    "name": "African Continental Championships - Road Race",
+    "startDate": "2026-xx-xx",
+    "endDate": "2026-xx-xx",
+    "categoryId": 8,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 390,
+    "name": "Skoda Tour de Luxembourg - Stage 4",
+    "startDate": "2026-09-19",
+    "endDate": "2026-09-19",
+    "categoryId": 23,
+    "tourId": 45,
+    "maxRiders": 7
+  },
+  {
+    "id": 391,
+    "name": "Skoda Tour de Luxembourg - Stage 5",
+    "startDate": "2026-09-20",
+    "endDate": "2026-09-20",
+    "categoryId": 23,
+    "tourId": 45,
+    "maxRiders": 7
+  },
+  {
+    "id": 392,
+    "name": "Lloyds Tour of Britain - Stage 1",
+    "startDate": "2026-09-02",
+    "endDate": "2026-09-02",
+    "categoryId": 23,
+    "tourId": 46,
+    "maxRiders": 7
+  },
+  {
+    "id": 393,
+    "name": "Lloyds Tour of Britain - Stage 2",
+    "startDate": "2026-09-03",
+    "endDate": "2026-09-03",
+    "categoryId": 23,
+    "tourId": 46,
+    "maxRiders": 7
+  },
+  {
+    "id": 394,
+    "name": "Lloyds Tour of Britain - Stage 3",
+    "startDate": "2026-09-04",
+    "endDate": "2026-09-04",
+    "categoryId": 23,
+    "tourId": 46,
+    "maxRiders": 7
+  },
+  {
+    "id": 395,
+    "name": "Lloyds Tour of Britain - Stage 4",
+    "startDate": "2026-09-05",
+    "endDate": "2026-09-05",
+    "categoryId": 23,
+    "tourId": 46,
+    "maxRiders": 7
+  },
+  {
+    "id": 396,
+    "name": "Lloyds Tour of Britain - Stage 5",
+    "startDate": "2026-09-06",
+    "endDate": "2026-09-06",
+    "categoryId": 23,
+    "tourId": 46,
+    "maxRiders": 7
+  },
+  {
+    "id": 397,
+    "name": "Lidl Deutschland Tour - Stage 1",
+    "startDate": "2026-08-19",
+    "endDate": "2026-08-19",
+    "categoryId": 23,
+    "tourId": 47,
+    "maxRiders": 7
+  },
+  {
+    "id": 398,
+    "name": "Lidl Deutschland Tour - Stage 2",
+    "startDate": "2026-08-20",
+    "endDate": "2026-08-20",
+    "categoryId": 23,
+    "tourId": 47,
+    "maxRiders": 7
+  },
+  {
+    "id": 399,
+    "name": "Lidl Deutschland Tour - Stage 3",
+    "startDate": "2026-08-21",
+    "endDate": "2026-08-21",
+    "categoryId": 23,
+    "tourId": 47,
+    "maxRiders": 7
+  },
+  {
+    "id": 4,
+    "name": "UCI Road World Championships 2026 - Montréal (Elite)",
+    "startDate": "2026-09-27",
+    "endDate": "2026-09-27",
+    "categoryId": 3,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 40,
+    "name": "European Continental Championships - Road Race",
+    "startDate": "2026-xx-xx",
+    "endDate": "2026-xx-xx",
+    "categoryId": 8,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 400,
+    "name": "Lidl Deutschland Tour - Stage 4",
+    "startDate": "2026-08-22",
+    "endDate": "2026-08-22",
+    "categoryId": 23,
+    "tourId": 47,
+    "maxRiders": 7
+  },
+  {
+    "id": 401,
+    "name": "Lidl Deutschland Tour - Stage 5",
+    "startDate": "2026-08-23",
+    "endDate": "2026-08-23",
+    "categoryId": 23,
+    "tourId": 47,
+    "maxRiders": 7
+  },
+  {
+    "id": 402,
+    "name": "PostNord Tour of Denmark - Stage 1",
+    "startDate": "2026-07-29",
+    "endDate": "2026-07-29",
+    "categoryId": 23,
+    "tourId": 48,
+    "maxRiders": 7
+  },
+  {
+    "id": 403,
+    "name": "PostNord Tour of Denmark - Stage 2",
+    "startDate": "2026-07-30",
+    "endDate": "2026-07-30",
+    "categoryId": 23,
+    "tourId": 48,
+    "maxRiders": 7
+  },
+  {
+    "id": 404,
+    "name": "PostNord Tour of Denmark - Stage 3",
+    "startDate": "2026-07-31",
+    "endDate": "2026-07-31",
+    "categoryId": 23,
+    "tourId": 48,
+    "maxRiders": 7
+  },
+  {
+    "id": 405,
+    "name": "PostNord Tour of Denmark - Stage 4",
+    "startDate": "2026-08-01",
+    "endDate": "2026-08-01",
+    "categoryId": 23,
+    "tourId": 48,
+    "maxRiders": 7
+  },
+  {
+    "id": 406,
+    "name": "PostNord Tour of Denmark - Stage 5",
+    "startDate": "2026-08-02",
+    "endDate": "2026-08-02",
+    "categoryId": 23,
+    "tourId": 48,
+    "maxRiders": 7
+  },
+  {
+    "id": 407,
+    "name": "Arctic Race of Norway - Stage 1",
+    "startDate": "2026-08-13",
+    "endDate": "2026-08-13",
+    "categoryId": 23,
+    "tourId": 49,
+    "maxRiders": 7
+  },
+  {
+    "id": 408,
+    "name": "Arctic Race of Norway - Stage 2",
+    "startDate": "2026-08-14",
+    "endDate": "2026-08-14",
+    "categoryId": 23,
+    "tourId": 49,
+    "maxRiders": 7
+  },
+  {
+    "id": 409,
+    "name": "Arctic Race of Norway - Stage 3",
+    "startDate": "2026-08-15",
+    "endDate": "2026-08-15",
+    "categoryId": 23,
+    "tourId": 49,
+    "maxRiders": 7
+  },
+  {
+    "id": 41,
+    "name": "Pan-American Continental Championships - Road Race",
+    "startDate": "2026-xx-xx",
+    "endDate": "2026-xx-xx",
+    "categoryId": 8,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 410,
+    "name": "Arctic Race of Norway - Stage 4",
+    "startDate": "2026-08-16",
+    "endDate": "2026-08-16",
+    "categoryId": 23,
+    "tourId": 49,
+    "maxRiders": 7
+  },
+  {
+    "id": 411,
+    "name": "Vuelta a Burgos - Stage 1",
+    "startDate": "2026-08-05",
+    "endDate": "2026-08-05",
+    "categoryId": 23,
+    "tourId": 50,
+    "maxRiders": 7
+  },
+  {
+    "id": 412,
+    "name": "Vuelta a Burgos - Stage 2",
+    "startDate": "2026-08-06",
+    "endDate": "2026-08-06",
+    "categoryId": 23,
+    "tourId": 50,
+    "maxRiders": 7
+  },
+  {
+    "id": 413,
+    "name": "Vuelta a Burgos - Stage 3",
+    "startDate": "2026-08-07",
+    "endDate": "2026-08-07",
+    "categoryId": 23,
+    "tourId": 50,
+    "maxRiders": 7
+  },
+  {
+    "id": 414,
+    "name": "Vuelta a Burgos - Stage 4",
+    "startDate": "2026-08-08",
+    "endDate": "2026-08-08",
+    "categoryId": 23,
+    "tourId": 50,
+    "maxRiders": 7
+  },
+  {
+    "id": 415,
+    "name": "Vuelta a Burgos - Stage 5",
+    "startDate": "2026-08-09",
+    "endDate": "2026-08-09",
+    "categoryId": 23,
+    "tourId": 50,
+    "maxRiders": 7
+  },
+  {
+    "id": 416,
+    "name": "Ethias-Tour de Wallonie - Stage 1",
+    "startDate": "2026-06-01",
+    "endDate": "2026-06-01",
+    "categoryId": 23,
+    "tourId": 51,
+    "maxRiders": 7
+  },
+  {
+    "id": 417,
+    "name": "Ethias-Tour de Wallonie - Stage 2",
+    "startDate": "2026-06-02",
+    "endDate": "2026-06-02",
+    "categoryId": 23,
+    "tourId": 51,
+    "maxRiders": 7
+  },
+  {
+    "id": 418,
+    "name": "Ethias-Tour de Wallonie - Stage 3",
+    "startDate": "2026-06-03",
+    "endDate": "2026-06-03",
+    "categoryId": 23,
+    "tourId": 51,
+    "maxRiders": 7
+  },
+  {
+    "id": 419,
+    "name": "Ethias-Tour de Wallonie - Stage 4",
+    "startDate": "2026-06-04",
+    "endDate": "2026-06-04",
+    "categoryId": 23,
+    "tourId": 51,
+    "maxRiders": 7
+  },
+  {
+    "id": 42,
+    "name": "Asian Continental Championships - Road Race",
+    "startDate": "2026-xx-xx",
+    "endDate": "2026-xx-xx",
+    "categoryId": 8,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 420,
+    "name": "Ethias-Tour de Wallonie - Stage 5",
+    "startDate": "2026-06-05",
+    "endDate": "2026-06-05",
+    "categoryId": 23,
+    "tourId": 51,
+    "maxRiders": 7
+  },
+  {
+    "id": 421,
+    "name": "Tour of Magnificent Qinghai - Stage 1",
+    "startDate": "2026-07-05",
+    "endDate": "2026-07-05",
+    "categoryId": 23,
+    "tourId": 52,
+    "maxRiders": 7
+  },
+  {
+    "id": 422,
+    "name": "Tour of Magnificent Qinghai - Stage 2",
+    "startDate": "2026-07-06",
+    "endDate": "2026-07-06",
+    "categoryId": 23,
+    "tourId": 52,
+    "maxRiders": 7
+  },
+  {
+    "id": 423,
+    "name": "Tour of Magnificent Qinghai - Stage 3",
+    "startDate": "2026-07-07",
+    "endDate": "2026-07-07",
+    "categoryId": 23,
+    "tourId": 52,
+    "maxRiders": 7
+  },
+  {
+    "id": 424,
+    "name": "Tour of Magnificent Qinghai - Stage 4",
+    "startDate": "2026-07-08",
+    "endDate": "2026-07-08",
+    "categoryId": 23,
+    "tourId": 52,
+    "maxRiders": 7
+  },
+  {
+    "id": 425,
+    "name": "Tour of Magnificent Qinghai - Stage 5",
+    "startDate": "2026-07-09",
+    "endDate": "2026-07-09",
+    "categoryId": 23,
+    "tourId": 52,
+    "maxRiders": 7
+  },
+  {
+    "id": 426,
+    "name": "Tour of Magnificent Qinghai - Stage 6",
+    "startDate": "2026-07-10",
+    "endDate": "2026-07-10",
+    "categoryId": 23,
+    "tourId": 52,
+    "maxRiders": 7
+  },
+  {
+    "id": 427,
+    "name": "Tour of Magnificent Qinghai - Stage 7",
+    "startDate": "2026-07-11",
+    "endDate": "2026-07-11",
+    "categoryId": 23,
+    "tourId": 52,
+    "maxRiders": 7
+  },
+  {
+    "id": 428,
+    "name": "Tour of Magnificent Qinghai - Stage 8",
+    "startDate": "2026-07-12",
+    "endDate": "2026-07-12",
+    "categoryId": 23,
+    "tourId": 52,
+    "maxRiders": 7
+  },
+  {
+    "id": 429,
+    "name": "Baloise Belgium Tour - Stage 1",
+    "startDate": "2026-06-17",
+    "endDate": "2026-06-17",
+    "categoryId": 23,
+    "tourId": 53,
+    "maxRiders": 7
+  },
+  {
+    "id": 43,
+    "name": "Tour of Taihu Lake",
+    "startDate": "2026-11-05",
+    "endDate": "2026-11-09",
+    "categoryId": 9,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 430,
+    "name": "Baloise Belgium Tour - Stage 2",
+    "startDate": "2026-06-18",
+    "endDate": "2026-06-18",
+    "categoryId": 23,
+    "tourId": 53,
+    "maxRiders": 7
+  },
+  {
+    "id": 431,
+    "name": "Baloise Belgium Tour - Stage 3",
+    "startDate": "2026-06-19",
+    "endDate": "2026-06-19",
+    "categoryId": 23,
+    "tourId": 53,
+    "maxRiders": 7
+  },
+  {
+    "id": 432,
+    "name": "Baloise Belgium Tour - Stage 4",
+    "startDate": "2026-06-20",
+    "endDate": "2026-06-20",
+    "categoryId": 23,
+    "tourId": 53,
+    "maxRiders": 7
+  },
+  {
+    "id": 433,
+    "name": "Baloise Belgium Tour - Stage 5",
+    "startDate": "2026-06-21",
+    "endDate": "2026-06-21",
+    "categoryId": 23,
+    "tourId": 53,
+    "maxRiders": 7
+  },
+  {
+    "id": 434,
+    "name": "Tour of Slovenia - Stage 1",
+    "startDate": "2026-06-17",
+    "endDate": "2026-06-17",
+    "categoryId": 23,
+    "tourId": 54,
+    "maxRiders": 7
+  },
+  {
+    "id": 435,
+    "name": "Tour of Slovenia - Stage 2",
+    "startDate": "2026-06-18",
+    "endDate": "2026-06-18",
+    "categoryId": 23,
+    "tourId": 54,
+    "maxRiders": 7
+  },
+  {
+    "id": 436,
+    "name": "Tour of Slovenia - Stage 3",
+    "startDate": "2026-06-19",
+    "endDate": "2026-06-19",
+    "categoryId": 23,
+    "tourId": 54,
+    "maxRiders": 7
+  },
+  {
+    "id": 437,
+    "name": "Tour of Slovenia - Stage 4",
+    "startDate": "2026-06-20",
+    "endDate": "2026-06-20",
+    "categoryId": 23,
+    "tourId": 54,
+    "maxRiders": 7
+  },
+  {
+    "id": 438,
+    "name": "Tour of Slovenia - Stage 5",
+    "startDate": "2026-06-21",
+    "endDate": "2026-06-21",
+    "categoryId": 23,
+    "tourId": 54,
+    "maxRiders": 7
+  },
+  {
+    "id": 439,
+    "name": "Boucles de la Mayenne - Crédit Mutuel - Stage 1",
+    "startDate": "2026-05-28",
+    "endDate": "2026-05-28",
+    "categoryId": 23,
+    "tourId": 56,
+    "maxRiders": 7
+  },
+  {
+    "id": 44,
+    "name": "Petronas Le Tour de Langkawi",
+    "startDate": "2026-09-27",
+    "endDate": "2026-10-04",
+    "categoryId": 9,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 440,
+    "name": "Boucles de la Mayenne - Crédit Mutuel - Stage 2",
+    "startDate": "2026-05-29",
+    "endDate": "2026-05-29",
+    "categoryId": 23,
+    "tourId": 56,
+    "maxRiders": 7
+  },
+  {
+    "id": 441,
+    "name": "Boucles de la Mayenne - Crédit Mutuel - Stage 3",
+    "startDate": "2026-05-30",
+    "endDate": "2026-05-30",
+    "categoryId": 23,
+    "tourId": 56,
+    "maxRiders": 7
+  },
+  {
+    "id": 442,
+    "name": "Boucles de la Mayenne - Crédit Mutuel - Stage 4",
+    "startDate": "2026-05-31",
+    "endDate": "2026-05-31",
+    "categoryId": 23,
+    "tourId": 56,
+    "maxRiders": 7
+  },
+  {
+    "id": 443,
+    "name": "Tour de Hongrie - Stage 1",
+    "startDate": "2026-05-13",
+    "endDate": "2026-05-13",
+    "categoryId": 23,
+    "tourId": 57,
+    "maxRiders": 7
+  },
+  {
+    "id": 444,
+    "name": "Tour de Hongrie - Stage 2",
+    "startDate": "2026-05-14",
+    "endDate": "2026-05-14",
+    "categoryId": 23,
+    "tourId": 57,
+    "maxRiders": 7
+  },
+  {
+    "id": 445,
+    "name": "Tour de Hongrie - Stage 3",
+    "startDate": "2026-05-15",
+    "endDate": "2026-05-15",
+    "categoryId": 23,
+    "tourId": 57,
+    "maxRiders": 7
+  },
+  {
+    "id": 446,
+    "name": "Tour de Hongrie - Stage 4",
+    "startDate": "2026-05-16",
+    "endDate": "2026-05-16",
+    "categoryId": 23,
+    "tourId": 57,
+    "maxRiders": 7
+  },
+  {
+    "id": 447,
+    "name": "Tour de Hongrie - Stage 5",
+    "startDate": "2026-05-17",
+    "endDate": "2026-05-17",
+    "categoryId": 23,
+    "tourId": 57,
+    "maxRiders": 7
+  },
+  {
+    "id": 448,
+    "name": "4 Jours de Dunkerque - Stage 1",
+    "startDate": "2026-05-20",
+    "endDate": "2026-05-20",
+    "categoryId": 23,
+    "tourId": 58,
+    "maxRiders": 7
+  },
+  {
+    "id": 449,
+    "name": "4 Jours de Dunkerque - Stage 2",
+    "startDate": "2026-05-21",
+    "endDate": "2026-05-21",
+    "categoryId": 23,
+    "tourId": 58,
+    "maxRiders": 7
+  },
+  {
+    "id": 45,
+    "name": "Skoda Tour de Luxembourg",
+    "startDate": "2026-09-16",
+    "endDate": "2026-09-20",
+    "categoryId": 9,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 450,
+    "name": "4 Jours de Dunkerque - Stage 3",
+    "startDate": "2026-05-22",
+    "endDate": "2026-05-22",
+    "categoryId": 23,
+    "tourId": 58,
+    "maxRiders": 7
+  },
+  {
+    "id": 451,
+    "name": "4 Jours de Dunkerque - Stage 4",
+    "startDate": "2026-05-23",
+    "endDate": "2026-05-23",
+    "categoryId": 23,
+    "tourId": 58,
+    "maxRiders": 7
+  },
+  {
+    "id": 452,
+    "name": "4 Jours de Dunkerque - Stage 5",
+    "startDate": "2026-05-24",
+    "endDate": "2026-05-24",
+    "categoryId": 23,
+    "tourId": 58,
+    "maxRiders": 7
+  },
+  {
+    "id": 453,
+    "name": "Presidential Cycling Tour of Turkiye - Stage 1",
+    "startDate": "2026-04-26",
+    "endDate": "2026-04-26",
+    "categoryId": 23,
+    "tourId": 59,
+    "maxRiders": 7
+  },
+  {
+    "id": 454,
+    "name": "Presidential Cycling Tour of Turkiye - Stage 2",
+    "startDate": "2026-04-27",
+    "endDate": "2026-04-27",
+    "categoryId": 23,
+    "tourId": 59,
+    "maxRiders": 7
+  },
+  {
+    "id": 455,
+    "name": "Presidential Cycling Tour of Turkiye - Stage 3",
+    "startDate": "2026-04-28",
+    "endDate": "2026-04-28",
+    "categoryId": 23,
+    "tourId": 59,
+    "maxRiders": 7
+  },
+  {
+    "id": 456,
+    "name": "Presidential Cycling Tour of Turkiye - Stage 4",
+    "startDate": "2026-04-29",
+    "endDate": "2026-04-29",
+    "categoryId": 23,
+    "tourId": 59,
+    "maxRiders": 7
+  },
+  {
+    "id": 457,
+    "name": "Presidential Cycling Tour of Turkiye - Stage 5",
+    "startDate": "2026-04-30",
+    "endDate": "2026-04-30",
+    "categoryId": 23,
+    "tourId": 59,
+    "maxRiders": 7
+  },
+  {
+    "id": 458,
+    "name": "Presidential Cycling Tour of Turkiye - Stage 6",
+    "startDate": "2026-05-01",
+    "endDate": "2026-05-01",
+    "categoryId": 23,
+    "tourId": 59,
+    "maxRiders": 7
+  },
+  {
+    "id": 459,
+    "name": "Presidential Cycling Tour of Turkiye - Stage 7",
+    "startDate": "2026-05-02",
+    "endDate": "2026-05-02",
+    "categoryId": 23,
+    "tourId": 59,
+    "maxRiders": 7
+  },
+  {
+    "id": 46,
+    "name": "Lloyds Tour of Britain",
+    "startDate": "2026-09-02",
+    "endDate": "2026-09-06",
+    "categoryId": 9,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 460,
+    "name": "Presidential Cycling Tour of Turkiye - Stage 8",
+    "startDate": "2026-05-03",
+    "endDate": "2026-05-03",
+    "categoryId": 23,
+    "tourId": 59,
+    "maxRiders": 7
+  },
+  {
+    "id": 461,
+    "name": "Tour of the Alps - Stage 1",
+    "startDate": "2026-04-20",
+    "endDate": "2026-04-20",
+    "categoryId": 23,
+    "tourId": 60,
+    "maxRiders": 7
+  },
+  {
+    "id": 462,
+    "name": "Tour of the Alps - Stage 2",
+    "startDate": "2026-04-21",
+    "endDate": "2026-04-21",
+    "categoryId": 23,
+    "tourId": 60,
+    "maxRiders": 7
+  },
+  {
+    "id": 463,
+    "name": "Tour of the Alps - Stage 3",
+    "startDate": "2026-04-22",
+    "endDate": "2026-04-22",
+    "categoryId": 23,
+    "tourId": 60,
+    "maxRiders": 7
+  },
+  {
+    "id": 464,
+    "name": "Tour of the Alps - Stage 4",
+    "startDate": "2026-04-23",
+    "endDate": "2026-04-23",
+    "categoryId": 23,
+    "tourId": 60,
+    "maxRiders": 7
+  },
+  {
+    "id": 465,
+    "name": "Tour of the Alps - Stage 5",
+    "startDate": "2026-04-24",
+    "endDate": "2026-04-24",
+    "categoryId": 23,
+    "tourId": 60,
+    "maxRiders": 7
+  },
+  {
+    "id": 466,
+    "name": "Tour of Hainan - Stage 1",
+    "startDate": "2026-04-07",
+    "endDate": "2026-04-07",
+    "categoryId": 23,
+    "tourId": 61,
+    "maxRiders": 7
+  },
+  {
+    "id": 467,
+    "name": "Tour of Hainan - Stage 2",
+    "startDate": "2026-04-08",
+    "endDate": "2026-04-08",
+    "categoryId": 23,
+    "tourId": 61,
+    "maxRiders": 7
+  },
+  {
+    "id": 468,
+    "name": "Tour of Hainan - Stage 3",
+    "startDate": "2026-04-09",
+    "endDate": "2026-04-09",
+    "categoryId": 23,
+    "tourId": 61,
+    "maxRiders": 7
+  },
+  {
+    "id": 469,
+    "name": "Tour of Hainan - Stage 4",
+    "startDate": "2026-04-10",
+    "endDate": "2026-04-10",
+    "categoryId": 23,
+    "tourId": 61,
+    "maxRiders": 7
+  },
+  {
+    "id": 47,
+    "name": "Lidl Deutschland Tour",
+    "startDate": "2026-08-19",
+    "endDate": "2026-08-23",
+    "categoryId": 9,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 470,
+    "name": "Tour of Hainan - Stage 5",
+    "startDate": "2026-04-11",
+    "endDate": "2026-04-11",
+    "categoryId": 23,
+    "tourId": 61,
+    "maxRiders": 7
+  },
+  {
+    "id": 471,
+    "name": "Vuelta a Andalucia Ruta Ciclista Del Sol - Stage 1",
+    "startDate": "2026-02-18",
+    "endDate": "2026-02-18",
+    "categoryId": 23,
+    "tourId": 62,
+    "maxRiders": 7
+  },
+  {
+    "id": 472,
+    "name": "Vuelta a Andalucia Ruta Ciclista Del Sol - Stage 2",
+    "startDate": "2026-02-19",
+    "endDate": "2026-02-19",
+    "categoryId": 23,
+    "tourId": 62,
+    "maxRiders": 7
+  },
+  {
+    "id": 473,
+    "name": "Vuelta a Andalucia Ruta Ciclista Del Sol - Stage 3",
+    "startDate": "2026-02-20",
+    "endDate": "2026-02-20",
+    "categoryId": 23,
+    "tourId": 62,
+    "maxRiders": 7
+  },
+  {
+    "id": 474,
+    "name": "Vuelta a Andalucia Ruta Ciclista Del Sol - Stage 4",
+    "startDate": "2026-02-21",
+    "endDate": "2026-02-21",
+    "categoryId": 23,
+    "tourId": 62,
+    "maxRiders": 7
+  },
+  {
+    "id": 475,
+    "name": "Vuelta a Andalucia Ruta Ciclista Del Sol - Stage 5",
+    "startDate": "2026-02-22",
+    "endDate": "2026-02-22",
+    "categoryId": 23,
+    "tourId": 62,
+    "maxRiders": 7
+  },
+  {
+    "id": 476,
+    "name": "Volta ao Algarve em Bicicleta - Stage 1",
+    "startDate": "2026-02-18",
+    "endDate": "2026-02-18",
+    "categoryId": 23,
+    "tourId": 63,
+    "maxRiders": 7
+  },
+  {
+    "id": 477,
+    "name": "Volta ao Algarve em Bicicleta - Stage 2",
+    "startDate": "2026-02-19",
+    "endDate": "2026-02-19",
+    "categoryId": 23,
+    "tourId": 63,
+    "maxRiders": 7
+  },
+  {
+    "id": 478,
+    "name": "Volta ao Algarve em Bicicleta - Stage 3",
+    "startDate": "2026-02-20",
+    "endDate": "2026-02-20",
+    "categoryId": 23,
+    "tourId": 63,
+    "maxRiders": 7
+  },
+  {
+    "id": 479,
+    "name": "Volta ao Algarve em Bicicleta - Stage 4",
+    "startDate": "2026-02-21",
+    "endDate": "2026-02-21",
+    "categoryId": 23,
+    "tourId": 63,
+    "maxRiders": 7
+  },
+  {
+    "id": 48,
+    "name": "PostNord Tour of Denmark",
+    "startDate": "2026-07-29",
+    "endDate": "2026-08-02",
+    "categoryId": 9,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 480,
+    "name": "Volta ao Algarve em Bicicleta - Stage 5",
+    "startDate": "2026-02-22",
+    "endDate": "2026-02-22",
+    "categoryId": 23,
+    "tourId": 63,
+    "maxRiders": 7
+  },
+  {
+    "id": 481,
+    "name": "Tour of Oman - Stage 1",
+    "startDate": "2026-02-07",
+    "endDate": "2026-02-07",
+    "categoryId": 23,
+    "tourId": 64,
+    "maxRiders": 7
+  },
+  {
+    "id": 482,
+    "name": "Tour of Oman - Stage 2",
+    "startDate": "2026-02-08",
+    "endDate": "2026-02-08",
+    "categoryId": 23,
+    "tourId": 64,
+    "maxRiders": 7
+  },
+  {
+    "id": 483,
+    "name": "Tour of Oman - Stage 3",
+    "startDate": "2026-02-09",
+    "endDate": "2026-02-09",
+    "categoryId": 23,
+    "tourId": 64,
+    "maxRiders": 7
+  },
+  {
+    "id": 484,
+    "name": "Tour of Oman - Stage 4",
+    "startDate": "2026-02-10",
+    "endDate": "2026-02-10",
+    "categoryId": 23,
+    "tourId": 64,
+    "maxRiders": 7
+  },
+  {
+    "id": 485,
+    "name": "Tour of Oman - Stage 5",
+    "startDate": "2026-02-11",
+    "endDate": "2026-02-11",
+    "categoryId": 23,
+    "tourId": 64,
+    "maxRiders": 7
+  },
+  {
+    "id": 486,
+    "name": "Volta a la Comunitat Valenciana - Stage 1",
+    "startDate": "2026-02-04",
+    "endDate": "2026-02-04",
+    "categoryId": 23,
+    "tourId": 65,
+    "maxRiders": 7
+  },
+  {
+    "id": 487,
+    "name": "Volta a la Comunitat Valenciana - Stage 2",
+    "startDate": "2026-02-05",
+    "endDate": "2026-02-05",
+    "categoryId": 23,
+    "tourId": 65,
+    "maxRiders": 7
+  },
+  {
+    "id": 488,
+    "name": "Volta a la Comunitat Valenciana - Stage 3",
+    "startDate": "2026-02-06",
+    "endDate": "2026-02-06",
+    "categoryId": 23,
+    "tourId": 65,
+    "maxRiders": 7
+  },
+  {
+    "id": 489,
+    "name": "Volta a la Comunitat Valenciana - Stage 4",
+    "startDate": "2026-02-07",
+    "endDate": "2026-02-07",
+    "categoryId": 23,
+    "tourId": 65,
+    "maxRiders": 7
+  },
+  {
+    "id": 49,
+    "name": "Arctic Race of Norway",
+    "startDate": "2026-08-13",
+    "endDate": "2026-08-16",
+    "categoryId": 9,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 490,
+    "name": "Volta a la Comunitat Valenciana - Stage 5",
+    "startDate": "2026-02-08",
+    "endDate": "2026-02-08",
+    "categoryId": 23,
+    "tourId": 65,
+    "maxRiders": 7
+  },
+  {
+    "id": 491,
+    "name": "AlUla Tour - Stage 1",
+    "startDate": "2026-01-27",
+    "endDate": "2026-01-27",
+    "categoryId": 23,
+    "tourId": 66,
+    "maxRiders": 7
+  },
+  {
+    "id": 492,
+    "name": "AlUla Tour - Stage 2",
+    "startDate": "2026-01-28",
+    "endDate": "2026-01-28",
+    "categoryId": 23,
+    "tourId": 66,
+    "maxRiders": 7
+  },
+  {
+    "id": 493,
+    "name": "AlUla Tour - Stage 3",
+    "startDate": "2026-01-29",
+    "endDate": "2026-01-29",
+    "categoryId": 23,
+    "tourId": 66,
+    "maxRiders": 7
+  },
+  {
+    "id": 494,
+    "name": "AlUla Tour - Stage 4",
+    "startDate": "2026-01-30",
+    "endDate": "2026-01-30",
+    "categoryId": 23,
+    "tourId": 66,
+    "maxRiders": 7
+  },
+  {
+    "id": 495,
+    "name": "AlUla Tour - Stage 5",
+    "startDate": "2026-01-31",
+    "endDate": "2026-01-31",
+    "categoryId": 23,
+    "tourId": 66,
+    "maxRiders": 7
+  },
+  {
+    "id": 496,
+    "name": "Région Pays de la Loire Tour - Stage 1",
+    "startDate": "2026-04-07",
+    "endDate": "2026-04-07",
+    "categoryId": 23,
+    "tourId": 67,
+    "maxRiders": 7
+  },
+  {
+    "id": 497,
+    "name": "Région Pays de la Loire Tour - Stage 2",
+    "startDate": "2026-04-08",
+    "endDate": "2026-04-08",
+    "categoryId": 23,
+    "tourId": 67,
+    "maxRiders": 7
+  },
+  {
+    "id": 498,
+    "name": "Région Pays de la Loire Tour - Stage 3",
+    "startDate": "2026-04-09",
+    "endDate": "2026-04-09",
+    "categoryId": 23,
+    "tourId": 67,
+    "maxRiders": 7
+  },
+  {
+    "id": 499,
+    "name": "Région Pays de la Loire Tour - Stage 4",
+    "startDate": "2026-04-10",
+    "endDate": "2026-04-10",
+    "categoryId": 23,
+    "tourId": 67,
+    "maxRiders": 7
+  },
+  {
+    "id": 5,
+    "name": "UCI Time Trial World Championships 2026 - Montréal (Elite)",
+    "startDate": "2026-09-24",
+    "endDate": "2026-09-24",
+    "categoryId": 4,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 50,
+    "name": "Vuelta a Burgos",
+    "startDate": "2026-08-04",
+    "endDate": "2026-08-08",
+    "categoryId": 9,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 500,
+    "name": "Czech Tour - Stage 1",
+    "startDate": "2026-08-13",
+    "endDate": "2026-08-13",
+    "categoryId": 23,
+    "tourId": 68,
+    "maxRiders": 7
+  },
+  {
+    "id": 501,
+    "name": "Czech Tour - Stage 2",
+    "startDate": "2026-08-14",
+    "endDate": "2026-08-14",
+    "categoryId": 23,
+    "tourId": 68,
+    "maxRiders": 7
+  },
+  {
+    "id": 502,
+    "name": "Czech Tour - Stage 3",
+    "startDate": "2026-08-15",
+    "endDate": "2026-08-15",
+    "categoryId": 23,
+    "tourId": 68,
+    "maxRiders": 7
+  },
+  {
+    "id": 503,
+    "name": "Czech Tour - Stage 4",
+    "startDate": "2026-08-16",
+    "endDate": "2026-08-16",
+    "categoryId": 23,
+    "tourId": 68,
+    "maxRiders": 7
+  },
+  {
+    "id": 504,
+    "name": "Maryland Cycling Classic - Stage 1",
+    "startDate": "2026-09-05",
+    "endDate": "2026-09-05",
+    "categoryId": 23,
+    "tourId": 69,
+    "maxRiders": 7
+  },
+  {
+    "id": 505,
+    "name": "Maryland Cycling Classic - Stage 2",
+    "startDate": "2026-09-06",
+    "endDate": "2026-09-06",
+    "categoryId": 23,
+    "tourId": 69,
+    "maxRiders": 7
+  },
+  {
+    "id": 506,
+    "name": "Maryland Cycling Classic - Stage 3",
+    "startDate": "2026-09-07",
+    "endDate": "2026-09-07",
+    "categoryId": 23,
+    "tourId": 69,
+    "maxRiders": 7
+  },
+  {
+    "id": 507,
+    "name": "CRO Race - Stage 1",
+    "startDate": "2026-09-22",
+    "endDate": "2026-09-22",
+    "categoryId": 23,
+    "tourId": 70,
+    "maxRiders": 7
+  },
+  {
+    "id": 508,
+    "name": "CRO Race - Stage 2",
+    "startDate": "2026-09-23",
+    "endDate": "2026-09-23",
+    "categoryId": 23,
+    "tourId": 70,
+    "maxRiders": 7
+  },
+  {
+    "id": 509,
+    "name": "CRO Race - Stage 3",
+    "startDate": "2026-09-24",
+    "endDate": "2026-09-24",
+    "categoryId": 23,
+    "tourId": 70,
+    "maxRiders": 7
+  },
+  {
+    "id": 51,
+    "name": "Ethias-Tour de Wallonie",
+    "startDate": "2026-06-01",
+    "endDate": "2026-06-05",
+    "categoryId": 9,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 510,
+    "name": "CRO Race - Stage 4",
+    "startDate": "2026-09-25",
+    "endDate": "2026-09-25",
+    "categoryId": 23,
+    "tourId": 70,
+    "maxRiders": 7
+  },
+  {
+    "id": 511,
+    "name": "CRO Race - Stage 5",
+    "startDate": "2026-09-26",
+    "endDate": "2026-09-26",
+    "categoryId": 23,
+    "tourId": 70,
+    "maxRiders": 7
+  },
+  {
+    "id": 512,
+    "name": "CRO Race - Stage 6",
+    "startDate": "2026-09-27",
+    "endDate": "2026-09-27",
+    "categoryId": 23,
+    "tourId": 70,
+    "maxRiders": 7
+  },
+  {
+    "id": 513,
+    "name": "Tour El Salvador - Stage 1",
+    "startDate": "2026-01-17",
+    "endDate": "2026-01-17",
+    "categoryId": 24,
+    "tourId": 127,
+    "maxRiders": 7
+  },
+  {
+    "id": 514,
+    "name": "Tour El Salvador - Stage 2",
+    "startDate": "2026-01-18",
+    "endDate": "2026-01-18",
+    "categoryId": 24,
+    "tourId": 127,
+    "maxRiders": 7
+  },
+  {
+    "id": 515,
+    "name": "Tour El Salvador - Stage 3",
+    "startDate": "2026-01-19",
+    "endDate": "2026-01-19",
+    "categoryId": 24,
+    "tourId": 127,
+    "maxRiders": 7
+  },
+  {
+    "id": 516,
+    "name": "Tour El Salvador - Stage 4",
+    "startDate": "2026-01-20",
+    "endDate": "2026-01-20",
+    "categoryId": 24,
+    "tourId": 127,
+    "maxRiders": 7
+  },
+  {
+    "id": 517,
+    "name": "Tour El Salvador - Stage 5",
+    "startDate": "2026-01-21",
+    "endDate": "2026-01-21",
+    "categoryId": 24,
+    "tourId": 127,
+    "maxRiders": 7
+  },
+  {
+    "id": 518,
+    "name": "Tour Colombia - Stage 1",
+    "startDate": "2026-02-03",
+    "endDate": "2026-02-03",
+    "categoryId": 24,
+    "tourId": 128,
+    "maxRiders": 7
+  },
+  {
+    "id": 519,
+    "name": "Tour Colombia - Stage 2",
+    "startDate": "2026-02-04",
+    "endDate": "2026-02-04",
+    "categoryId": 24,
+    "tourId": 128,
+    "maxRiders": 7
+  },
+  {
+    "id": 52,
+    "name": "Tour of Magnificent Qinghai",
+    "startDate": "2026-07-05",
+    "endDate": "2026-07-12",
+    "categoryId": 9,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 520,
+    "name": "Tour Colombia - Stage 3",
+    "startDate": "2026-02-05",
+    "endDate": "2026-02-05",
+    "categoryId": 24,
+    "tourId": 128,
+    "maxRiders": 7
+  },
+  {
+    "id": 521,
+    "name": "Tour Colombia - Stage 4",
+    "startDate": "2026-02-06",
+    "endDate": "2026-02-06",
+    "categoryId": 24,
+    "tourId": 128,
+    "maxRiders": 7
+  },
+  {
+    "id": 522,
+    "name": "Tour Colombia - Stage 5",
+    "startDate": "2026-02-07",
+    "endDate": "2026-02-07",
+    "categoryId": 24,
+    "tourId": 128,
+    "maxRiders": 7
+  },
+  {
+    "id": 523,
+    "name": "Tour Colombia - Stage 6",
+    "startDate": "2026-02-08",
+    "endDate": "2026-02-08",
+    "categoryId": 24,
+    "tourId": 128,
+    "maxRiders": 7
+  },
+  {
+    "id": 524,
+    "name": "Etoile de Bessèges - Tour du Gard - Stage 1",
+    "startDate": "2026-02-04",
+    "endDate": "2026-02-04",
+    "categoryId": 24,
+    "tourId": 129,
+    "maxRiders": 7
+  },
+  {
+    "id": 525,
+    "name": "Etoile de Bessèges - Tour du Gard - Stage 2",
+    "startDate": "2026-02-05",
+    "endDate": "2026-02-05",
+    "categoryId": 24,
+    "tourId": 129,
+    "maxRiders": 7
+  },
+  {
+    "id": 526,
+    "name": "Etoile de Bessèges - Tour du Gard - Stage 3",
+    "startDate": "2026-02-06",
+    "endDate": "2026-02-06",
+    "categoryId": 24,
+    "tourId": 129,
+    "maxRiders": 7
+  },
+  {
+    "id": 527,
+    "name": "Etoile de Bessèges - Tour du Gard - Stage 4",
+    "startDate": "2026-02-07",
+    "endDate": "2026-02-07",
+    "categoryId": 24,
+    "tourId": 129,
+    "maxRiders": 7
+  },
+  {
+    "id": 528,
+    "name": "Etoile de Bessèges - Tour du Gard - Stage 5",
+    "startDate": "2026-02-08",
+    "endDate": "2026-02-08",
+    "categoryId": 24,
+    "tourId": 129,
+    "maxRiders": 7
+  },
+  {
+    "id": 529,
+    "name": "Jayco Herald Sun Tour - Stage 1",
+    "startDate": "2026-02-04",
+    "endDate": "2026-02-04",
+    "categoryId": 24,
+    "tourId": 130,
+    "maxRiders": 7
+  },
+  {
+    "id": 53,
+    "name": "Baloise Belgium Tour",
+    "startDate": "2026-06-17",
+    "endDate": "2026-06-21",
+    "categoryId": 9,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 530,
+    "name": "Jayco Herald Sun Tour - Stage 2",
+    "startDate": "2026-02-05",
+    "endDate": "2026-02-05",
+    "categoryId": 24,
+    "tourId": 130,
+    "maxRiders": 7
+  },
+  {
+    "id": 531,
+    "name": "Jayco Herald Sun Tour - Stage 3",
+    "startDate": "2026-02-06",
+    "endDate": "2026-02-06",
+    "categoryId": 24,
+    "tourId": 130,
+    "maxRiders": 7
+  },
+  {
+    "id": 532,
+    "name": "Jayco Herald Sun Tour - Stage 4",
+    "startDate": "2026-02-07",
+    "endDate": "2026-02-07",
+    "categoryId": 24,
+    "tourId": 130,
+    "maxRiders": 7
+  },
+  {
+    "id": 533,
+    "name": "Jayco Herald Sun Tour - Stage 5",
+    "startDate": "2026-02-08",
+    "endDate": "2026-02-08",
+    "categoryId": 24,
+    "tourId": 130,
+    "maxRiders": 7
+  },
+  {
+    "id": 534,
+    "name": "Tour de la Provence - Stage 1",
+    "startDate": "2026-02-13",
+    "endDate": "2026-02-13",
+    "categoryId": 24,
+    "tourId": 131,
+    "maxRiders": 7
+  },
+  {
+    "id": 535,
+    "name": "Tour de la Provence - Stage 2",
+    "startDate": "2026-02-14",
+    "endDate": "2026-02-14",
+    "categoryId": 24,
+    "tourId": 131,
+    "maxRiders": 7
+  },
+  {
+    "id": 536,
+    "name": "Tour de la Provence - Stage 3",
+    "startDate": "2026-02-15",
+    "endDate": "2026-02-15",
+    "categoryId": 24,
+    "tourId": 131,
+    "maxRiders": 7
+  },
+  {
+    "id": 537,
+    "name": "Tour du Rwanda - Stage 1",
+    "startDate": "2026-02-22",
+    "endDate": "2026-02-22",
+    "categoryId": 24,
+    "tourId": 132,
+    "maxRiders": 7
+  },
+  {
+    "id": 538,
+    "name": "Tour du Rwanda - Stage 2",
+    "startDate": "2026-02-23",
+    "endDate": "2026-02-23",
+    "categoryId": 24,
+    "tourId": 132,
+    "maxRiders": 7
+  },
+  {
+    "id": 539,
+    "name": "Tour du Rwanda - Stage 3",
+    "startDate": "2026-02-24",
+    "endDate": "2026-02-24",
+    "categoryId": 24,
+    "tourId": 132,
+    "maxRiders": 7
+  },
+  {
+    "id": 54,
+    "name": "Tour of Slovenia",
+    "startDate": "2026-06-17",
+    "endDate": "2026-06-21",
+    "categoryId": 9,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 540,
+    "name": "Tour du Rwanda - Stage 4",
+    "startDate": "2026-02-25",
+    "endDate": "2026-02-25",
+    "categoryId": 24,
+    "tourId": 132,
+    "maxRiders": 7
+  },
+  {
+    "id": 541,
+    "name": "Tour du Rwanda - Stage 5",
+    "startDate": "2026-02-26",
+    "endDate": "2026-02-26",
+    "categoryId": 24,
+    "tourId": 132,
+    "maxRiders": 7
+  },
+  {
+    "id": 542,
+    "name": "Tour du Rwanda - Stage 6",
+    "startDate": "2026-02-27",
+    "endDate": "2026-02-27",
+    "categoryId": 24,
+    "tourId": 132,
+    "maxRiders": 7
+  },
+  {
+    "id": 543,
+    "name": "Tour du Rwanda - Stage 7",
+    "startDate": "2026-02-28",
+    "endDate": "2026-02-28",
+    "categoryId": 24,
+    "tourId": 132,
+    "maxRiders": 7
+  },
+  {
+    "id": 544,
+    "name": "Tour du Rwanda - Stage 8",
+    "startDate": "2026-03-01",
+    "endDate": "2026-03-01",
+    "categoryId": 24,
+    "tourId": 132,
+    "maxRiders": 7
+  },
+  {
+    "id": 545,
+    "name": "Giro di Sardegna - Stage 1",
+    "startDate": "2026-02-25",
+    "endDate": "2026-02-25",
+    "categoryId": 24,
+    "tourId": 133,
+    "maxRiders": 7
+  },
+  {
+    "id": 546,
+    "name": "Giro di Sardegna - Stage 2",
+    "startDate": "2026-02-26",
+    "endDate": "2026-02-26",
+    "categoryId": 24,
+    "tourId": 133,
+    "maxRiders": 7
+  },
+  {
+    "id": 547,
+    "name": "Giro di Sardegna - Stage 3",
+    "startDate": "2026-02-27",
+    "endDate": "2026-02-27",
+    "categoryId": 24,
+    "tourId": 133,
+    "maxRiders": 7
+  },
+  {
+    "id": 548,
+    "name": "Giro di Sardegna - Stage 4",
+    "startDate": "2026-02-28",
+    "endDate": "2026-02-28",
+    "categoryId": 24,
+    "tourId": 133,
+    "maxRiders": 7
+  },
+  {
+    "id": 549,
+    "name": "Giro di Sardegna - Stage 5",
+    "startDate": "2026-03-01",
+    "endDate": "2026-03-01",
+    "categoryId": 24,
+    "tourId": 133,
+    "maxRiders": 7
+  },
+  {
+    "id": 55,
+    "name": "Tour of Norway",
+    "startDate": "2026-05-28",
+    "endDate": "2026-05-31",
+    "categoryId": 9,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 550,
+    "name": "Guido Reybrouck Classic - Stage 1",
+    "startDate": "2026-03-21",
+    "endDate": "2026-03-21",
+    "categoryId": 24,
+    "tourId": 134,
+    "maxRiders": 7
+  },
+  {
+    "id": 551,
+    "name": "Guido Reybrouck Classic - Stage 2",
+    "startDate": "2026-03-22",
+    "endDate": "2026-03-22",
+    "categoryId": 24,
+    "tourId": 134,
+    "maxRiders": 7
+  },
+  {
+    "id": 552,
+    "name": "Tour de Taiwan - Stage 1",
+    "startDate": "2026-03-22",
+    "endDate": "2026-03-22",
+    "categoryId": 24,
+    "tourId": 135,
+    "maxRiders": 7
+  },
+  {
+    "id": 553,
+    "name": "Tour de Taiwan - Stage 2",
+    "startDate": "2026-03-23",
+    "endDate": "2026-03-23",
+    "categoryId": 24,
+    "tourId": 135,
+    "maxRiders": 7
+  },
+  {
+    "id": 554,
+    "name": "Tour de Taiwan - Stage 3",
+    "startDate": "2026-03-24",
+    "endDate": "2026-03-24",
+    "categoryId": 24,
+    "tourId": 135,
+    "maxRiders": 7
+  },
+  {
+    "id": 555,
+    "name": "Tour de Taiwan - Stage 4",
+    "startDate": "2026-03-25",
+    "endDate": "2026-03-25",
+    "categoryId": 24,
+    "tourId": 135,
+    "maxRiders": 7
+  },
+  {
+    "id": 556,
+    "name": "Tour de Taiwan - Stage 5",
+    "startDate": "2026-03-26",
+    "endDate": "2026-03-26",
+    "categoryId": 24,
+    "tourId": 135,
+    "maxRiders": 7
+  },
+  {
+    "id": 557,
+    "name": "Settimana Internazionale Coppi e Bartali - Stage 1",
+    "startDate": "2026-03-24",
+    "endDate": "2026-03-24",
+    "categoryId": 24,
+    "tourId": 136,
+    "maxRiders": 7
+  },
+  {
+    "id": 558,
+    "name": "Settimana Internazionale Coppi e Bartali - Stage 2",
+    "startDate": "2026-03-25",
+    "endDate": "2026-03-25",
+    "categoryId": 24,
+    "tourId": 136,
+    "maxRiders": 7
+  },
+  {
+    "id": 559,
+    "name": "Settimana Internazionale Coppi e Bartali - Stage 3",
+    "startDate": "2026-03-26",
+    "endDate": "2026-03-26",
+    "categoryId": 24,
+    "tourId": 136,
+    "maxRiders": 7
+  },
+  {
+    "id": 56,
+    "name": "Boucles de la Mayenne - Crédit Mutuel",
+    "startDate": "2026-05-28",
+    "endDate": "2026-05-31",
+    "categoryId": 9,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 560,
+    "name": "Settimana Internazionale Coppi e Bartali - Stage 4",
+    "startDate": "2026-03-27",
+    "endDate": "2026-03-27",
+    "categoryId": 24,
+    "tourId": 136,
+    "maxRiders": 7
+  },
+  {
+    "id": 561,
+    "name": "Settimana Internazionale Coppi e Bartali - Stage 5",
+    "startDate": "2026-03-28",
+    "endDate": "2026-03-28",
+    "categoryId": 24,
+    "tourId": 136,
+    "maxRiders": 7
+  },
+  {
+    "id": 562,
+    "name": "The Princess Maha Chakri Sirindhorn's Cup Tour of Thailand - Stage 1",
+    "startDate": "2026-03-24",
+    "endDate": "2026-03-24",
+    "categoryId": 24,
+    "tourId": 137,
+    "maxRiders": 7
+  },
+  {
+    "id": 563,
+    "name": "The Princess Maha Chakri Sirindhorn's Cup Tour of Thailand - Stage 2",
+    "startDate": "2026-03-25",
+    "endDate": "2026-03-25",
+    "categoryId": 24,
+    "tourId": 137,
+    "maxRiders": 7
+  },
+  {
+    "id": 564,
+    "name": "The Princess Maha Chakri Sirindhorn's Cup Tour of Thailand - Stage 3",
+    "startDate": "2026-03-26",
+    "endDate": "2026-03-26",
+    "categoryId": 24,
+    "tourId": 137,
+    "maxRiders": 7
+  },
+  {
+    "id": 565,
+    "name": "The Princess Maha Chakri Sirindhorn's Cup Tour of Thailand - Stage 4",
+    "startDate": "2026-03-27",
+    "endDate": "2026-03-27",
+    "categoryId": 24,
+    "tourId": 137,
+    "maxRiders": 7
+  },
+  {
+    "id": 566,
+    "name": "The Princess Maha Chakri Sirindhorn's Cup Tour of Thailand - Stage 5",
+    "startDate": "2026-03-28",
+    "endDate": "2026-03-28",
+    "categoryId": 24,
+    "tourId": 137,
+    "maxRiders": 7
+  },
+  {
+    "id": 567,
+    "name": "The Princess Maha Chakri Sirindhorn's Cup Tour of Thailand - Stage 6",
+    "startDate": "2026-03-29",
+    "endDate": "2026-03-29",
+    "categoryId": 24,
+    "tourId": 137,
+    "maxRiders": 7
+  },
+  {
+    "id": 568,
+    "name": "STER Van Zuid Limburg - Stage 1",
+    "startDate": "2026-04-03",
+    "endDate": "2026-04-03",
+    "categoryId": 24,
+    "tourId": 138,
+    "maxRiders": 7
+  },
+  {
+    "id": 569,
+    "name": "STER Van Zuid Limburg - Stage 2",
+    "startDate": "2026-04-04",
+    "endDate": "2026-04-04",
+    "categoryId": 24,
+    "tourId": 138,
+    "maxRiders": 7
+  },
+  {
+    "id": 57,
+    "name": "Tour de Hongrie",
+    "startDate": "2026-05-13",
+    "endDate": "2026-05-17",
+    "categoryId": 9,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 570,
+    "name": "STER Van Zuid Limburg - Stage 3",
+    "startDate": "2026-04-05",
+    "endDate": "2026-04-05",
+    "categoryId": 24,
+    "tourId": 138,
+    "maxRiders": 7
+  },
+  {
+    "id": 571,
+    "name": "STER Van Zuid Limburg - Stage 4",
+    "startDate": "2026-04-06",
+    "endDate": "2026-04-06",
+    "categoryId": 24,
+    "tourId": 138,
+    "maxRiders": 7
+  },
+  {
+    "id": 572,
+    "name": "Giro della Magna Grecia - Stage 1",
+    "startDate": "2026-04-12",
+    "endDate": "2026-04-12",
+    "categoryId": 24,
+    "tourId": 139,
+    "maxRiders": 7
+  },
+  {
+    "id": 573,
+    "name": "Giro della Magna Grecia - Stage 2",
+    "startDate": "2026-04-13",
+    "endDate": "2026-04-13",
+    "categoryId": 24,
+    "tourId": 139,
+    "maxRiders": 7
+  },
+  {
+    "id": 574,
+    "name": "Giro della Magna Grecia - Stage 3",
+    "startDate": "2026-04-14",
+    "endDate": "2026-04-14",
+    "categoryId": 24,
+    "tourId": 139,
+    "maxRiders": 7
+  },
+  {
+    "id": 575,
+    "name": "Giro della Magna Grecia - Stage 4",
+    "startDate": "2026-04-15",
+    "endDate": "2026-04-15",
+    "categoryId": 24,
+    "tourId": 139,
+    "maxRiders": 7
+  },
+  {
+    "id": 576,
+    "name": "Giro della Magna Grecia - Stage 5",
+    "startDate": "2026-04-16",
+    "endDate": "2026-04-16",
+    "categoryId": 24,
+    "tourId": 139,
+    "maxRiders": 7
+  },
+  {
+    "id": 577,
+    "name": "O Gran Camiño - The Historical Route - Stage 1",
+    "startDate": "2026-04-14",
+    "endDate": "2026-04-14",
+    "categoryId": 24,
+    "tourId": 140,
+    "maxRiders": 7
+  },
+  {
+    "id": 578,
+    "name": "O Gran Camiño - The Historical Route - Stage 2",
+    "startDate": "2026-04-15",
+    "endDate": "2026-04-15",
+    "categoryId": 24,
+    "tourId": 140,
+    "maxRiders": 7
+  },
+  {
+    "id": 579,
+    "name": "O Gran Camiño - The Historical Route - Stage 3",
+    "startDate": "2026-04-16",
+    "endDate": "2026-04-16",
+    "categoryId": 24,
+    "tourId": 140,
+    "maxRiders": 7
+  },
+  {
+    "id": 58,
+    "name": "4 Jours de Dunkerque / Grand Prix des Hauts de France",
+    "startDate": "2026-05-20",
+    "endDate": "2026-05-24",
+    "categoryId": 9,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 580,
+    "name": "O Gran Camiño - The Historical Route - Stage 4",
+    "startDate": "2026-04-17",
+    "endDate": "2026-04-17",
+    "categoryId": 24,
+    "tourId": 140,
+    "maxRiders": 7
+  },
+  {
+    "id": 581,
+    "name": "O Gran Camiño - The Historical Route - Stage 5",
+    "startDate": "2026-04-18",
+    "endDate": "2026-04-18",
+    "categoryId": 24,
+    "tourId": 140,
+    "maxRiders": 7
+  },
+  {
+    "id": 582,
+    "name": "Penn Ar Bed - Bro An Hirwazh - Stage 1",
+    "startDate": "2026-04-18",
+    "endDate": "2026-04-18",
+    "categoryId": 24,
+    "tourId": 141,
+    "maxRiders": 7
+  },
+  {
+    "id": 583,
+    "name": "Penn Ar Bed - Bro An Hirwazh - Stage 2",
+    "startDate": "2026-04-19",
+    "endDate": "2026-04-19",
+    "categoryId": 24,
+    "tourId": 141,
+    "maxRiders": 7
+  },
+  {
+    "id": 584,
+    "name": "Grand Prix Samarkand - Stage 1",
+    "startDate": "2026-04-20",
+    "endDate": "2026-04-20",
+    "categoryId": 24,
+    "tourId": 142,
+    "maxRiders": 7
+  },
+  {
+    "id": 585,
+    "name": "Grand Prix Samarkand - Stage 2",
+    "startDate": "2026-04-21",
+    "endDate": "2026-04-21",
+    "categoryId": 24,
+    "tourId": 142,
+    "maxRiders": 7
+  },
+  {
+    "id": 586,
+    "name": "Vuelta Asturias Julio Alvarez Mendo - Stage 1",
+    "startDate": "2026-04-23",
+    "endDate": "2026-04-23",
+    "categoryId": 24,
+    "tourId": 143,
+    "maxRiders": 7
+  },
+  {
+    "id": 587,
+    "name": "Vuelta Asturias Julio Alvarez Mendo - Stage 2",
+    "startDate": "2026-04-24",
+    "endDate": "2026-04-24",
+    "categoryId": 24,
+    "tourId": 143,
+    "maxRiders": 7
+  },
+  {
+    "id": 588,
+    "name": "Vuelta Asturias Julio Alvarez Mendo - Stage 3",
+    "startDate": "2026-04-25",
+    "endDate": "2026-04-25",
+    "categoryId": 24,
+    "tourId": 143,
+    "maxRiders": 7
+  },
+  {
+    "id": 589,
+    "name": "Vuelta Asturias Julio Alvarez Mendo - Stage 4",
+    "startDate": "2026-04-26",
+    "endDate": "2026-04-26",
+    "categoryId": 24,
+    "tourId": 143,
+    "maxRiders": 7
+  },
+  {
+    "id": 59,
+    "name": "Presidential Cycling Tour of Turkiye",
+    "startDate": "2026-04-26",
+    "endDate": "2026-05-03",
+    "categoryId": 9,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 590,
+    "name": "Course de Cujavie-Poméranie - Stage 1",
+    "startDate": "2026-04-30",
+    "endDate": "2026-04-30",
+    "categoryId": 24,
+    "tourId": 144,
+    "maxRiders": 7
+  },
+  {
+    "id": 591,
+    "name": "Course de Cujavie-Poméranie - Stage 2",
+    "startDate": "2026-05-01",
+    "endDate": "2026-05-01",
+    "categoryId": 24,
+    "tourId": 144,
+    "maxRiders": 7
+  },
+  {
+    "id": 592,
+    "name": "Course de Cujavie-Poméranie - Stage 3",
+    "startDate": "2026-05-02",
+    "endDate": "2026-05-02",
+    "categoryId": 24,
+    "tourId": 144,
+    "maxRiders": 7
+  },
+  {
+    "id": 593,
+    "name": "Course de Cujavie-Poméranie - Stage 4",
+    "startDate": "2026-05-03",
+    "endDate": "2026-05-03",
+    "categoryId": 24,
+    "tourId": 144,
+    "maxRiders": 7
+  },
+  {
+    "id": 594,
+    "name": "Grande Prémio Anicolor - Stage 1",
+    "startDate": "2026-05-01",
+    "endDate": "2026-05-01",
+    "categoryId": 24,
+    "tourId": 145,
+    "maxRiders": 7
+  },
+  {
+    "id": 595,
+    "name": "Grande Prémio Anicolor - Stage 2",
+    "startDate": "2026-05-02",
+    "endDate": "2026-05-02",
+    "categoryId": 24,
+    "tourId": 145,
+    "maxRiders": 7
+  },
+  {
+    "id": 596,
+    "name": "Grande Prémio Anicolor - Stage 3",
+    "startDate": "2026-05-03",
+    "endDate": "2026-05-03",
+    "categoryId": 24,
+    "tourId": 145,
+    "maxRiders": 7
+  },
+  {
+    "id": 597,
+    "name": "Grand Prix West Bohemia - Stage 1",
+    "startDate": "2026-05-02",
+    "endDate": "2026-05-02",
+    "categoryId": 24,
+    "tourId": 146,
+    "maxRiders": 7
+  },
+  {
+    "id": 598,
+    "name": "Grand Prix West Bohemia - Stage 2",
+    "startDate": "2026-05-03",
+    "endDate": "2026-05-03",
+    "categoryId": 24,
+    "tourId": 146,
+    "maxRiders": 7
+  },
+  {
+    "id": 599,
+    "name": "ΔΕΗ Tour of Hellas - Stage 1",
+    "startDate": "2026-05-06",
+    "endDate": "2026-05-06",
+    "categoryId": 24,
+    "tourId": 147,
+    "maxRiders": 7
+  },
+  {
+    "id": 6,
+    "name": "Milano - San Remo",
+    "startDate": "2026-03-21",
+    "endDate": "2026-03-21",
+    "categoryId": 5,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 60,
+    "name": "Tour of the Alps",
+    "startDate": "2026-04-20",
+    "endDate": "2026-04-24",
+    "categoryId": 9,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 600,
+    "name": "ΔΕΗ Tour of Hellas - Stage 2",
+    "startDate": "2026-05-07",
+    "endDate": "2026-05-07",
+    "categoryId": 24,
+    "tourId": 147,
+    "maxRiders": 7
+  },
+  {
+    "id": 601,
+    "name": "ΔΕΗ Tour of Hellas - Stage 3",
+    "startDate": "2026-05-08",
+    "endDate": "2026-05-08",
+    "categoryId": 24,
+    "tourId": 147,
+    "maxRiders": 7
+  },
+  {
+    "id": 602,
+    "name": "ΔΕΗ Tour of Hellas - Stage 4",
+    "startDate": "2026-05-09",
+    "endDate": "2026-05-09",
+    "categoryId": 24,
+    "tourId": 147,
+    "maxRiders": 7
+  },
+  {
+    "id": 603,
+    "name": "ΔΕΗ Tour of Hellas - Stage 5",
+    "startDate": "2026-05-10",
+    "endDate": "2026-05-10",
+    "categoryId": 24,
+    "tourId": 147,
+    "maxRiders": 7
+  },
+  {
+    "id": 604,
+    "name": "Baku-Khankendi Azerbaijan Cycling race - Stage 1",
+    "startDate": "2026-05-10",
+    "endDate": "2026-05-10",
+    "categoryId": 24,
+    "tourId": 148,
+    "maxRiders": 7
+  },
+  {
+    "id": 605,
+    "name": "Baku-Khankendi Azerbaijan Cycling race - Stage 2",
+    "startDate": "2026-05-11",
+    "endDate": "2026-05-11",
+    "categoryId": 24,
+    "tourId": 148,
+    "maxRiders": 7
+  },
+  {
+    "id": 606,
+    "name": "Baku-Khankendi Azerbaijan Cycling race - Stage 3",
+    "startDate": "2026-05-12",
+    "endDate": "2026-05-12",
+    "categoryId": 24,
+    "tourId": 148,
+    "maxRiders": 7
+  },
+  {
+    "id": 607,
+    "name": "Baku-Khankendi Azerbaijan Cycling race - Stage 4",
+    "startDate": "2026-05-13",
+    "endDate": "2026-05-13",
+    "categoryId": 24,
+    "tourId": 148,
+    "maxRiders": 7
+  },
+  {
+    "id": 608,
+    "name": "Baku-Khankendi Azerbaijan Cycling race - Stage 5",
+    "startDate": "2026-05-14",
+    "endDate": "2026-05-14",
+    "categoryId": 24,
+    "tourId": 148,
+    "maxRiders": 7
+  },
+  {
+    "id": 609,
+    "name": "Flèche du Sud - Stage 1",
+    "startDate": "2026-05-13",
+    "endDate": "2026-05-13",
+    "categoryId": 24,
+    "tourId": 149,
+    "maxRiders": 7
+  },
+  {
+    "id": 61,
+    "name": "Tour of Hainan",
+    "startDate": "2026-04-15",
+    "endDate": "2026-04-19",
+    "categoryId": 9,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 610,
+    "name": "Flèche du Sud - Stage 2",
+    "startDate": "2026-05-14",
+    "endDate": "2026-05-14",
+    "categoryId": 24,
+    "tourId": 149,
+    "maxRiders": 7
+  },
+  {
+    "id": 611,
+    "name": "Flèche du Sud - Stage 3",
+    "startDate": "2026-05-15",
+    "endDate": "2026-05-15",
+    "categoryId": 24,
+    "tourId": 149,
+    "maxRiders": 7
+  },
+  {
+    "id": 612,
+    "name": "Flèche du Sud - Stage 4",
+    "startDate": "2026-05-16",
+    "endDate": "2026-05-16",
+    "categoryId": 24,
+    "tourId": 149,
+    "maxRiders": 7
+  },
+  {
+    "id": 613,
+    "name": "Flèche du Sud - Stage 5",
+    "startDate": "2026-05-17",
+    "endDate": "2026-05-17",
+    "categoryId": 24,
+    "tourId": 149,
+    "maxRiders": 7
+  },
+  {
+    "id": 614,
+    "name": "Grande Prémio Internacional Beiras e Serra da Estrela - Stage 1",
+    "startDate": "2026-05-20",
+    "endDate": "2026-05-20",
+    "categoryId": 24,
+    "tourId": 150,
+    "maxRiders": 7
+  },
+  {
+    "id": 615,
+    "name": "Grande Prémio Internacional Beiras e Serra da Estrela - Stage 2",
+    "startDate": "2026-05-21",
+    "endDate": "2026-05-21",
+    "categoryId": 24,
+    "tourId": 150,
+    "maxRiders": 7
+  },
+  {
+    "id": 616,
+    "name": "Grande Prémio Internacional Beiras e Serra da Estrela - Stage 3",
+    "startDate": "2026-05-22",
+    "endDate": "2026-05-22",
+    "categoryId": 24,
+    "tourId": 150,
+    "maxRiders": 7
+  },
+  {
+    "id": 617,
+    "name": "Grande Prémio Internacional Beiras e Serra da Estrela - Stage 4",
+    "startDate": "2026-05-23",
+    "endDate": "2026-05-23",
+    "categoryId": 24,
+    "tourId": 150,
+    "maxRiders": 7
+  },
+  {
+    "id": 618,
+    "name": "Grande Prémio Internacional Beiras e Serra da Estrela - Stage 5",
+    "startDate": "2026-05-24",
+    "endDate": "2026-05-24",
+    "categoryId": 24,
+    "tourId": 150,
+    "maxRiders": 7
+  },
+  {
+    "id": 619,
+    "name": "Gipuzkoa Klasikoa - Stage 1",
+    "startDate": "2026-05-30",
+    "endDate": "2026-05-30",
+    "categoryId": 24,
+    "tourId": 151,
+    "maxRiders": 7
+  },
+  {
+    "id": 62,
+    "name": "Vuelta a Andalucia Ruta Ciclista Del Sol",
+    "startDate": "2026-02-18",
+    "endDate": "2026-02-22",
+    "categoryId": 9,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 620,
+    "name": "Gipuzkoa Klasikoa - Stage 2",
+    "startDate": "2026-05-31",
+    "endDate": "2026-05-31",
+    "categoryId": 24,
+    "tourId": 151,
+    "maxRiders": 7
+  },
+  {
+    "id": 621,
+    "name": "Tour of Estonia - Stage 1",
+    "startDate": "2026-06-04",
+    "endDate": "2026-06-04",
+    "categoryId": 24,
+    "tourId": 152,
+    "maxRiders": 7
+  },
+  {
+    "id": 622,
+    "name": "Tour of Estonia - Stage 2",
+    "startDate": "2026-06-05",
+    "endDate": "2026-06-05",
+    "categoryId": 24,
+    "tourId": 152,
+    "maxRiders": 7
+  },
+  {
+    "id": 623,
+    "name": "Tour of Estonia - Stage 3",
+    "startDate": "2026-06-06",
+    "endDate": "2026-06-06",
+    "categoryId": 24,
+    "tourId": 152,
+    "maxRiders": 7
+  },
+  {
+    "id": 624,
+    "name": "La Route d'Occitanie - CIC - Stage 1",
+    "startDate": "2026-06-19",
+    "endDate": "2026-06-19",
+    "categoryId": 24,
+    "tourId": 154,
+    "maxRiders": 7
+  },
+  {
+    "id": 625,
+    "name": "La Route d'Occitanie - CIC - Stage 2",
+    "startDate": "2026-06-20",
+    "endDate": "2026-06-20",
+    "categoryId": 24,
+    "tourId": 154,
+    "maxRiders": 7
+  },
+  {
+    "id": 626,
+    "name": "La Route d'Occitanie - CIC - Stage 3",
+    "startDate": "2026-06-21",
+    "endDate": "2026-06-21",
+    "categoryId": 24,
+    "tourId": 154,
+    "maxRiders": 7
+  },
+  {
+    "id": 627,
+    "name": "BESTRONICS Acht van Bladel - Stage 1",
+    "startDate": "2026-06-25",
+    "endDate": "2026-06-25",
+    "categoryId": 24,
+    "tourId": 155,
+    "maxRiders": 7
+  },
+  {
+    "id": 628,
+    "name": "BESTRONICS Acht van Bladel - Stage 2",
+    "startDate": "2026-06-26",
+    "endDate": "2026-06-26",
+    "categoryId": 24,
+    "tourId": 155,
+    "maxRiders": 7
+  },
+  {
+    "id": 629,
+    "name": "BESTRONICS Acht van Bladel - Stage 3",
+    "startDate": "2026-06-27",
+    "endDate": "2026-06-27",
+    "categoryId": 24,
+    "tourId": 155,
+    "maxRiders": 7
+  },
+  {
+    "id": 63,
+    "name": "Volta ao Algarve em Bicicleta",
+    "startDate": "2026-02-18",
+    "endDate": "2026-02-22",
+    "categoryId": 9,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 630,
+    "name": "BESTRONICS Acht van Bladel - Stage 4",
+    "startDate": "2026-06-28",
+    "endDate": "2026-06-28",
+    "categoryId": 24,
+    "tourId": 155,
+    "maxRiders": 7
+  },
+  {
+    "id": 631,
+    "name": "Lyon - Torino - Stage 1",
+    "startDate": "2026-07-01",
+    "endDate": "2026-07-01",
+    "categoryId": 24,
+    "tourId": 156,
+    "maxRiders": 7
+  },
+  {
+    "id": 632,
+    "name": "Lyon - Torino - Stage 2",
+    "startDate": "2026-07-02",
+    "endDate": "2026-07-02",
+    "categoryId": 24,
+    "tourId": 156,
+    "maxRiders": 7
+  },
+  {
+    "id": 633,
+    "name": "Lyon - Torino - Stage 3",
+    "startDate": "2026-07-03",
+    "endDate": "2026-07-03",
+    "categoryId": 24,
+    "tourId": 156,
+    "maxRiders": 7
+  },
+  {
+    "id": 634,
+    "name": "Sint Martinusprijs Kontich - Stage 1",
+    "startDate": "2026-07-02",
+    "endDate": "2026-07-02",
+    "categoryId": 24,
+    "tourId": 157,
+    "maxRiders": 7
+  },
+  {
+    "id": 635,
+    "name": "Sint Martinusprijs Kontich - Stage 2",
+    "startDate": "2026-07-03",
+    "endDate": "2026-07-03",
+    "categoryId": 24,
+    "tourId": 157,
+    "maxRiders": 7
+  },
+  {
+    "id": 636,
+    "name": "Sint Martinusprijs Kontich - Stage 3",
+    "startDate": "2026-07-04",
+    "endDate": "2026-07-04",
+    "categoryId": 24,
+    "tourId": 157,
+    "maxRiders": 7
+  },
+  {
+    "id": 637,
+    "name": "Sint Martinusprijs Kontich - Stage 4",
+    "startDate": "2026-07-05",
+    "endDate": "2026-07-05",
+    "categoryId": 24,
+    "tourId": 157,
+    "maxRiders": 7
+  },
+  {
+    "id": 638,
+    "name": "Sibiu Cycling Tour - Stage 1",
+    "startDate": "2026-07-04",
+    "endDate": "2026-07-04",
+    "categoryId": 24,
+    "tourId": 158,
+    "maxRiders": 7
+  },
+  {
+    "id": 639,
+    "name": "Sibiu Cycling Tour - Stage 2",
+    "startDate": "2026-07-05",
+    "endDate": "2026-07-05",
+    "categoryId": 24,
+    "tourId": 158,
+    "maxRiders": 7
+  },
+  {
+    "id": 64,
+    "name": "Tour of Oman",
+    "startDate": "2026-02-07",
+    "endDate": "2026-02-11",
+    "categoryId": 9,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 640,
+    "name": "Sibiu Cycling Tour - Stage 3",
+    "startDate": "2026-07-06",
+    "endDate": "2026-07-06",
+    "categoryId": 24,
+    "tourId": 158,
+    "maxRiders": 7
+  },
+  {
+    "id": 641,
+    "name": "Sibiu Cycling Tour - Stage 4",
+    "startDate": "2026-07-07",
+    "endDate": "2026-07-07",
+    "categoryId": 24,
+    "tourId": 158,
+    "maxRiders": 7
+  },
+  {
+    "id": 642,
+    "name": "Tour of Austria - Stage 1",
+    "startDate": "2026-07-08",
+    "endDate": "2026-07-08",
+    "categoryId": 24,
+    "tourId": 159,
+    "maxRiders": 7
+  },
+  {
+    "id": 643,
+    "name": "Tour of Austria - Stage 2",
+    "startDate": "2026-07-09",
+    "endDate": "2026-07-09",
+    "categoryId": 24,
+    "tourId": 159,
+    "maxRiders": 7
+  },
+  {
+    "id": 644,
+    "name": "Tour of Austria - Stage 3",
+    "startDate": "2026-07-10",
+    "endDate": "2026-07-10",
+    "categoryId": 24,
+    "tourId": 159,
+    "maxRiders": 7
+  },
+  {
+    "id": 645,
+    "name": "Tour of Austria - Stage 4",
+    "startDate": "2026-07-11",
+    "endDate": "2026-07-11",
+    "categoryId": 24,
+    "tourId": 159,
+    "maxRiders": 7
+  },
+  {
+    "id": 646,
+    "name": "Tour of Austria - Stage 5",
+    "startDate": "2026-07-12",
+    "endDate": "2026-07-12",
+    "categoryId": 24,
+    "tourId": 159,
+    "maxRiders": 7
+  },
+  {
+    "id": 647,
+    "name": "Ain Bugey Valromey Tour - Stage 1",
+    "startDate": "2026-07-10",
+    "endDate": "2026-07-10",
+    "categoryId": 24,
+    "tourId": 160,
+    "maxRiders": 7
+  },
+  {
+    "id": 648,
+    "name": "Ain Bugey Valromey Tour - Stage 2",
+    "startDate": "2026-07-11",
+    "endDate": "2026-07-11",
+    "categoryId": 24,
+    "tourId": 160,
+    "maxRiders": 7
+  },
+  {
+    "id": 649,
+    "name": "Ain Bugey Valromey Tour - Stage 3",
+    "startDate": "2026-07-12",
+    "endDate": "2026-07-12",
+    "categoryId": 24,
+    "tourId": 160,
+    "maxRiders": 7
+  },
+  {
+    "id": 65,
+    "name": "Volta a la Comunitat Valenciana",
+    "startDate": "2026-02-04",
+    "endDate": "2026-02-08",
+    "categoryId": 9,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 650,
+    "name": "Ain Bugey Valromey Tour - Stage 4",
+    "startDate": "2026-07-13",
+    "endDate": "2026-07-13",
+    "categoryId": 24,
+    "tourId": 160,
+    "maxRiders": 7
+  },
+  {
+    "id": 651,
+    "name": "Ain Bugey Valromey Tour - Stage 5",
+    "startDate": "2026-07-14",
+    "endDate": "2026-07-14",
+    "categoryId": 24,
+    "tourId": 160,
+    "maxRiders": 7
+  },
+  {
+    "id": 652,
+    "name": "Tour de l'Ain - Stage 1",
+    "startDate": "2026-07-28",
+    "endDate": "2026-07-28",
+    "categoryId": 24,
+    "tourId": 161,
+    "maxRiders": 7
+  },
+  {
+    "id": 653,
+    "name": "Tour de l'Ain - Stage 2",
+    "startDate": "2026-07-29",
+    "endDate": "2026-07-29",
+    "categoryId": 24,
+    "tourId": 161,
+    "maxRiders": 7
+  },
+  {
+    "id": 654,
+    "name": "Tour de l'Ain - Stage 3",
+    "startDate": "2026-07-30",
+    "endDate": "2026-07-30",
+    "categoryId": 24,
+    "tourId": 161,
+    "maxRiders": 7
+  },
+  {
+    "id": 655,
+    "name": "Giro Giovani - Stage 1",
+    "startDate": "2026-07-29",
+    "endDate": "2026-07-29",
+    "categoryId": 24,
+    "tourId": 162,
+    "maxRiders": 7
+  },
+  {
+    "id": 656,
+    "name": "Giro Giovani - Stage 2",
+    "startDate": "2026-07-30",
+    "endDate": "2026-07-30",
+    "categoryId": 24,
+    "tourId": 162,
+    "maxRiders": 7
+  },
+  {
+    "id": 657,
+    "name": "Giro Giovani - Stage 3",
+    "startDate": "2026-07-31",
+    "endDate": "2026-07-31",
+    "categoryId": 24,
+    "tourId": 162,
+    "maxRiders": 7
+  },
+  {
+    "id": 658,
+    "name": "Giro Giovani - Stage 4",
+    "startDate": "2026-08-01",
+    "endDate": "2026-08-01",
+    "categoryId": 24,
+    "tourId": 162,
+    "maxRiders": 7
+  },
+  {
+    "id": 659,
+    "name": "China Xizang Trans-Himalaya - Stage 1",
+    "startDate": "2026-08-02",
+    "endDate": "2026-08-02",
+    "categoryId": 24,
+    "tourId": 163,
+    "maxRiders": 7
+  },
+  {
+    "id": 66,
+    "name": "AlUla Tour",
+    "startDate": "2026-01-27",
+    "endDate": "2026-01-31",
+    "categoryId": 9,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 660,
+    "name": "China Xizang Trans-Himalaya - Stage 2",
+    "startDate": "2026-08-03",
+    "endDate": "2026-08-03",
+    "categoryId": 24,
+    "tourId": 163,
+    "maxRiders": 7
+  },
+  {
+    "id": 661,
+    "name": "China Xizang Trans-Himalaya - Stage 3",
+    "startDate": "2026-08-04",
+    "endDate": "2026-08-04",
+    "categoryId": 24,
+    "tourId": 163,
+    "maxRiders": 7
+  },
+  {
+    "id": 662,
+    "name": "China Xizang Trans-Himalaya - Stage 4",
+    "startDate": "2026-08-05",
+    "endDate": "2026-08-05",
+    "categoryId": 24,
+    "tourId": 163,
+    "maxRiders": 7
+  },
+  {
+    "id": 663,
+    "name": "China Xizang Trans-Himalaya - Stage 5",
+    "startDate": "2026-08-06",
+    "endDate": "2026-08-06",
+    "categoryId": 24,
+    "tourId": 163,
+    "maxRiders": 7
+  },
+  {
+    "id": 664,
+    "name": "Volta a Portugal em Bicicleta - Stage 1",
+    "startDate": "2026-08-05",
+    "endDate": "2026-08-05",
+    "categoryId": 24,
+    "tourId": 164,
+    "maxRiders": 7
+  },
+  {
+    "id": 665,
+    "name": "Volta a Portugal em Bicicleta - Stage 2",
+    "startDate": "2026-08-06",
+    "endDate": "2026-08-06",
+    "categoryId": 24,
+    "tourId": 164,
+    "maxRiders": 7
+  },
+  {
+    "id": 666,
+    "name": "Volta a Portugal em Bicicleta - Stage 3",
+    "startDate": "2026-08-07",
+    "endDate": "2026-08-07",
+    "categoryId": 24,
+    "tourId": 164,
+    "maxRiders": 7
+  },
+  {
+    "id": 667,
+    "name": "Volta a Portugal em Bicicleta - Stage 4",
+    "startDate": "2026-08-08",
+    "endDate": "2026-08-08",
+    "categoryId": 24,
+    "tourId": 164,
+    "maxRiders": 7
+  },
+  {
+    "id": 668,
+    "name": "Volta a Portugal em Bicicleta - Stage 5",
+    "startDate": "2026-08-09",
+    "endDate": "2026-08-09",
+    "categoryId": 24,
+    "tourId": 164,
+    "maxRiders": 7
+  },
+  {
+    "id": 669,
+    "name": "Volta a Portugal em Bicicleta - Stage 6",
+    "startDate": "2026-08-10",
+    "endDate": "2026-08-10",
+    "categoryId": 24,
+    "tourId": 164,
+    "maxRiders": 7
+  },
+  {
+    "id": 67,
+    "name": "Région Pays de la Loire Tour",
+    "startDate": "2026-04-07",
+    "endDate": "2026-04-10",
+    "categoryId": 9,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 670,
+    "name": "Volta a Portugal em Bicicleta - Stage 7",
+    "startDate": "2026-08-11",
+    "endDate": "2026-08-11",
+    "categoryId": 24,
+    "tourId": 164,
+    "maxRiders": 7
+  },
+  {
+    "id": 671,
+    "name": "Volta a Portugal em Bicicleta - Stage 8",
+    "startDate": "2026-08-12",
+    "endDate": "2026-08-12",
+    "categoryId": 24,
+    "tourId": 164,
+    "maxRiders": 7
+  },
+  {
+    "id": 672,
+    "name": "Volta a Portugal em Bicicleta - Stage 9",
+    "startDate": "2026-08-13",
+    "endDate": "2026-08-13",
+    "categoryId": 24,
+    "tourId": 164,
+    "maxRiders": 7
+  },
+  {
+    "id": 673,
+    "name": "Volta a Portugal em Bicicleta - Stage 10",
+    "startDate": "2026-08-14",
+    "endDate": "2026-08-14",
+    "categoryId": 24,
+    "tourId": 164,
+    "maxRiders": 7
+  },
+  {
+    "id": 674,
+    "name": "Volta a Portugal em Bicicleta - Stage 11",
+    "startDate": "2026-08-15",
+    "endDate": "2026-08-15",
+    "categoryId": 24,
+    "tourId": 164,
+    "maxRiders": 7
+  },
+  {
+    "id": 675,
+    "name": "Volta a Portugal em Bicicleta - Stage 12",
+    "startDate": "2026-08-16",
+    "endDate": "2026-08-16",
+    "categoryId": 24,
+    "tourId": 164,
+    "maxRiders": 7
+  },
+  {
+    "id": 676,
+    "name": "Aubel-Thimister-Stavelot - Stage 1",
+    "startDate": "2026-08-07",
+    "endDate": "2026-08-07",
+    "categoryId": 24,
+    "tourId": 165,
+    "maxRiders": 7
+  },
+  {
+    "id": 677,
+    "name": "Aubel-Thimister-Stavelot - Stage 2",
+    "startDate": "2026-08-08",
+    "endDate": "2026-08-08",
+    "categoryId": 24,
+    "tourId": 165,
+    "maxRiders": 7
+  },
+  {
+    "id": 678,
+    "name": "Aubel-Thimister-Stavelot - Stage 3",
+    "startDate": "2026-08-09",
+    "endDate": "2026-08-09",
+    "categoryId": 24,
+    "tourId": 165,
+    "maxRiders": 7
+  },
+  {
+    "id": 679,
+    "name": "Tour du Limousin-Périgord - Nouvelle Aquitaine - Stage 1",
+    "startDate": "2026-08-18",
+    "endDate": "2026-08-18",
+    "categoryId": 24,
+    "tourId": 166,
+    "maxRiders": 7
+  },
+  {
+    "id": 68,
+    "name": "Czech Tour",
+    "startDate": "2026-08-13",
+    "endDate": "2026-08-16",
+    "categoryId": 9,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 680,
+    "name": "Tour du Limousin-Périgord - Nouvelle Aquitaine - Stage 2",
+    "startDate": "2026-08-19",
+    "endDate": "2026-08-19",
+    "categoryId": 24,
+    "tourId": 166,
+    "maxRiders": 7
+  },
+  {
+    "id": 681,
+    "name": "Tour du Limousin-Périgord - Nouvelle Aquitaine - Stage 3",
+    "startDate": "2026-08-20",
+    "endDate": "2026-08-20",
+    "categoryId": 24,
+    "tourId": 166,
+    "maxRiders": 7
+  },
+  {
+    "id": 682,
+    "name": "Tour du Limousin-Périgord - Nouvelle Aquitaine - Stage 4",
+    "startDate": "2026-08-21",
+    "endDate": "2026-08-21",
+    "categoryId": 24,
+    "tourId": 166,
+    "maxRiders": 7
+  },
+  {
+    "id": 683,
+    "name": "Tour du Limousin-Périgord - Nouvelle Aquitaine (2) - Stage 1",
+    "startDate": "2026-08-25",
+    "endDate": "2026-08-25",
+    "categoryId": 24,
+    "tourId": 167,
+    "maxRiders": 7
+  },
+  {
+    "id": 684,
+    "name": "Tour du Limousin-Périgord - Nouvelle Aquitaine (2) - Stage 2",
+    "startDate": "2026-08-26",
+    "endDate": "2026-08-26",
+    "categoryId": 24,
+    "tourId": 167,
+    "maxRiders": 7
+  },
+  {
+    "id": 685,
+    "name": "Tour du Limousin-Périgord - Nouvelle Aquitaine (2) - Stage 3",
+    "startDate": "2026-08-27",
+    "endDate": "2026-08-27",
+    "categoryId": 24,
+    "tourId": 167,
+    "maxRiders": 7
+  },
+  {
+    "id": 686,
+    "name": "Tour du Limousin-Périgord - Nouvelle Aquitaine (2) - Stage 4",
+    "startDate": "2026-08-28",
+    "endDate": "2026-08-28",
+    "categoryId": 24,
+    "tourId": 167,
+    "maxRiders": 7
+  },
+  {
+    "id": 687,
+    "name": "Tour de Korea - Stage 1",
+    "startDate": "2026-08-31",
+    "endDate": "2026-08-31",
+    "categoryId": 24,
+    "tourId": 168,
+    "maxRiders": 7
+  },
+  {
+    "id": 688,
+    "name": "Tour de Korea - Stage 2",
+    "startDate": "2026-09-01",
+    "endDate": "2026-09-01",
+    "categoryId": 24,
+    "tourId": 168,
+    "maxRiders": 7
+  },
+  {
+    "id": 689,
+    "name": "Tour de Korea - Stage 3",
+    "startDate": "2026-09-02",
+    "endDate": "2026-09-02",
+    "categoryId": 24,
+    "tourId": 168,
+    "maxRiders": 7
+  },
+  {
+    "id": 69,
+    "name": "Maryland Cycling Classic",
+    "startDate": "2026-09-05",
+    "endDate": "2026-09-07",
+    "categoryId": 9,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 690,
+    "name": "Tour de Korea - Stage 4",
+    "startDate": "2026-09-03",
+    "endDate": "2026-09-03",
+    "categoryId": 24,
+    "tourId": 168,
+    "maxRiders": 7
+  },
+  {
+    "id": 691,
+    "name": "Tour de Korea - Stage 5",
+    "startDate": "2026-09-04",
+    "endDate": "2026-09-04",
+    "categoryId": 24,
+    "tourId": 168,
+    "maxRiders": 7
+  },
+  {
+    "id": 692,
+    "name": "ZLM Tour - Stage 1",
+    "startDate": "2026-09-02",
+    "endDate": "2026-09-02",
+    "categoryId": 24,
+    "tourId": 169,
+    "maxRiders": 7
+  },
+  {
+    "id": 693,
+    "name": "ZLM Tour - Stage 2",
+    "startDate": "2026-09-03",
+    "endDate": "2026-09-03",
+    "categoryId": 24,
+    "tourId": 169,
+    "maxRiders": 7
+  },
+  {
+    "id": 694,
+    "name": "ZLM Tour - Stage 3",
+    "startDate": "2026-09-04",
+    "endDate": "2026-09-04",
+    "categoryId": 24,
+    "tourId": 169,
+    "maxRiders": 7
+  },
+  {
+    "id": 695,
+    "name": "ZLM Tour - Stage 4",
+    "startDate": "2026-09-05",
+    "endDate": "2026-09-05",
+    "categoryId": 24,
+    "tourId": 169,
+    "maxRiders": 7
+  },
+  {
+    "id": 696,
+    "name": "ZLM Tour - Stage 5",
+    "startDate": "2026-09-06",
+    "endDate": "2026-09-06",
+    "categoryId": 24,
+    "tourId": 169,
+    "maxRiders": 7
+  },
+  {
+    "id": 697,
+    "name": "Giro Della Lunigiana - Stage 1",
+    "startDate": "2026-09-03",
+    "endDate": "2026-09-03",
+    "categoryId": 24,
+    "tourId": 170,
+    "maxRiders": 7
+  },
+  {
+    "id": 698,
+    "name": "Giro Della Lunigiana - Stage 2",
+    "startDate": "2026-09-04",
+    "endDate": "2026-09-04",
+    "categoryId": 24,
+    "tourId": 170,
+    "maxRiders": 7
+  },
+  {
+    "id": 699,
+    "name": "Giro Della Lunigiana - Stage 3",
+    "startDate": "2026-09-05",
+    "endDate": "2026-09-05",
+    "categoryId": 24,
+    "tourId": 170,
+    "maxRiders": 7
+  },
+  {
+    "id": 7,
+    "name": "Tour of Flanders/ Ronde van Vlaanderen",
+    "startDate": "2026-04-05",
+    "endDate": "2026-04-05",
+    "categoryId": 5,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 70,
+    "name": "CRO Race",
+    "startDate": "2026-09-22",
+    "endDate": "2026-09-27",
+    "categoryId": 9,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 700,
+    "name": "Giro Della Lunigiana - Stage 4",
+    "startDate": "2026-09-06",
+    "endDate": "2026-09-06",
+    "categoryId": 24,
+    "tourId": 170,
+    "maxRiders": 7
+  },
+  {
+    "id": 701,
+    "name": "Grand Prix Rüebliland - Stage 1",
+    "startDate": "2026-09-03",
+    "endDate": "2026-09-03",
+    "categoryId": 24,
+    "tourId": 171,
+    "maxRiders": 7
+  },
+  {
+    "id": 702,
+    "name": "Grand Prix Rüebliland - Stage 2",
+    "startDate": "2026-09-04",
+    "endDate": "2026-09-04",
+    "categoryId": 24,
+    "tourId": 171,
+    "maxRiders": 7
+  },
+  {
+    "id": 703,
+    "name": "Grand Prix Rüebliland - Stage 3",
+    "startDate": "2026-09-05",
+    "endDate": "2026-09-05",
+    "categoryId": 24,
+    "tourId": 171,
+    "maxRiders": 7
+  },
+  {
+    "id": 704,
+    "name": "Grand Prix Rüebliland - Stage 4",
+    "startDate": "2026-09-06",
+    "endDate": "2026-09-06",
+    "categoryId": 24,
+    "tourId": 171,
+    "maxRiders": 7
+  },
+  {
+    "id": 705,
+    "name": "Vuelta a Cantabria - GP. Gobierno de Cantabria - Stage 1",
+    "startDate": "2026-09-04",
+    "endDate": "2026-09-04",
+    "categoryId": 24,
+    "tourId": 172,
+    "maxRiders": 7
+  },
+  {
+    "id": 706,
+    "name": "Vuelta a Cantabria - GP. Gobierno de Cantabria - Stage 2",
+    "startDate": "2026-09-05",
+    "endDate": "2026-09-05",
+    "categoryId": 24,
+    "tourId": 172,
+    "maxRiders": 7
+  },
+  {
+    "id": 707,
+    "name": "Vuelta a Cantabria - GP. Gobierno de Cantabria - Stage 3",
+    "startDate": "2026-09-06",
+    "endDate": "2026-09-06",
+    "categoryId": 24,
+    "tourId": 172,
+    "maxRiders": 7
+  },
+  {
+    "id": 708,
+    "name": "Tour of Binzhou - Stage 1",
+    "startDate": "2026-09-08",
+    "endDate": "2026-09-08",
+    "categoryId": 24,
+    "tourId": 173,
+    "maxRiders": 7
+  },
+  {
+    "id": 709,
+    "name": "Tour of Binzhou - Stage 2",
+    "startDate": "2026-09-09",
+    "endDate": "2026-09-09",
+    "categoryId": 24,
+    "tourId": 173,
+    "maxRiders": 7
+  },
+  {
+    "id": 71,
+    "name": "Surf Coast Classic - Men",
+    "startDate": "2026-01-29",
+    "endDate": "2026-01-29",
+    "categoryId": 10,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 710,
+    "name": "Tour of Taihu Lake - Stage 1",
+    "startDate": "2026-09-12",
+    "endDate": "2026-09-12",
+    "categoryId": 24,
+    "tourId": 174,
+    "maxRiders": 7
+  },
+  {
+    "id": 711,
+    "name": "Tour of Taihu Lake - Stage 2",
+    "startDate": "2026-09-13",
+    "endDate": "2026-09-13",
+    "categoryId": 24,
+    "tourId": 174,
+    "maxRiders": 7
+  },
+  {
+    "id": 712,
+    "name": "Tour of Taihu Lake - Stage 3",
+    "startDate": "2026-09-14",
+    "endDate": "2026-09-14",
+    "categoryId": 24,
+    "tourId": 174,
+    "maxRiders": 7
+  },
+  {
+    "id": 713,
+    "name": "Tour of Taihu Lake - Stage 4",
+    "startDate": "2026-09-15",
+    "endDate": "2026-09-15",
+    "categoryId": 24,
+    "tourId": 174,
+    "maxRiders": 7
+  },
+  {
+    "id": 714,
+    "name": "Tour of Taihu Lake - Stage 5",
+    "startDate": "2026-09-16",
+    "endDate": "2026-09-16",
+    "categoryId": 24,
+    "tourId": 174,
+    "maxRiders": 7
+  },
+  {
+    "id": 715,
+    "name": "Il Giro d'Abruzzo - Stage 1",
+    "startDate": "2026-09-15",
+    "endDate": "2026-09-15",
+    "categoryId": 24,
+    "tourId": 175,
+    "maxRiders": 7
+  },
+  {
+    "id": 716,
+    "name": "Il Giro d'Abruzzo - Stage 2",
+    "startDate": "2026-09-16",
+    "endDate": "2026-09-16",
+    "categoryId": 24,
+    "tourId": 175,
+    "maxRiders": 7
+  },
+  {
+    "id": 717,
+    "name": "Il Giro d'Abruzzo - Stage 3",
+    "startDate": "2026-09-17",
+    "endDate": "2026-09-17",
+    "categoryId": 24,
+    "tourId": 175,
+    "maxRiders": 7
+  },
+  {
+    "id": 718,
+    "name": "Il Giro d'Abruzzo - Stage 4",
+    "startDate": "2026-09-18",
+    "endDate": "2026-09-18",
+    "categoryId": 24,
+    "tourId": 175,
+    "maxRiders": 7
+  },
+  {
+    "id": 719,
+    "name": "Okolo Slovenska / Tour de Slovaquie - Stage 1",
+    "startDate": "2026-09-16",
+    "endDate": "2026-09-16",
+    "categoryId": 24,
+    "tourId": 176,
+    "maxRiders": 7
+  },
+  {
+    "id": 72,
+    "name": "Muscat Classic",
+    "startDate": "2026-02-06",
+    "endDate": "2026-02-06",
+    "categoryId": 10,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 720,
+    "name": "Okolo Slovenska / Tour de Slovaquie - Stage 2",
+    "startDate": "2026-09-17",
+    "endDate": "2026-09-17",
+    "categoryId": 24,
+    "tourId": 176,
+    "maxRiders": 7
+  },
+  {
+    "id": 721,
+    "name": "Okolo Slovenska / Tour de Slovaquie - Stage 3",
+    "startDate": "2026-09-18",
+    "endDate": "2026-09-18",
+    "categoryId": 24,
+    "tourId": 176,
+    "maxRiders": 7
+  },
+  {
+    "id": 722,
+    "name": "Okolo Slovenska / Tour de Slovaquie - Stage 4",
+    "startDate": "2026-09-19",
+    "endDate": "2026-09-19",
+    "categoryId": 24,
+    "tourId": 176,
+    "maxRiders": 7
+  },
+  {
+    "id": 723,
+    "name": "Okolo Slovenska / Tour de Slovaquie - Stage 5",
+    "startDate": "2026-09-20",
+    "endDate": "2026-09-20",
+    "categoryId": 24,
+    "tourId": 176,
+    "maxRiders": 7
+  },
+  {
+    "id": 724,
+    "name": "Tour of Huangshan - Stage 1",
+    "startDate": "2026-09-18",
+    "endDate": "2026-09-18",
+    "categoryId": 24,
+    "tourId": 177,
+    "maxRiders": 7
+  },
+  {
+    "id": 725,
+    "name": "Tour of Huangshan - Stage 2",
+    "startDate": "2026-09-19",
+    "endDate": "2026-09-19",
+    "categoryId": 24,
+    "tourId": 177,
+    "maxRiders": 7
+  },
+  {
+    "id": 726,
+    "name": "Tour of Huangshan - Stage 3",
+    "startDate": "2026-09-20",
+    "endDate": "2026-09-20",
+    "categoryId": 24,
+    "tourId": 177,
+    "maxRiders": 7
+  },
+  {
+    "id": 727,
+    "name": "Tour de Kyushu - Stage 1",
+    "startDate": "2026-10-10",
+    "endDate": "2026-10-10",
+    "categoryId": 24,
+    "tourId": 178,
+    "maxRiders": 7
+  },
+  {
+    "id": 728,
+    "name": "Tour de Kyushu - Stage 2",
+    "startDate": "2026-10-11",
+    "endDate": "2026-10-11",
+    "categoryId": 24,
+    "tourId": 178,
+    "maxRiders": 7
+  },
+  {
+    "id": 729,
+    "name": "Tour de Kyushu - Stage 3",
+    "startDate": "2026-10-12",
+    "endDate": "2026-10-12",
+    "categoryId": 24,
+    "tourId": 178,
+    "maxRiders": 7
+  },
+  {
+    "id": 73,
+    "name": "Figueira Champions Classic",
+    "startDate": "2026-02-14",
+    "endDate": "2026-02-14",
+    "categoryId": 10,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 730,
+    "name": "National Championships India ME - Road Race",
+    "startDate": "2026-xx-xx",
+    "endDate": "2026-xx-xx",
+    "categoryId": 26,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 731,
+    "name": "National Championships Taiwan ME - Road Race",
+    "startDate": "2026-xx-xx",
+    "endDate": "2026-xx-xx",
+    "categoryId": 26,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 732,
+    "name": "National Championships Mexico ME - Road Race",
+    "startDate": "2026-xx-xx",
+    "endDate": "2026-xx-xx",
+    "categoryId": 26,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 733,
+    "name": "National Championships Vietnam ME - Road Race",
+    "startDate": "2026-xx-xx",
+    "endDate": "2026-xx-xx",
+    "categoryId": 26,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 734,
+    "name": "National Championships Israel ME - Road Race",
+    "startDate": "2026-xx-xx",
+    "endDate": "2026-xx-xx",
+    "categoryId": 26,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 735,
+    "name": "National Championships Guam ME - Road Race",
+    "startDate": "2026-xx-xx",
+    "endDate": "2026-xx-xx",
+    "categoryId": 26,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 736,
+    "name": "National Championships Iran ME - Road Race",
+    "startDate": "2026-xx-xx",
+    "endDate": "2026-xx-xx",
+    "categoryId": 26,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 737,
+    "name": "National Championships Sint Maarten ME - Road Race",
+    "startDate": "2026-xx-xx",
+    "endDate": "2026-xx-xx",
+    "categoryId": 26,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 738,
+    "name": "National Championships Saint Vincent and the Grenadines ME - Road Race",
+    "startDate": "2026-xx-xx",
+    "endDate": "2026-xx-xx",
+    "categoryId": 26,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 739,
+    "name": "National Championships Kyrgyzstan ME - Road Race",
+    "startDate": "2026-xx-xx",
+    "endDate": "2026-xx-xx",
+    "categoryId": 26,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 74,
+    "name": "Clasica de Almeria",
+    "startDate": "2026-02-15",
+    "endDate": "2026-02-15",
+    "categoryId": 10,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 740,
+    "name": "National Championships Jamaica ME - Road Race",
+    "startDate": "2026-xx-xx",
+    "endDate": "2026-xx-xx",
+    "categoryId": 26,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 741,
+    "name": "National Championships Brazil ME - Road Race",
+    "startDate": "2026-xx-xx",
+    "endDate": "2026-xx-xx",
+    "categoryId": 26,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 742,
+    "name": "National Championships Indonesia ME - Road Race",
+    "startDate": "2026-xx-xx",
+    "endDate": "2026-xx-xx",
+    "categoryId": 26,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 743,
+    "name": "National Championships Greece ME - Road Race",
+    "startDate": "2026-xx-xx",
+    "endDate": "2026-xx-xx",
+    "categoryId": 26,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 744,
+    "name": "National Championships Slovenia ME - Road Race",
+    "startDate": "2026-xx-xx",
+    "endDate": "2026-xx-xx",
+    "categoryId": 26,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 745,
+    "name": "National Championships Belgium ME - Road Race",
+    "startDate": "2026-xx-xx",
+    "endDate": "2026-xx-xx",
+    "categoryId": 26,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 746,
+    "name": "National Championships France ME - Road Race",
+    "startDate": "2026-xx-xx",
+    "endDate": "2026-xx-xx",
+    "categoryId": 26,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 747,
+    "name": "National Championships Switzerland ME - Road Race",
+    "startDate": "2026-xx-xx",
+    "endDate": "2026-xx-xx",
+    "categoryId": 26,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 748,
+    "name": "National Championships Luxembourg ME - Road Race",
+    "startDate": "2026-xx-xx",
+    "endDate": "2026-xx-xx",
+    "categoryId": 26,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 749,
+    "name": "National Championships Germany ME - Road Race",
+    "startDate": "2026-xx-xx",
+    "endDate": "2026-xx-xx",
+    "categoryId": 26,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 75,
+    "name": "Faun-Ardèche Classic",
+    "startDate": "2026-02-28",
+    "endDate": "2026-02-28",
+    "categoryId": 10,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 750,
+    "name": "National Championships Italy ME - Road Race",
+    "startDate": "2026-xx-xx",
+    "endDate": "2026-xx-xx",
+    "categoryId": 26,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 751,
+    "name": "National Championships Spain ME - Road Race",
+    "startDate": "2026-xx-xx",
+    "endDate": "2026-xx-xx",
+    "categoryId": 26,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 752,
+    "name": "National Championships Great Britain ME - Road Race",
+    "startDate": "2026-xx-xx",
+    "endDate": "2026-xx-xx",
+    "categoryId": 26,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 753,
+    "name": "National Championships Denmark ME - Road Race",
+    "startDate": "2026-xx-xx",
+    "endDate": "2026-xx-xx",
+    "categoryId": 26,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 754,
+    "name": "National Championships Poland ME - Road Race",
+    "startDate": "2026-xx-xx",
+    "endDate": "2026-xx-xx",
+    "categoryId": 26,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 755,
+    "name": "National Championships Portugal ME - Road Race",
+    "startDate": "2026-xx-xx",
+    "endDate": "2026-xx-xx",
+    "categoryId": 26,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 756,
+    "name": "National Championships Norway ME - Road Race",
+    "startDate": "2026-xx-xx",
+    "endDate": "2026-xx-xx",
+    "categoryId": 26,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 757,
+    "name": "National Championships Ireland ME - Road Race",
+    "startDate": "2026-xx-xx",
+    "endDate": "2026-xx-xx",
+    "categoryId": 26,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 758,
+    "name": "National Championships Slovakia ME - Road Race",
+    "startDate": "2026-xx-xx",
+    "endDate": "2026-xx-xx",
+    "categoryId": 26,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 759,
+    "name": "National Championships Czech Republic ME - Road Race",
+    "startDate": "2026-xx-xx",
+    "endDate": "2026-xx-xx",
+    "categoryId": 26,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 76,
+    "name": "Faun Drome Classic",
+    "startDate": "2026-03-01",
+    "endDate": "2026-03-01",
+    "categoryId": 10,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 760,
+    "name": "National Championships Kazakhstan ME - Road Race",
+    "startDate": "2026-xx-xx",
+    "endDate": "2026-xx-xx",
+    "categoryId": 26,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 761,
+    "name": "National Championships Austria ME - Road Race",
+    "startDate": "2026-xx-xx",
+    "endDate": "2026-xx-xx",
+    "categoryId": 26,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 762,
+    "name": "National Championships Ukraine ME - Road Race",
+    "startDate": "2026-xx-xx",
+    "endDate": "2026-xx-xx",
+    "categoryId": 26,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 763,
+    "name": "National Championships Croatia ME - Road Race",
+    "startDate": "2026-xx-xx",
+    "endDate": "2026-xx-xx",
+    "categoryId": 26,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 764,
+    "name": "National Championships Eritrea ME - Road Race",
+    "startDate": "2026-xx-xx",
+    "endDate": "2026-xx-xx",
+    "categoryId": 26,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 765,
+    "name": "National Championships Latvia ME - Road Race",
+    "startDate": "2026-xx-xx",
+    "endDate": "2026-xx-xx",
+    "categoryId": 26,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 766,
+    "name": "National Championships Estonia ME - Road Race",
+    "startDate": "2026-xx-xx",
+    "endDate": "2026-xx-xx",
+    "categoryId": 26,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 767,
+    "name": "National Championships Venezuela ME - Road Race",
+    "startDate": "2026-xx-xx",
+    "endDate": "2026-xx-xx",
+    "categoryId": 26,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 768,
+    "name": "National Championships Rwanda ME - Road Race",
+    "startDate": "2026-xx-xx",
+    "endDate": "2026-xx-xx",
+    "categoryId": 26,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 769,
+    "name": "National Championships Sweden ME - Road Race",
+    "startDate": "2026-xx-xx",
+    "endDate": "2026-xx-xx",
+    "categoryId": 26,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 77,
+    "name": "Kuurne - Brussel - Kuurne",
+    "startDate": "2026-03-01",
+    "endDate": "2026-03-01",
+    "categoryId": 10,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 770,
+    "name": "National Championships Lithuania ME - Road Race",
+    "startDate": "2026-xx-xx",
+    "endDate": "2026-xx-xx",
+    "categoryId": 26,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 771,
+    "name": "National Championships Morocco ME - Road Race",
+    "startDate": "2026-xx-xx",
+    "endDate": "2026-xx-xx",
+    "categoryId": 26,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 772,
+    "name": "National Championships Guatemala ME - Road Race",
+    "startDate": "2026-xx-xx",
+    "endDate": "2026-xx-xx",
+    "categoryId": 26,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 773,
+    "name": "National Championships Hungary ME - Road Race",
+    "startDate": "2026-xx-xx",
+    "endDate": "2026-xx-xx",
+    "categoryId": 26,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 774,
+    "name": "National Championships Uganda ME - Road Race",
+    "startDate": "2026-xx-xx",
+    "endDate": "2026-xx-xx",
+    "categoryId": 26,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 775,
+    "name": "National Championships Bosnia and Herzegovina ME - Road Race",
+    "startDate": "2026-xx-xx",
+    "endDate": "2026-xx-xx",
+    "categoryId": 26,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 776,
+    "name": "National Championships Bulgaria ME - Road Race",
+    "startDate": "2026-xx-xx",
+    "endDate": "2026-xx-xx",
+    "categoryId": 26,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 777,
+    "name": "National Championships Mongolia ME - Road Race",
+    "startDate": "2026-xx-xx",
+    "endDate": "2026-xx-xx",
+    "categoryId": 26,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 778,
+    "name": "National Championships Laos ME - Road Race",
+    "startDate": "2026-xx-xx",
+    "endDate": "2026-xx-xx",
+    "categoryId": 26,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 779,
+    "name": "National Championships Montenegro ME - Road Race",
+    "startDate": "2026-xx-xx",
+    "endDate": "2026-xx-xx",
+    "categoryId": 26,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 78,
+    "name": "Trofeo Laigueglia",
+    "startDate": "2026-03-04",
+    "endDate": "2026-03-04",
+    "categoryId": 10,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 780,
+    "name": "National Championships Cameroon ME - Road Race",
+    "startDate": "2026-xx-xx",
+    "endDate": "2026-xx-xx",
+    "categoryId": 26,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 781,
+    "name": "National Championships Ethiopia ME - Road Race",
+    "startDate": "2026-xx-xx",
+    "endDate": "2026-xx-xx",
+    "categoryId": 26,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 782,
+    "name": "National Championships North Macedonia ME - Road Race",
+    "startDate": "2026-xx-xx",
+    "endDate": "2026-xx-xx",
+    "categoryId": 26,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 783,
+    "name": "National Championships Cape Verde ME - Road Race",
+    "startDate": "2026-xx-xx",
+    "endDate": "2026-xx-xx",
+    "categoryId": 26,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 784,
+    "name": "National Championships Dominican Republic ME - Road Race",
+    "startDate": "2026-xx-xx",
+    "endDate": "2026-xx-xx",
+    "categoryId": 26,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 785,
+    "name": "National Championships El Salvador ME - Road Race",
+    "startDate": "2026-xx-xx",
+    "endDate": "2026-xx-xx",
+    "categoryId": 26,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 786,
+    "name": "National Championships Cyprus ME - Road Race",
+    "startDate": "2026-xx-xx",
+    "endDate": "2026-xx-xx",
+    "categoryId": 26,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 787,
+    "name": "National Championships Antigua and Barbuda ME - Road Race",
+    "startDate": "2026-xx-xx",
+    "endDate": "2026-xx-xx",
+    "categoryId": 26,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 788,
+    "name": "National Championships Honduras ME - Road Race",
+    "startDate": "2026-xx-xx",
+    "endDate": "2026-xx-xx",
+    "categoryId": 26,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 789,
+    "name": "National Championships Trinidad & Tobago ME - Road Race",
+    "startDate": "2026-xx-xx",
+    "endDate": "2026-xx-xx",
+    "categoryId": 26,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 79,
+    "name": "Danilith Nokere Koerse",
+    "startDate": "2026-03-18",
+    "endDate": "2026-03-18",
+    "categoryId": 10,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 790,
+    "name": "National Championships Belize ME - Road Race",
+    "startDate": "2026-xx-xx",
+    "endDate": "2026-xx-xx",
+    "categoryId": 26,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 791,
+    "name": "National Championships Cayman Islands ME - Road Race",
+    "startDate": "2026-xx-xx",
+    "endDate": "2026-xx-xx",
+    "categoryId": 26,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 792,
+    "name": "National Championships British Virgin Islands ME - Road Race",
+    "startDate": "2026-xx-xx",
+    "endDate": "2026-xx-xx",
+    "categoryId": 26,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 793,
+    "name": "National Championships Malta ME - Road Race",
+    "startDate": "2026-xx-xx",
+    "endDate": "2026-xx-xx",
+    "categoryId": 26,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 794,
+    "name": "National Championships Iceland ME - Road Race",
+    "startDate": "2026-xx-xx",
+    "endDate": "2026-xx-xx",
+    "categoryId": 26,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 795,
+    "name": "National Championships Netherlands ME - Road Race",
+    "startDate": "2026-xx-xx",
+    "endDate": "2026-xx-xx",
+    "categoryId": 26,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 796,
+    "name": "National Championships Canada ME - Road Race",
+    "startDate": "2026-xx-xx",
+    "endDate": "2026-xx-xx",
+    "categoryId": 26,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 797,
+    "name": "National Championships Algeria ME - Road Race",
+    "startDate": "2026-xx-xx",
+    "endDate": "2026-xx-xx",
+    "categoryId": 26,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 798,
+    "name": "National Championships Turkey ME - Road Race",
+    "startDate": "2026-xx-xx",
+    "endDate": "2026-xx-xx",
+    "categoryId": 26,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 799,
+    "name": "National Championships Eswatini ME - Road Race",
+    "startDate": "2026-xx-xx",
+    "endDate": "2026-xx-xx",
+    "categoryId": 26,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 8,
+    "name": "Paris - Roubaix",
+    "startDate": "2026-04-12",
+    "endDate": "2026-04-12",
+    "categoryId": 5,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 80,
+    "name": "Milano - Torino",
+    "startDate": "2026-03-18",
+    "endDate": "2026-03-18",
+    "categoryId": 10,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 800,
+    "name": "National Championships South Korea ME - Road Race",
+    "startDate": "2026-xx-xx",
+    "endDate": "2026-xx-xx",
+    "categoryId": 26,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 801,
+    "name": "National Championships Jordan ME - Road Race",
+    "startDate": "2026-xx-xx",
+    "endDate": "2026-xx-xx",
+    "categoryId": 26,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 802,
+    "name": "National Championships China ME - Road Race",
+    "startDate": "2026-xx-xx",
+    "endDate": "2026-xx-xx",
+    "categoryId": 26,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 803,
+    "name": "National Championships Uzbekistan ME - Road Race",
+    "startDate": "2026-xx-xx",
+    "endDate": "2026-xx-xx",
+    "categoryId": 26,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 804,
+    "name": "National Championships Costa Rica ME - Road Race",
+    "startDate": "2026-xx-xx",
+    "endDate": "2026-xx-xx",
+    "categoryId": 26,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 805,
+    "name": "National Championships Bermuda ME - Road Race",
+    "startDate": "2026-xx-xx",
+    "endDate": "2026-xx-xx",
+    "categoryId": 26,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 806,
+    "name": "National Championships Romania ME - Road Race",
+    "startDate": "2026-xx-xx",
+    "endDate": "2026-xx-xx",
+    "categoryId": 26,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 807,
+    "name": "National Championships Serbia ME - Road Race",
+    "startDate": "2026-xx-xx",
+    "endDate": "2026-xx-xx",
+    "categoryId": 26,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 808,
+    "name": "National Championships Hong Kong ME - Road Race",
+    "startDate": "2026-xx-xx",
+    "endDate": "2026-xx-xx",
+    "categoryId": 26,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 809,
+    "name": "National Championships Singapore ME - Road Race",
+    "startDate": "2026-xx-xx",
+    "endDate": "2026-xx-xx",
+    "categoryId": 26,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 81,
+    "name": "Grand Prix de Denain - Porte du Hainaut",
+    "startDate": "2026-03-19",
+    "endDate": "2026-03-19",
+    "categoryId": 10,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 810,
+    "name": "National Championships Mauritius ME - Road Race",
+    "startDate": "2026-xx-xx",
+    "endDate": "2026-xx-xx",
+    "categoryId": 26,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 811,
+    "name": "National Championships Tunisia ME - Road Race",
+    "startDate": "2026-xx-xx",
+    "endDate": "2026-xx-xx",
+    "categoryId": 26,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 812,
+    "name": "National Championships Japan ME - Road Race",
+    "startDate": "2026-xx-xx",
+    "endDate": "2026-xx-xx",
+    "categoryId": 26,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 813,
+    "name": "National Championships Burkina Faso ME - Road Race",
+    "startDate": "2026-xx-xx",
+    "endDate": "2026-xx-xx",
+    "categoryId": 26,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 814,
+    "name": "National Championships Puerto Rico ME - Road Race",
+    "startDate": "2026-xx-xx",
+    "endDate": "2026-xx-xx",
+    "categoryId": 26,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 815,
+    "name": "National Championships Bolivia ME - Road Race",
+    "startDate": "2026-xx-xx",
+    "endDate": "2026-xx-xx",
+    "categoryId": 26,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 816,
+    "name": "National Championships Macau ME - Road Race",
+    "startDate": "2026-xx-xx",
+    "endDate": "2026-xx-xx",
+    "categoryId": 26,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 817,
+    "name": "National Championships Kosovo ME - Road Race",
+    "startDate": "2026-xx-xx",
+    "endDate": "2026-xx-xx",
+    "categoryId": 26,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 818,
+    "name": "National Championships Benin ME - Road Race",
+    "startDate": "2026-xx-xx",
+    "endDate": "2026-xx-xx",
+    "categoryId": 26,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 819,
+    "name": "National Championships Albania ME - Road Race",
+    "startDate": "2026-xx-xx",
+    "endDate": "2026-xx-xx",
+    "categoryId": 26,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 82,
+    "name": "Bredene Koksijde Classic",
+    "startDate": "2026-03-20",
+    "endDate": "2026-03-20",
+    "categoryId": 10,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 820,
+    "name": "National Championships Finland ME - Road Race",
+    "startDate": "2026-xx-xx",
+    "endDate": "2026-xx-xx",
+    "categoryId": 26,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 821,
+    "name": "National Championships Cuba ME - Road Race",
+    "startDate": "2026-xx-xx",
+    "endDate": "2026-xx-xx",
+    "categoryId": 26,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 822,
+    "name": "National Championships Dominica ME - Road Race",
+    "startDate": "2026-xx-xx",
+    "endDate": "2026-xx-xx",
+    "categoryId": 26,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 823,
+    "name": "National Championships Angola ME - Road Race",
+    "startDate": "2026-xx-xx",
+    "endDate": "2026-xx-xx",
+    "categoryId": 26,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 824,
+    "name": "National Championships Malaysia ME - Road Race",
+    "startDate": "2026-xx-xx",
+    "endDate": "2026-xx-xx",
+    "categoryId": 26,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 825,
+    "name": "National Championships United States ME - Road Race",
+    "startDate": "2026-xx-xx",
+    "endDate": "2026-xx-xx",
+    "categoryId": 26,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 826,
+    "name": "National Championships Paraguay ME - Road Race",
+    "startDate": "2026-xx-xx",
+    "endDate": "2026-xx-xx",
+    "categoryId": 26,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 827,
+    "name": "National Championships Argentina ME - Road Race",
+    "startDate": "2026-xx-xx",
+    "endDate": "2026-xx-xx",
+    "categoryId": 26,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 828,
+    "name": "National Championships Peru ME - Road Race",
+    "startDate": "2026-xx-xx",
+    "endDate": "2026-xx-xx",
+    "categoryId": 26,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 829,
+    "name": "National Championships Chile ME - Road Race",
+    "startDate": "2026-xx-xx",
+    "endDate": "2026-xx-xx",
+    "categoryId": 26,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 83,
+    "name": "Gran Premio Miguel Indurain",
+    "startDate": "2026-04-04",
+    "endDate": "2026-04-04",
+    "categoryId": 10,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 830,
+    "name": "National Championships Egypt ME - Road Race",
+    "startDate": "2026-xx-xx",
+    "endDate": "2026-xx-xx",
+    "categoryId": 26,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 831,
+    "name": "National Championships Zimbabwe ME - Road Race",
+    "startDate": "2026-xx-xx",
+    "endDate": "2026-xx-xx",
+    "categoryId": 26,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 832,
+    "name": "National Championships United Arab Emirates ME - Time Trial",
+    "startDate": "2026-xx-xx",
+    "endDate": "2026-xx-xx",
+    "categoryId": 27,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 833,
+    "name": "National Championships Panama ME - Time Trial",
+    "startDate": "2026-xx-xx",
+    "endDate": "2026-xx-xx",
+    "categoryId": 27,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 834,
+    "name": "National Championships Philippines ME - Time Trial",
+    "startDate": "2026-xx-xx",
+    "endDate": "2026-xx-xx",
+    "categoryId": 27,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 835,
+    "name": "National Championships Pakistan ME - Time Trial",
+    "startDate": "2026-xx-xx",
+    "endDate": "2026-xx-xx",
+    "categoryId": 27,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 836,
+    "name": "National Championships Uruguay ME - Time Trial",
+    "startDate": "2026-xx-xx",
+    "endDate": "2026-xx-xx",
+    "categoryId": 27,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 837,
+    "name": "National Championships Colombia ME - Time Trial",
+    "startDate": "2026-xx-xx",
+    "endDate": "2026-xx-xx",
+    "categoryId": 27,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 838,
+    "name": "National Championships South Africa ME - Time Trial",
+    "startDate": "2026-xx-xx",
+    "endDate": "2026-xx-xx",
+    "categoryId": 27,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 839,
+    "name": "National Championships Namibia ME - Time Trial",
+    "startDate": "2026-xx-xx",
+    "endDate": "2026-xx-xx",
+    "categoryId": 27,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 84,
+    "name": "Scheldeprijs",
+    "startDate": "2026-04-08",
+    "endDate": "2026-04-08",
+    "categoryId": 10,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 840,
+    "name": "National Championships New Zealand ME - Time Trial",
+    "startDate": "2026-xx-xx",
+    "endDate": "2026-xx-xx",
+    "categoryId": 27,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 841,
+    "name": "National Championships Ecuador ME - Time Trial",
+    "startDate": "2026-xx-xx",
+    "endDate": "2026-xx-xx",
+    "categoryId": 27,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 842,
+    "name": "National Championships Thailand ME - Time Trial",
+    "startDate": "2026-xx-xx",
+    "endDate": "2026-xx-xx",
+    "categoryId": 27,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 843,
+    "name": "National Championships Australia ME - Time Trial",
+    "startDate": "2026-xx-xx",
+    "endDate": "2026-xx-xx",
+    "categoryId": 27,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 844,
+    "name": "National Championships Lesotho ME - Time Trial",
+    "startDate": "2026-xx-xx",
+    "endDate": "2026-xx-xx",
+    "categoryId": 27,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 845,
+    "name": "Tour of Norway - Stage 1",
+    "startDate": "2026-05-28",
+    "endDate": "2026-05-28",
+    "categoryId": 23,
+    "tourId": 55,
+    "maxRiders": 7
+  },
+  {
+    "id": 846,
+    "name": "Tour of Norway - Stage 2",
+    "startDate": "2026-05-29",
+    "endDate": "2026-05-29",
+    "categoryId": 23,
+    "tourId": 55,
+    "maxRiders": 7
+  },
+  {
+    "id": 847,
+    "name": "Tour of Norway - Stage 3",
+    "startDate": "2026-05-30",
+    "endDate": "2026-05-30",
+    "categoryId": 23,
+    "tourId": 55,
+    "maxRiders": 7
+  },
+  {
+    "id": 848,
+    "name": "Tour of Norway - Stage 4",
+    "startDate": "2026-05-31",
+    "endDate": "2026-05-31",
+    "categoryId": 23,
+    "tourId": 55,
+    "maxRiders": 7
+  },
+  {
+    "id": 85,
+    "name": "De Brabantse Pijl - La Flèche Brabançonne",
+    "startDate": "2026-04-17",
+    "endDate": "2026-04-17",
+    "categoryId": 10,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 86,
+    "name": "Grand Prix du Morbihan",
+    "startDate": "2026-05-09",
+    "endDate": "2026-05-09",
+    "categoryId": 10,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 87,
+    "name": "Tro-Bro Léon",
+    "startDate": "2026-05-10",
+    "endDate": "2026-05-10",
+    "categoryId": 10,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 88,
+    "name": "Classique Dunkerque / Grand prix des Hauts de France",
+    "startDate": "2026-05-19",
+    "endDate": "2026-05-19",
+    "categoryId": 10,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 89,
+    "name": "Brussels Cycling Classic",
+    "startDate": "2026-06-07",
+    "endDate": "2026-06-07",
+    "categoryId": 10,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 9,
+    "name": "Liège - Bastogne - Liège",
+    "startDate": "2026-04-26",
+    "endDate": "2026-04-26",
+    "categoryId": 5,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 90,
+    "name": "Circuit Franco-Belge",
+    "startDate": "2026-06-10",
+    "endDate": "2026-06-10",
+    "categoryId": 10,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 91,
+    "name": "GP Industria & Artigianato",
+    "startDate": "2026-09-06",
+    "endDate": "2026-09-06",
+    "categoryId": 10,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 92,
+    "name": "Gran Premio città di Peccioli - Coppa Sabatini",
+    "startDate": "2026-09-10",
+    "endDate": "2026-09-10",
+    "categoryId": 10,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 93,
+    "name": "GP de Fourmies / La Voix du Nord",
+    "startDate": "2026-09-13",
+    "endDate": "2026-09-13",
+    "categoryId": 10,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 94,
+    "name": "Grand Prix de Wallonie",
+    "startDate": "2026-09-16",
+    "endDate": "2026-09-16",
+    "categoryId": 10,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 95,
+    "name": "SUPER 8 Classic",
+    "startDate": "2026-09-19",
+    "endDate": "2026-09-19",
+    "categoryId": 10,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 96,
+    "name": "Giro dell'Emilia",
+    "startDate": "2026-10-03",
+    "endDate": "2026-10-03",
+    "categoryId": 10,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 97,
+    "name": "Sparkassen Münsterland Giro",
+    "startDate": "2026-10-03",
+    "endDate": "2026-10-03",
+    "categoryId": 10,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 98,
+    "name": "Coppa Bernocchi - GP Banco BPM",
+    "startDate": "2026-10-05",
+    "endDate": "2026-10-05",
+    "categoryId": 10,
+    "tourId": null,
+    "maxRiders": 7
+  },
+  {
+    "id": 99,
+    "name": "Tre Valli Varesine",
+    "startDate": "2026-10-06",
+    "endDate": "2026-10-06",
+    "categoryId": 10,
+    "tourId": null,
+    "maxRiders": 7
+  }
+]

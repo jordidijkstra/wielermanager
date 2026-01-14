@@ -1,0 +1,515 @@
+/* Result Edit Modal */
+.result-edit-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.3);
+  z-index: 999;
+}
+
+.result-edit-modal-content {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: white;
+  padding: 30px;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  z-index: 1000;
+  min-width: 500px;
+  max-height: 80vh;
+  overflow-y: auto;
+}
+
+.result-edit-modal-content h3 {
+  margin-top: 0;
+  margin-bottom: 10px;
+}
+
+.result-edit-info {
+  color: #666;
+  font-size: 0.9em;
+  margin-bottom: 20px;
+}
+
+.result-edit-info strong {
+  font-weight: bold;
+}
+
+/* Result Edit Table */
+.result-edit-table-container {
+  margin: 20px 0;
+}
+
+.result-edit-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 20px;
+}
+
+.result-edit-table thead tr {
+  background: #f5f5f5;
+  border-bottom: 2px solid #ddd;
+}
+
+.result-edit-table th {
+  padding: 10px;
+  text-align: left;
+  font-weight: bold;
+}
+
+.result-edit-table tbody tr {
+  border-bottom: 1px solid #eee;
+}
+
+.result-edit-table td {
+  padding: 10px;
+}
+
+.result-edit-renner-cell {
+  position: relative;
+}
+
+.result-edit-renner-input {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-family: inherit;
+  font-size: inherit;
+}
+
+.result-edit-renner-input:focus {
+  outline: none;
+  border-color: #fca311;
+  box-shadow: 0 0 4px rgba(252, 163, 17, 0.2);
+}
+
+.result-edit-dropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: white;
+  border: 1px solid #ddd;
+  border-top: none;
+  border-radius: 0 0 4px 4px;
+  max-height: 200px;
+  overflow-y: auto;
+  z-index: 1000;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.result-edit-dropdown-empty {
+  padding: 8px;
+  color: #999;
+}
+
+.result-edit-dropdown-item {
+  padding: 8px 12px;
+  cursor: pointer;
+  background: white;
+  border-bottom: 1px solid #eee;
+  transition: background 0.2s;
+}
+
+.result-edit-dropdown-item:hover {
+  background: #f0f0f0;
+}
+
+.result-edit-dropdown-item.selected {
+  background: #fca311;
+  color: white;
+}
+
+.result-edit-select {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-family: inherit;
+  font-size: inherit;
+  background: white;
+  cursor: pointer;
+}
+
+.result-edit-select:focus {
+  outline: none;
+  border-color: #fca311;
+  box-shadow: 0 0 4px rgba(252, 163, 17, 0.2);
+}
+
+/* Modal Buttons */
+.result-edit-buttons {
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
+  margin-top: 20px;
+}
+
+.result-edit-cancel-btn {
+  padding: 8px 16px;
+  background: #ddd;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: inherit;
+  transition: background 0.2s;
+}
+
+.result-edit-cancel-btn:hover {
+  background: #ccc;
+}
+
+.result-edit-save-btn {
+  padding: 8px 16px;
+  background: #fca311;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  color: white;
+  font-weight: bold;
+  font-family: inherit;
+  font-size: inherit;
+  transition: background 0.2s;
+}
+
+.result-edit-save-btn:hover {
+  background: #e08700;
+}
+/* Result Approve Modal */
+.result-approve-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.3);
+  z-index: 999;
+}
+
+.result-approve-modal-content {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: white;
+  padding: 30px;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  z-index: 1000;
+  min-width: 500px;
+  max-height: 80vh;
+  overflow-y: auto;
+}
+
+.result-approve-modal-content h3 {
+  margin-top: 0;
+  margin-bottom: 10px;
+}
+
+.result-approve-info {
+  color: #666;
+  font-size: 0.9em;
+  margin-bottom: 20px;
+}
+
+.result-approve-info strong {
+  font-weight: bold;
+}
+
+.result-approve-table-container {
+  margin: 20px 0;
+}
+
+.result-approve-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 20px;
+  table-layout: fixed;
+}
+
+.result-approve-table thead tr {
+  background: #f5f5f5;
+  border-bottom: 2px solid #ddd;
+}
+
+.result-approve-table th {
+  padding: 10px;
+  text-align: left;
+  font-weight: bold;
+  word-wrap: break-word;
+}
+
+.result-approve-table th:first-child {
+  width: 80px;
+}
+
+.result-approve-table th:nth-child(2) {
+  width: 40%;
+}
+
+.result-approve-table th:nth-child(3) {
+  width: 40%;
+}
+
+.result-approve-table tbody tr {
+  border-bottom: 1px solid #eee;
+}
+
+.result-approve-table td {
+  padding: 10px;
+  vertical-align: top;
+}
+
+.result-approve-excel-name {
+  font-size: 0.9em;
+  color: #666;
+  word-break: break-word;
+}
+
+.result-approve-renner-cell {
+  position: relative;
+}
+
+.result-approve-renner-display {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.result-approve-renner-name {
+  flex: 1;
+  padding: 6px 0;
+}
+
+.result-approve-edit-btn {
+  padding: 4px 10px;
+  background: #fca311;
+  color: white;
+  border: none;
+  border-radius: 3px;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 0.85em;
+  font-weight: bold;
+  white-space: nowrap;
+  transition: background 0.2s;
+}
+
+.result-approve-edit-btn:hover {
+  background: #e89500;
+}
+
+.result-approve-renner-input {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-family: inherit;
+  font-size: inherit;
+  box-sizing: border-box;
+}
+
+.result-approve-renner-input:focus {
+  outline: none;
+  border-color: #fca311;
+  box-shadow: 0 0 4px rgba(252, 163, 17, 0.3);
+}
+
+.result-approve-dropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: white;
+  border: 1px solid #ddd;
+  border-top: none;
+  border-radius: 0 0 4px 4px;
+  max-height: 200px;
+  overflow-y: auto;
+  z-index: 1001;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.result-approve-dropdown-item {
+  padding: 8px 10px;
+  cursor: pointer;
+  transition: background 0.2s;
+  font-size: 0.95em;
+}
+
+.result-approve-dropdown-item:hover {
+  background: #f0f0f0;
+}
+
+.result-approve-dropdown-item.selected {
+  background: #fca311;
+  color: white;
+  font-weight: bold;
+}
+
+.result-approve-buttons {
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
+  margin-top: 20px;
+}
+
+.result-approve-cancel-btn {
+  padding: 8px 16px;
+  background: #ddd;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: inherit;
+  transition: background 0.2s;
+}
+
+.result-approve-cancel-btn:hover {
+  background: #ccc;
+}
+
+.result-approve-confirm-btn {
+  padding: 8px 16px;
+  background: #4CAF50;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  color: white;
+  font-weight: bold;
+  font-family: inherit;
+  font-size: inherit;
+  transition: background 0.2s;
+}
+
+.result-approve-confirm-btn:hover {
+  background: #45a049;
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+  .result-edit-modal-content,
+  .result-approve-modal-content {
+    min-width: 90vw;
+    padding: 20px;
+  }
+
+  .result-edit-modal-content h3,
+  .result-approve-modal-content h3 {
+    font-size: 1.3em;
+  }
+
+  .result-edit-table,
+  .result-approve-table {
+    font-size: 0.9em;
+  }
+
+  .result-edit-table th,
+  .result-edit-table td,
+  .result-approve-table th,
+  .result-approve-table td {
+    padding: 8px 6px;
+  }
+
+  .result-edit-renner-input,
+  .result-approve-renner-input {
+    padding: 6px;
+    font-size: 0.9em;
+  }
+
+  .result-edit-save-btn,
+  .result-edit-cancel-btn,
+  .result-approve-cancel-btn,
+  .result-approve-confirm-btn {
+    padding: 8px 14px;
+    font-size: 0.9em;
+  }
+
+  .result-approve-edit-btn {
+    padding: 4px 8px;
+    font-size: 0.8em;
+  }
+
+  .result-approve-renner-display {
+    flex-direction: column;
+    gap: 6px;
+  }
+}
+
+@media (max-width: 480px) {
+  .result-edit-modal-content,
+  .result-approve-modal-content {
+    min-width: 95vw;
+    padding: 15px;
+  }
+
+  .result-edit-modal-content h3,
+  .result-approve-modal-content h3 {
+    font-size: 1.1em;
+  }
+
+  .result-edit-info,
+  .result-approve-info {
+    font-size: 0.8em;
+  }
+
+  .result-edit-table,
+  .result-approve-table {
+    font-size: 0.8em;
+    table-layout: auto;
+  }
+
+  .result-edit-table th,
+  .result-edit-table td,
+  .result-approve-table th,
+  .result-approve-table td {
+    padding: 6px 4px;
+  }
+
+  .result-edit-renner-input,
+  .result-approve-renner-input {
+    padding: 4px;
+    font-size: 0.85em;
+  }
+
+  .result-edit-dropdown,
+  .result-approve-dropdown {
+    max-height: 150px;
+  }
+
+  .result-edit-buttons,
+  .result-approve-buttons {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .result-edit-save-btn,
+  .result-edit-cancel-btn,
+  .result-approve-cancel-btn,
+  .result-approve-confirm-btn {
+    padding: 8px 10px;
+    font-size: 0.9em;
+    width: 100%;
+  }
+
+  .result-approve-edit-btn {
+    padding: 3px 6px;
+    font-size: 0.75em;
+    width: auto;
+  }
+
+  .result-approve-renner-display {
+    flex-direction: row;
+    gap: 4px;
+  }
+
+  .result-approve-renner-name {
+    font-size: 0.9em;
+  }
+}

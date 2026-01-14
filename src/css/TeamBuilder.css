@@ -95,6 +95,18 @@
   background: #218838;
 }
 
+.btn-save:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  background: #ccc;
+  color: #888;
+  border: 1px solid #bbb;
+}
+
+.btn-save:disabled:hover {
+  transform: none;
+}
+
 .btn-download {
   padding: 10px 20px;
   background: none;
@@ -181,14 +193,14 @@
   color: #667eea;
 }
 
-.riders-list {
+.riders-list-teambuilder {
   display: flex;
   flex-direction: column;
   gap: 12px;
   overflow-y: auto;
 }
 
-.rider-card {
+.rider-card-teambuilder {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -198,17 +210,17 @@
   transition: border-color 0.2s, box-shadow 0.2s;
 }
 
-.rider-info {
+.rider-info-teambuilder {
   flex: 1;
 }
 
-.rider-name {
+.rider-name-teambuilder {
   font-size: 1em;
   font-weight: 600;
   color: #333;
 }
 
-.rider-price {
+.rider-price-teambuilder {
   font-size: 1.2em;
   font-weight: 700;
   color: #667eea;
@@ -299,20 +311,20 @@
   width: 70%;
 }
 
-.rider-jersey {
+.rider-jersey-teambuilder {
   width: 40px;
   height: 40px;
   object-fit: contain;
   flex-shrink: 0;
 }
 
-.rider-card{
+.rider-card-teambuilder {
   display: flex;
   align-items: center;
   gap: 12px;
 }
 
-.rider-card .rider-info,.rider-info {
+.rider-card-teambuilder .rider-info-teambuilder,.rider-info-teambuilder {
   flex: 1;
   min-width: 0;
 }
@@ -382,5 +394,106 @@
   
   .budget-info {
     flex-wrap: wrap;
+  }
+}
+
+@media (max-width: 768px) {
+  .team-builder {
+    padding: 15px;
+    margin-top: 10dvh;
+  }
+
+  .team-header h1 {
+    font-size: 1.5em;
+    margin-bottom: 15px;
+  }
+
+  .budget-info {
+    gap: 15px;
+    padding: 15px;
+    flex-direction: column;
+  }
+
+  .budget-stat .value {
+    font-size: 20px;
+  }
+
+  .team-content {
+    grid-template-columns: 1fr;
+    gap: 15px;
+  }
+
+  .rider-category h2 {
+    font-size: 1.3em;
+  }
+
+  .riders-grid {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .rider-card-teambuilder {
+    padding: 12px;
+  }
+
+  .rider-info-row {
+    gap: 8px;
+    font-size: 0.9em;
+  }
+}
+
+@media (max-width: 480px) {
+  .team-builder {
+    padding: 10px;
+  }
+
+  .team-header h1 {
+    font-size: 1.2em;
+    margin-bottom: 10px;
+  }
+
+  .budget-info {
+    gap: 10px;
+    padding: 12px;
+    margin-bottom: 15px;
+  }
+
+  .budget-stat .label {
+    font-size: 10px;
+  }
+
+  .budget-stat .value {
+    font-size: 16px;
+  }
+
+  .team-content {
+    gap: 10px;
+  }
+
+  .rider-category h2 {
+    font-size: 1.1em;
+    margin-bottom: 10px;
+  }
+
+  .riders-grid {
+    gap: 10px;
+  }
+
+  .rider-card-teambuilder {
+    padding: 10px;
+  }
+
+  .rider-name-teambuilder {
+    font-size: 0.95em;
+  }
+
+  .rider-info-row {
+    gap: 6px;
+    font-size: 0.85em;
+  }
+
+  .btn-select-rider {
+    padding: 6px 10px !important;
+    font-size: 0.85em;
   }
 }

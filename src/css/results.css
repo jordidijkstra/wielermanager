@@ -121,3 +121,104 @@
   font-weight: 600;
   color: #14213d;
 }
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+  .container-results {
+    padding: 15px;
+    top: 10dvh;
+  }
+
+  .container-results h2 {
+    font-size: 1.5em;
+    margin: 0.3em 0;
+  }
+
+  .container-months,
+  .container-races,
+  .container-stages {
+    padding: 1em;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .container-months label,
+  .container-races label,
+  .container-stages label {
+    font-size: 1em;
+    margin-right: 0;
+    margin-bottom: 5px;
+  }
+
+  .container-months select,
+  .container-races select,
+  .container-stages select {
+    min-width: 100%;
+    font-size: 0.95em;
+  }
+
+  .container-race-results {
+    margin: 15px 0;
+    font-size: 0.95em;
+  }
+
+  .container-race-results th,
+  .container-race-results td {
+    padding: 8px 6px;
+  }
+
+  .container-race-results h3 {
+    font-size: 1.2em;
+  }
+}
+
+@media (max-width: 480px) {
+  .container-results {
+    padding: 10px;
+    top: 50px;
+    min-height: auto;
+  }
+
+  .container-results h2 {
+    font-size: 1.2em;
+  }
+
+  .container-months,
+  .container-races,
+  .container-stages {
+    padding: 10px;
+    gap: 8px;
+  }
+
+  .container-months label,
+  .container-races label,
+  .container-stages label {
+    font-size: 0.9em;
+    margin-bottom: 5px;
+  }
+
+  .container-months select,
+  .container-races select,
+  .container-stages select {
+    font-size: 0.9em;
+    padding: 8px;
+  }
+
+  .container-race-results {
+    font-size: 0.85em;
+  }
+
+  .container-race-results th,
+  .container-race-results td {
+    padding: 6px 4px;
+  }
+
+  .container-race-results h3 {
+    font-size: 1.1em;
+    margin-bottom: 10px;
+  }
+
+  .container-race-results td:first-child {
+    font-size: 1em;
+  }
+}

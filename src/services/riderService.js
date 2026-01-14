@@ -9,12 +9,14 @@ export const getAllRiders = async () => {
   }));
 };
 
-export const updateRider = async ({ id, firstname, lastname, teamId, price }) => {
+export const updateRider = async ({ id, firstname, lastname, firstnameWithoutSpecialChars, lastnameWithoutSpecialChars, teamId, price }) => {
   const riderRef = doc(db, 'riders', id.toString());
   await setDoc(riderRef, {
     id: Number(id),
     firstname,
     lastname,
+    firstnameWithoutSpecialChars: firstnameWithoutSpecialChars || '',
+    lastnameWithoutSpecialChars: lastnameWithoutSpecialChars || '',
     teamId: Number(teamId),
     price: Number(price)
   }, { merge: true });

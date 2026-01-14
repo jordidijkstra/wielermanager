@@ -1,0 +1,655 @@
+.admin-container {
+  padding: 20px;
+  width: 90%;
+  margin: 10dvh auto;
+}
+
+.admin-container h1 {
+  font-size: 2em;
+  padding: 0.5em 0;
+}
+
+/* Admin Tabs */
+.admin-tabs {
+  display: flex;
+  gap: 10px;
+  margin: 20px 0;
+  border-bottom: 2px solid #ddd;
+}
+
+.tab-button {
+  padding: 12px 20px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: 500;
+  color: #666;
+  border-bottom: 3px solid transparent;
+  transition: all 0.3s;
+}
+
+.tab-button:hover {
+  color: #14213d;
+}
+
+.tab-button.active {
+  color: #fca311;
+  border-bottom-color: #fca311;
+}
+
+.tab-content {
+  padding: 20px 0;
+}
+
+.admin-controls {
+  display: flex;
+  gap: 15px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.search-box {
+  flex: 1;
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.search-box input {
+  flex: 1;
+  padding: 10px 15px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+.result-count {
+  color: #666;
+  font-weight: 500;
+  min-width: 100px;
+  text-align: right;
+}
+
+.btn-add-rider {
+  padding: 10px 20px;
+  background: #fca311;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  transition: transform 0.3s;
+}
+
+.add-rider-form {
+  background: #f9f9f9;
+  border-radius: 8px;
+  padding: 1em;
+  margin-bottom: 1em;
+}
+
+.add-rider-form h3 {
+  color: #333;
+  padding: 0.5em 0;
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 15px;
+  margin-bottom: 15px;
+}
+
+.form-field {
+  position: relative;
+}
+
+.form-field input {
+  width: 100%;
+  padding: 12px 10px 8px 10px;
+  border: 2px solid #ddd;
+  border-radius: 4px;
+  font-size: 14px;
+  box-sizing: border-box;
+  transition: border-color 0.2s;
+  background: #f9f9f9;
+}
+
+.form-field select {
+  width: 100%;
+  padding: 12px 10px 8px 10px;
+  border: 2px solid #ddd;
+  border-radius: 4px;
+  font-size: 14px;
+  box-sizing: border-box;
+  transition: border-color 0.2s;
+  background: #f9f9f9;
+}
+
+.form-field input:focus {
+  outline: none;
+  border-color: #4CAF50;
+}
+
+.form-field select:focus {
+  outline: none;
+  border-color: #4CAF50;
+}
+
+.form-field label {
+  position: absolute;
+  top: 6px;
+  left: 10px;
+  font-size: 12px;
+  color: #666;
+  padding: 0 4px;
+  pointer-events: none;
+  transition: all 0.2s;
+  background: #f9f9f9;
+}
+
+#categoryId-label, #teamId-label {
+  top: -8.5px;
+}
+
+.form-field input:focus + label,
+.form-field input:not(:placeholder-shown) + label {
+  top: -8px;
+  left: 10px;
+  font-size: 11px;
+  font-weight: 500;
+}
+
+.form-field input:focus + label {
+  color: #4CAF50;
+}
+
+.add-rider-form .btn-save {
+  padding: 10px 20px;
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.add-rider-form .btn-save:hover {
+  background-color: #45a049;
+}
+
+.riders-table {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: #fff;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid #ddd;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  background: white;
+}
+
+thead {
+  background-color: #f5f5f5;
+  border-bottom: 2px solid #ddd;
+}
+
+th {
+  padding: 15px;
+  text-align: left;
+  font-weight: 600;
+  color: #333;
+  font-size: 14px;
+}
+
+.sortable-header {
+  cursor: pointer;
+  user-select: none;
+  transition: background-color 0.2s;
+}
+
+.sortable-header:hover {
+  background-color: #e8f5e9;
+}
+
+td {
+  padding: 0.8em 1em;
+  border-bottom: 1px solid #eee;
+  font-size: 0.8em;
+  color: #213a70;
+}
+
+tbody tr.editing {
+  background-color: #fff3cd;
+}
+
+tbody tr.editing input {
+  width: 100%;
+  padding: 0.8em 1em;
+  border: 2px solid #4CAF50;
+  font-size: 0.8em;
+  box-sizing: border-box;
+  background: white;
+}
+
+tbody tr.editing input:focus {
+  outline: none;
+  box-shadow: inset 0 0 5px rgba(76, 175, 80, 0.3);
+}
+
+tfoot td.pagination-cell {
+  padding: 0;
+  border: none;
+}
+
+tfoot .pagination-riders {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 15px;
+  padding: 20px;
+  background-color: #f9f9f9;
+  border-top: 1px solid #ddd;
+  flex-wrap: wrap;
+  margin: 0;
+}
+
+.id-cell {
+  font-family: 'Courier New', monospace;
+  color: #666;
+  font-size: 12px;
+  max-width: 100px;
+  word-break: break-all;
+}
+
+table input {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #4CAF50;
+  border-radius: 3px;
+  font-size: 13px;
+  box-sizing: border-box;
+}
+
+table input:focus {
+  outline: none;
+  box-shadow: 0 0 5px rgba(76, 175, 80, 0.4);
+}
+
+.actions-cell {
+  display: flex;
+  gap: 8px;
+  flex-wrap: nowrap;
+}
+
+.btn-riders-edit,
+.btn-riders-delete,
+.btn-riders-save,
+.btn-riders-cancel {
+  padding: 6px 12px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 500;
+  transition: all 0.3s;
+}
+
+.btn-riders-edit {
+  background: #2196F3;
+  color: white;
+}
+
+.btn-riders-edit:hover {
+  background: #0b7dda;
+}
+
+.btn-riders-delete, .btn-riders-cancel {
+  background: #f44336;
+  color: white;
+}
+
+.btn-riders-delete:hover, .btn-riders-cancel:hover {
+  background: #da190b;
+}
+
+.btn-riders-save {
+  background: #4CAF50;
+  color: white;
+}
+
+.btn-riders-save:hover {
+  background: #45a049;
+}
+
+.btn-approve {
+  background: #4CAF50;
+  color: white;
+  padding: 8px 12px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 500;
+  transition: all 0.3s;
+  margin: 0 4px;
+}
+
+.btn-approve:hover {
+  background: #45a049;
+}
+
+.admin-stats {
+  margin-top: 20px;
+  padding: 20px;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  border-left: 4px solid #4CAF50;
+}
+
+.admin-stats p {
+  margin: 0;
+  font-size: 16px;
+  color: #333;
+}
+
+.admin-stats strong {
+  color: #4CAF50;
+  font-size: 18px;
+}
+
+.pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 15px;
+  padding: 20px;
+  background-color: #f9f9f9;
+  border-top: 1px solid #ddd;
+  flex-wrap: wrap;
+}
+
+.btn-pagination {
+  padding: 0.5em 1em;
+  background: #2196F3;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.875rem;
+  font-weight: 500;
+  transition: all 0.3s;
+}
+
+.btn-pagination:hover:not(:disabled) {
+  background: #0b7dda;
+}
+
+.btn-pagination:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.pagination-riders-info {
+  font-size: 0.8em;
+  color: #f1f1f1;
+  white-space: nowrap;
+  padding: 0.5em;
+  text-align: right;
+}
+
+.page-numbers {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.page-number {
+  min-width: 36px;
+  padding: 8px 10px;
+  background: #e0e0e0;
+  color: #333;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 500;
+  transition: all 0.3s;
+}
+
+.page-number:hover {
+  background-color: #d0d0d0;
+  border-color: #999;
+}
+
+.page-number.active {
+  background-color: #2196F3;
+  color: white;
+  border-color: #2196F3;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .admin-container {
+    padding: 15px;
+  }
+
+  .admin-controls {
+    gap: 10px;
+  }
+
+  th, td {
+    padding: 8px 6px !important;
+  }
+
+  .btn-edit, .btn-delete, .btn-approve {
+    padding: 6px 10px !important;
+    font-size: 0.85em;
+  }
+}
+
+@media (max-width: 480px) {
+  .admin-container {
+    padding: 10px;
+    width: 100%;
+  }
+
+  .admin-container h1 {
+    font-size: 1.2em;
+  }
+
+  .admin-tabs {
+    gap: 3px;
+    overflow-x: auto;
+  }
+
+  .tab-button {
+    padding: 8px 10px;
+    font-size: 12px;
+  }
+
+  .admin-controls {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .admin-controls input,
+  .admin-controls select {
+    width: 100%;
+  }
+
+  table {
+    font-size: 0.8em;
+    display: block;
+    overflow-x: auto;
+  }
+
+  th, td {
+    padding: 6px 4px !important;
+  }
+
+  .btn-edit, .btn-delete, .btn-approve {
+    padding: 4px 6px !important;
+    font-size: 0.75em;
+  }
+}
+.status-raced {
+  background-color: #d4edda;
+  color: #155724;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-weight: 500;
+}
+
+.status-raced-soon {
+  background-color: #fff3cd;
+  color: #856404;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-weight: 500;
+}
+
+.status-raced-later {
+  background-color: #f8d7da;
+  color: #721c24;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-weight: 500;
+}
+
+.status-tba {
+  background-color: #d1ecf1;
+  color: #0c5460;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-weight: 500;
+}
+
+/* Results Status Badge */
+.status-badge {
+  display: inline-block;
+  padding: 4px 12px;
+  border-radius: 4px;
+  font-weight: 500;
+  font-size: 0.9em;
+}
+
+.status-badge.status-ingediend {
+  background-color: #fff3cd;
+  color: #856404;
+}
+
+.status-badge.status-gecontrolleerd {
+  background-color: #d4edda;
+  color: #155724;
+}
+
+.status-badge.status-nog-geen-resultaat {
+  background-color: #f8d7da;
+  color: #721c24;
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+  .admin-container {
+    padding: 15px;
+    width: 95%;
+  }
+
+  .admin-container h1 {
+    font-size: 1.5em;
+  }
+
+  .admin-tabs {
+    gap: 5px;
+    margin: 15px 0;
+  }
+
+  .tab-button {
+    padding: 10px 15px;
+    font-size: 14px;
+  }
+
+  .tab-content {
+    padding: 15px 0;
+  }
+
+  .admin-controls {
+    gap: 10px;
+  }
+
+  table {
+    font-size: 0.9em;
+  }
+
+  th, td {
+    padding: 8px 6px !important;
+  }
+
+  .btn-edit, .btn-delete, .btn-approve {
+    padding: 6px 10px !important;
+    font-size: 0.85em;
+  }
+}
+
+@media (max-width: 480px) {
+  .admin-container {
+    padding: 10px;
+    width: 100%;
+    margin: 60px auto 0;
+  }
+
+  .admin-container h1 {
+    font-size: 1.2em;
+    margin-bottom: 15px;
+  }
+
+  .admin-tabs {
+    gap: 3px;
+    margin: 10px 0;
+    overflow-x: auto;
+    flex-wrap: nowrap;
+  }
+
+  .tab-button {
+    padding: 8px 10px;
+    font-size: 12px;
+    white-space: nowrap;
+  }
+
+  .admin-controls {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .admin-controls input,
+  .admin-controls select {
+    width: 100%;
+  }
+
+  table {
+    font-size: 0.8em;
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+  }
+
+  th, td {
+    padding: 6px 4px !important;
+  }
+
+  .btn-edit, .btn-delete, .btn-approve {
+    padding: 4px 6px !important;
+    font-size: 0.75em;
+  }
+}

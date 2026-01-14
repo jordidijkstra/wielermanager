@@ -9,3 +9,26 @@ footer{
     color: #14213d;
     position: relative;
 }
+
+@media (max-width: 768px) {
+  footer {
+    height: auto;
+    padding: 15px;
+    min-height: 60px;
+  }
+
+  footer p {
+    font-size: 0.95em;
+  }
+}
+
+@media (max-width: 480px) {
+  footer {
+    padding: 12px;
+    min-height: 50px;
+  }
+
+  footer p {
+    font-size: 0.85em;
+  }
+}

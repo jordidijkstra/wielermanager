@@ -100,7 +100,12 @@ function TeamBuilder({ user }) {
           <div className="section-header">
             <h2>Jouw Team</h2>
             {selectedRiders.length > 0 && (
-              <button className="btn-save" onClick={saveTeam}>
+              <button
+                className="btn-save"
+                onClick={saveTeam}
+                disabled={selectedRiders.length < 14}
+                title={selectedRiders.length < 14 ? "Je team moet minimaal 14 renners bevatten" : ""}
+              >
                 Opslaan <i className="fas fa-save"></i>
               </button>
             )}
@@ -114,9 +119,10 @@ function TeamBuilder({ user }) {
             </div>
           ) : (
             <div className="selected-riders-list">
-              {selectedRiders.map(rider => {
+              {[...selectedRiders]
+              .sort((a, b) => b.price - a.price)
+              .map(rider => {
                 const jerseyPath = getTeamJerseyPath(rider.teamId);
-                console.log('Jersey path:', jerseyPath);
                 return (
                 <div key={rider.id} className="selected-rider">
                   <img 
@@ -205,23 +211,23 @@ function TeamBuilder({ user }) {
             </div>
           </div>
 
-          <div className="riders-list">
+          <div className="riders-list-teambuilder">
             {currentRiders.length === 0 ? (
               <div className="no-riders">Geen renners gevonden</div>
             ) : (
               currentRiders.map(rider => (
-                <div key={rider.id} className="rider-card">
+                <div key={rider.id} className="rider-card-teambuilder">
                   <img 
                     src={getTeamJerseyPath(rider.teamId)}
                     alt="jersey" 
-                    className="rider-jersey"
+                    className="rider-jersey-teambuilder"
                     onError={(e) => e.target.src = '/assets/default.webp'}
                   />
-                  <div className="rider-info">
-                    <div className="rider-name">{getFullName(rider)}</div>
+                  <div className="rider-info-teambuilder">
+                    <div className="rider-name-teambuilder">{getFullName(rider)}</div>
                   </div>
-                  <div className="rider-actions">
-                    <span className="rider-price">{formatPrice(rider.price)}</span>
+                  <div className="rider-actions-teambuilder">
+                    <span className="rider-price-teambuilder">{formatPrice(rider.price)}</span>
                     {selectedRiders.find(r => r.id === rider.id) ? (
                       <span style={{ display: 'inline-block', width: '32px', height: '32px' }}></span>
                     ) : getRemainingBudget() >= rider.price ? (

@@ -1,0 +1,321 @@
+/* Result Modal Container */
+.result-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.3);
+  z-index: 999;
+}
+
+.result-modal-content {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: white;
+  padding: 30px;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  z-index: 1000;
+  min-width: 500px;
+  max-height: 80vh;
+  overflow-y: auto;
+}
+
+.result-modal-content h3 {
+  margin-top: 0;
+  margin-bottom: 10px;
+}
+
+.result-modal-info {
+  color: #666;
+  font-size: 0.9em;
+  margin-bottom: 20px;
+}
+
+.result-modal-info strong {
+  font-weight: bold;
+}
+
+/* Excel Import Section */
+.excel-import-section {
+  margin-top: 15px;
+  margin-bottom: 20px;
+  padding: 10px;
+  background: #f9f9f9;
+  border-radius: 4px;
+}
+
+.excel-import-label {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  font-weight: bold;
+  color: #333;
+}
+
+.excel-import-button {
+  background: #4CAF50;
+  color: white;
+  padding: 8px 12px;
+  border-radius: 4px;
+  font-size: 0.95em;
+  border: none;
+  cursor: pointer;
+}
+
+.excel-import-hint {
+  font-size: 0.85em;
+  color: #666;
+}
+
+.excel-import-label input[type="file"] {
+  display: none;
+}
+
+/* Result Entry Table */
+.result-entry-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+.result-entry-table thead tr {
+  background: #f5f5f5;
+  border-bottom: 2px solid #ddd;
+}
+
+.result-entry-table th {
+  padding: 10px;
+  text-align: left;
+}
+
+.result-entry-table tbody tr {
+  border-bottom: 1px solid #eee;
+}
+
+.result-entry-table td {
+  padding: 10px;
+}
+
+.result-entry-position {
+  font-weight: bold;
+}
+
+.result-entry-renner-cell {
+  position: relative;
+}
+
+.result-entry-renner-input {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-family: inherit;
+  font-size: inherit;
+}
+
+.result-entry-renner-input:focus {
+  outline: none;
+  border-color: #fca311;
+  box-shadow: 0 0 4px rgba(252, 163, 17, 0.2);
+}
+
+.result-entry-dropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: white;
+  border: 1px solid #ddd;
+  border-top: none;
+  border-radius: 0 0 4px 4px;
+  max-height: 200px;
+  overflow-y: auto;
+  z-index: 1000;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.result-entry-dropdown-empty {
+  padding: 8px;
+  color: #999;
+}
+
+.result-entry-dropdown-item {
+  padding: 8px 12px;
+  cursor: pointer;
+  background: white;
+  border-bottom: 1px solid #eee;
+  transition: background 0.2s;
+}
+
+.result-entry-dropdown-item:hover {
+  background: #f0f0f0;
+}
+
+.result-entry-dropdown-item.selected {
+  background: #fca311;
+  color: white;
+}
+
+.result-entry-points-cell {
+  background: #f9f9f9;
+}
+
+.result-entry-points-value {
+  font-weight: bold;
+}
+
+/* Modal Buttons */
+.result-modal-buttons {
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
+  margin-top: 20px;
+}
+
+.result-modal-cancel-btn {
+  padding: 8px 16px;
+  background: #ddd;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: inherit;
+  transition: background 0.2s;
+}
+
+.result-modal-cancel-btn:hover {
+  background: #ccc;
+}
+
+.result-modal-save-btn {
+  padding: 8px 16px;
+  background: #fca311;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  color: white;
+  font-weight: bold;
+  font-family: inherit;
+  font-size: inherit;
+  transition: background 0.2s;
+}
+
+.result-modal-save-btn:hover {
+  background: #e08700;
+}
+
+.result-modal-close-btn {
+  padding: 8px 16px;
+  background: #fca311;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  color: white;
+  font-weight: bold;
+  font-family: inherit;
+  font-size: inherit;
+  transition: background 0.2s;
+}
+
+.result-modal-close-btn:hover {
+  background: #e08700;
+}
+
+/* Existing Result Message */
+.result-modal-message {
+  color: #666;
+  font-size: 0.9em;
+  margin-bottom: 20px;
+}
+
+.result-modal-message strong {
+  font-weight: bold;
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+  .result-modal-content {
+    min-width: 90vw;
+    padding: 20px;
+  }
+
+  .result-modal-content h3 {
+    font-size: 1.3em;
+  }
+
+  .result-entry-table {
+    font-size: 0.9em;
+  }
+
+  .result-entry-table th,
+  .result-entry-table td {
+    padding: 8px 6px;
+  }
+
+  .result-entry-renner-input {
+    padding: 6px;
+    font-size: 0.9em;
+  }
+
+  .excel-import-button {
+    padding: 8px 12px;
+    font-size: 0.9em;
+  }
+
+  .result-modal-save-btn,
+  .result-modal-cancel-btn {
+    padding: 8px 14px;
+    font-size: 0.9em;
+  }
+}
+
+@media (max-width: 480px) {
+  .result-modal-content {
+    min-width: 95vw;
+    padding: 15px;
+  }
+
+  .result-modal-content h3 {
+    font-size: 1.1em;
+  }
+
+  .result-modal-info {
+    font-size: 0.8em;
+  }
+
+  .result-entry-table {
+    font-size: 0.8em;
+  }
+
+  .result-entry-table th,
+  .result-entry-table td {
+    padding: 6px 4px;
+  }
+
+  .result-entry-renner-input {
+    padding: 4px;
+    font-size: 0.85em;
+  }
+
+  .result-entry-dropdown {
+    max-height: 150px;
+  }
+
+  .excel-import-button {
+    padding: 6px 10px;
+    font-size: 0.8em;
+    width: 100%;
+  }
+
+  .result-modal-save-btn,
+  .result-modal-cancel-btn {
+    padding: 6px 10px;
+    font-size: 0.8em;
+  }
+}

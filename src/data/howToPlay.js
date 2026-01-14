@@ -1,7 +1,7 @@
 export const howToPlay = [
     {
         title: "1. Stel je ploeg samen",
-        description: "Kies 30 renners binnen je budget en bouw de perfecte ploeg met sprinters, klimmers, klassiekerspecialisten en tijdrijders.",
+        description: "Kies minstens 14 renners en maximaal 30 renners binnen het budget van 200 miljoen euro en bouw de perfecte ploeg met sprinters, klimmers, klassiekerspecialisten en tijdrijders.",
         image: "/assets/placeholder.png",
         imageAlt: "placeholder"
     },
@@ -13,7 +13,7 @@ export const howToPlay = [
     },
     {
         title: "3. Beheer je ploeg",
-        description: "Maak strategische keuzes en optimaliseer je 30-koppige selectie voor de verschillende koersen en klassementen.",
+        description: "Maak strategische keuzes en breng telkens je beste selectie aan de start van de verschillende koersen.",
         image: "/assets/placeholder.png",
         imageAlt: "placeholder"
     },

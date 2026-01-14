@@ -27,7 +27,7 @@ export default function Home() {
                 <h1>Welkom bij Wielermanager</h1>
                 <p>
                     Wielermanager is jouw ultieme wielerploegenspel voor het seizoen 2026. 
-                    Stel, net zoals in de echte wielerwereld, een ploeg samen van 30 renners die over het hele seizoen de meeste punten voor jou moeten scoren.
+                    Stel, net zoals in de echte wielerwereld, een ploeg samen van minstens 14 en maximaal 30 renners die over het hele seizoen de meeste punten voor jou moeten scoren.
                 </p>
                 <button onClick={scrollToHowToPlay}>Ontdek hoe</button>
             </section>
@@ -36,7 +36,7 @@ export default function Home() {
                 <div className="steps">
                     {steps}
                 </div>
-                <button>Maak je ploeg nu!</button>
+                <button>Maak een ploeg</button>
             </section>
 
         </main>
