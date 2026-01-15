@@ -32,7 +32,6 @@ export default function Home({ setCurrentPage, setShowLoginModal, user }) {
 
     return (
         <main className="home-container">
-            
             <section className="intro">
                 <h1>Welkom bij Wielermanager</h1>
                 <p>

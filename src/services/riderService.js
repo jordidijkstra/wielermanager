@@ -19,7 +19,7 @@ export const getAverageRiderPrice = async () => {
   return totalPrice / filteredRiders.length;
 };
 
-export const updateRider = async ({ id, firstname, lastname, firstnameWithoutSpecialChars, lastnameWithoutSpecialChars, teamId, price }) => {
+export const updateRider = async ({ id, firstname, lastname, firstnameWithoutSpecialChars, lastnameWithoutSpecialChars, teamId, price, points }) => {
   const riderRef = doc(db, 'riders', id.toString());
   await setDoc(riderRef, {
     id: Number(id),
@@ -28,6 +28,80 @@ export const updateRider = async ({ id, firstname, lastname, firstnameWithoutSpe
     firstnameWithoutSpecialChars: firstnameWithoutSpecialChars || '',
     lastnameWithoutSpecialChars: lastnameWithoutSpecialChars || '',
     teamId: Number(teamId),
-    price: Number(price)
+    price: Number(price),
+    points: Number(points) || 0
   }, { merge: true });
+};
+
+export const updateRidersPointsFromResults = async (raceResults) => {
+  // raceResults is an array of { riderId, points }
+  const updates = {};
+  
+  for (const result of raceResults) {
+    // Skip rider 911 (placeholder/test rider)
+    if (!result.riderId || result.riderId === '911' || result.riderId === 911 || result.points === undefined) continue;
+    
+    const riderId = result.riderId.toString();
+    if (!updates[riderId]) {
+      updates[riderId] = 0;
+    }
+    updates[riderId] += Number(result.points || 0);
+  }
+  
+  // Update each rider's points
+  for (const [riderId, pointsToAdd] of Object.entries(updates)) {
+    try {
+      const riderRef = doc(db, 'riders', riderId);
+      const currentRiderDoc = await getDocs(collection(db, 'riders'));
+      const currentRider = currentRiderDoc.docs
+        .map(d => ({ id: d.id, ...d.data() }))
+        .find(r => r.id === riderId);
+      
+      const currentPoints = currentRider?.points || 0;
+      await setDoc(riderRef, {
+        points: currentPoints + pointsToAdd
+      }, { merge: true });
+      
+      console.log(`✅ Punten geupdate voor rider ${riderId}: +${pointsToAdd}`);
+    } catch (error) {
+      console.error(`Error updating points for rider ${riderId}:`, error);
+    }
+  }
+};
+
+export const removeRidersPointsFromResults = async (raceResults) => {
+  // raceResults is an array of { riderId, points } - verwijder deze punten
+  const updates = {};
+  
+  for (const result of raceResults) {
+    // Skip rider 911 (placeholder/test rider)
+    if (!result.riderId || result.riderId === '911' || result.riderId === 911 || result.points === undefined) continue;
+    
+    const riderId = result.riderId.toString();
+    if (!updates[riderId]) {
+      updates[riderId] = 0;
+    }
+    updates[riderId] += Number(result.points || 0);
+  }
+  
+  // Update each rider's points (subtract)
+  for (const [riderId, pointsToRemove] of Object.entries(updates)) {
+    try {
+      const riderRef = doc(db, 'riders', riderId);
+      const currentRiderDoc = await getDocs(collection(db, 'riders'));
+      const currentRider = currentRiderDoc.docs
+        .map(d => ({ id: d.id, ...d.data() }))
+        .find(r => r.id === riderId);
+      
+      const currentPoints = currentRider?.points || 0;
+      const newPoints = Math.max(0, currentPoints - pointsToRemove); // Ensure no negative points
+      await setDoc(riderRef, {
+        points: newPoints
+      }, { merge: true });
+      
+      console.log(`✅ Punten verwijderd voor rider ${riderId}: -${pointsToRemove}`);
+    } catch (error) {
+      console.error(`Error removing points for rider ${riderId}:`, error);
+    }
+  }
 };

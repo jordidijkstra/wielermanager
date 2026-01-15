@@ -1,6 +1,7 @@
 export function RiderItem({
   rider,
   isSelected,
+  isSaved,
   isUnavailable,
   jerseyPath,
   onToggle,
@@ -8,6 +9,8 @@ export function RiderItem({
   return (
     <div
       className={`rider-item ${isSelected ? 'selected' : ''} ${
+        isSaved ? 'saved' : ''
+      } ${
         isUnavailable ? 'unavailable' : ''
       }`}
       onClick={onToggle}
@@ -29,7 +32,8 @@ export function RiderItem({
       <div className="rider-price">
         €{(rider.price / 1000000).toFixed(1)}M
       </div>
-      {isSelected && <div className="checkmark">✓</div>}
+      {isSaved && <div className="checkmark saved-checkmark">✓</div>}
+      {isSelected && !isSaved && <div className="checkmark">✓</div>}
       {isUnavailable && !isSelected && (
         <div className="unavailable-badge">Niet beschikbaar</div>
       )}

@@ -3,6 +3,7 @@ import { useResults } from '../hooks/useResults';
 import { useRaces } from '../hooks/useRaces';
 import { useRiders } from '../hooks/useRiders';
 import { usePointsByCategory } from '../hooks/usePointsByCategory';
+import { updateRidersPointsFromResults, removeRidersPointsFromResults } from '../services/riderService';
 import '../css/resultsTab.css';
 
 export default function ResultsTab() {
@@ -100,6 +101,25 @@ export default function ResultsTab() {
   const removeResult = async (resultId) => {
     if (confirm('Zeker weten dat je dit resultaat wilt verwijderen?')) {
       try {
+        // Find the result first to get the entries with points
+        const result = results.find(r => r.id === resultId);
+        
+        // Remove riders' points if this result was approved
+        if (result && result.status === 'gecontrolleerd' && result.entries && result.entries.length > 0) {
+          const pointsData = result.entries
+            .filter(entry => entry.riderId && entry.points !== undefined)
+            .map(entry => ({
+              riderId: entry.riderId,
+              points: Number(entry.points) || 0
+            }));
+          
+          if (pointsData.length > 0) {
+            await removeRidersPointsFromResults(pointsData);
+            console.log('✅ Rijderspunten verwijderd');
+          }
+        }
+        
+        // Delete the result
         await deleteResult(resultId);
         console.log('✅ Resultaat verwijderd');
       } catch (error) {
@@ -192,16 +212,35 @@ export default function ResultsTab() {
     if (!approvingResult) return;
     
     try {
-      await editResult(approvingResult.id, {
+      const updatedResult = {
         ...approvingResult,
         entries: approveRenners,
         status: 'gecontrolleerd'
-      });
+      };
+      
+      // Update the result status
+      await editResult(approvingResult.id, updatedResult);
+      
+      // Update riders' points based on their results
+      if (approveRenners && approveRenners.length > 0) {
+        const pointsData = approveRenners
+          .filter(entry => entry.riderId && entry.points !== undefined)
+          .map(entry => ({
+            riderId: entry.riderId,
+            points: Number(entry.points) || 0
+          }));
+        
+        if (pointsData.length > 0) {
+          await updateRidersPointsFromResults(pointsData);
+          console.log('✅ Rijderspunten geupdate vanuit race resultaten');
+        }
+      }
+      
       setApprovingResult(null);
       setApproveRenners([]);
       setApproveRiderSearchFilters({});
       setApproveOpenRiderDropdowns({});
-      console.log('✅ Uitslag goedgekeurd');
+      console.log('✅ Uitslag goedgekeurd en punten geupdate');
     } catch (error) {
       console.error('Error approving result:', error);
       alert('Fout bij goedkeuren resultaat');

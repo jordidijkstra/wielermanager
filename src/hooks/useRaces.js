@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { getAllRaces, getRaceById, getRaceTeam, saveRaceTeam, getUserRaceTeams } from '../services/raceService';
 import { setDoc, deleteDoc, doc } from 'firebase/firestore';
 import { db } from '../firebase/config';
@@ -27,6 +27,9 @@ export function useRaces(user) {
   useEffect(() => {
     loadRaces();
   }, []);
+
+  // Memoize races array om onnodig re-renders te voorkomen
+  const memoizedRaces = useMemo(() => races, [races]);
 
   // Laad user's race teams wanneer user verandert
   useEffect(() => {
@@ -111,8 +114,9 @@ export function useRaces(user) {
     }
   };
 
-  return {
-    races,
+  // Memoize the entire return object so the reference doesn't change unnecessarily
+  const returnValue = useMemo(() => ({
+    races: memoizedRaces,
     userRaceTeams,
     loading,
     error,
@@ -124,5 +128,7 @@ export function useRaces(user) {
     editRace,
     removeRace,
     reload: loadRaces
-  };
+  }), [memoizedRaces, userRaceTeams, loading, error, saveStatus]);
+
+  return returnValue;
 }

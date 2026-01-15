@@ -19,7 +19,8 @@ export default function RidersTab() {
     firstnameWithoutSpecialChars: '',
     lastnameWithoutSpecialChars: '',
     price: 0,
-    teamId: null
+    teamId: null,
+    points: 0
   });
 
   const toggleSort = () => {
@@ -39,7 +40,8 @@ export default function RidersTab() {
         firstnameWithoutSpecialChars: editData.firstnameWithoutSpecialChars || '',
         lastnameWithoutSpecialChars: editData.lastnameWithoutSpecialChars || '',
         teamId: editData.teamId ? parseInt(editData.teamId) : null,
-        price: editData.price ? parseInt(editData.price) : 0
+        price: editData.price ? parseInt(editData.price) : 0,
+        points: editData.points ? parseInt(editData.points) : 0
       });
       
       setEditingId(null);
@@ -75,7 +77,8 @@ export default function RidersTab() {
         firstnameWithoutSpecialChars: newRider.firstnameWithoutSpecialChars,
         lastnameWithoutSpecialChars: newRider.lastnameWithoutSpecialChars,
         price: parseInt(newRider.price) || 0,
-        teamId: newRider.teamId ? parseInt(newRider.teamId) : null
+        teamId: newRider.teamId ? parseInt(newRider.teamId) : null,
+        points: parseInt(newRider.points) || 0
       });
 
       setNewRider({
@@ -84,7 +87,8 @@ export default function RidersTab() {
         firstnameWithoutSpecialChars: '',
         lastnameWithoutSpecialChars: '',
         price: 0,
-        teamId: null
+        teamId: null,
+        points: 0
       });
       setShowAddForm(false);
       console.log('✅ New rider added');
@@ -222,6 +226,20 @@ export default function RidersTab() {
               <label htmlFor="price">Prijs (min. €500.000)</label>
             </div>
             <div className="form-field">
+              <input
+                type="number"
+                id='points'
+                name='points'
+                min="0"
+                step="1"
+                value={newRider.points || 0}
+                onChange={(e) => setNewRider({ ...newRider, points: e.target.value })}
+              />
+              <label htmlFor="points">Punten</label>
+            </div>
+          </div>
+          <div className="form-row">
+            <div className="form-field">
               <select
                 id='teamId'
                 name='teamId'
@@ -261,6 +279,7 @@ export default function RidersTab() {
                 <th>Voornaam (zonder speciale tekens)</th>
                 <th>Achternaam (zonder speciale tekens)</th>
                 <th>Prijs (€)</th>
+                <th>Punten</th>
                 <th>Team ID</th>
                 <th>Acties</th>
               </tr>
@@ -325,6 +344,18 @@ export default function RidersTab() {
                       />
                     ) : (
                       (rider.price / 1000000).toFixed(1) + ' M'
+                    )}
+                  </td>
+                  <td>
+                    {editingId === rider.id ? (
+                      <input
+                        type="number"
+                        min="0"
+                        value={editData.points || 0}
+                        onChange={(e) => setEditData({ ...editData, points: e.target.value })}
+                      />
+                    ) : (
+                      rider.points || 0
                     )}
                   </td>
                   <td>

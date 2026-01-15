@@ -5,6 +5,7 @@ import { useRacesCategories } from '../hooks/useRacesCategories';
 import { useResults } from '../hooks/useResults';
 import { useRiders } from '../hooks/useRiders';
 import { usePointsByCategory } from '../hooks/usePointsByCategory';
+import { saveRaceParticipants } from '../services/raceService';
 import '../css/racesTab.css';
 
 export default function RacesTab() {
@@ -23,6 +24,10 @@ export default function RacesTab() {
   const [openRiderDropdowns, setOpenRiderDropdowns] = useState({});
   const [selectedCategoryFilter, setSelectedCategoryFilter] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
+  const [showParticipantsModal, setShowParticipantsModal] = useState(null);
+  const [participantEntries, setParticipantEntries] = useState([]);
+  const [participantSearchFilters, setParticipantSearchFilters] = useState({});
+  const [openParticipantDropdowns, setOpenParticipantDropdowns] = useState({});
   const racesPerPage = 50;
   const [newRace, setNewRace] = useState({
     name: '',
@@ -280,6 +285,115 @@ export default function RacesTab() {
       
       setResultEntries(emptyEntries);
       setShowResultModal({ type: 'form', raceId, pointsCount: emptyEntries.length });
+    }
+  };
+
+  const handleParticipantsAction = (raceId) => {
+    // Open modal om startlijst in te voeren
+    setShowParticipantsModal(raceId);
+    setParticipantEntries([{ riderId: null }]); // Start met 1 lege entry
+    setParticipantSearchFilters({});
+  };
+
+  const addParticipantEntry = () => {
+    setParticipantEntries([...participantEntries, { riderId: null }]);
+  };
+
+  const removeParticipantEntry = (index) => {
+    setParticipantEntries(participantEntries.filter((_, i) => i !== index));
+  };
+
+  const updateParticipantEntry = (index, riderId) => {
+    const updated = [...participantEntries];
+    updated[index] = { riderId: riderId ? parseInt(riderId) : null };
+    setParticipantEntries(updated);
+  };
+
+  const handleParticipantsExcelImport = (event) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      try {
+        const data = e.target?.result;
+        const workbook = XLSX.read(data, { type: 'array' });
+        const worksheet = workbook.Sheets[workbook.SheetNames[0]];
+        const rows = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
+
+        const updatedEntries = [];
+        const newSearchFilters = {};
+        let matchedCount = 0;
+        
+        rows.forEach((row, idx) => {
+          const fullName = String(row[0] || '').trim();
+
+          if (fullName) {
+            // Find rider with fuzzy matching on normalized full name
+            const normalizedSearch = normalizeText(fullName);
+            
+            // Split name to try both orders
+            const nameParts = fullName.split(/\s+/).filter(p => p.length > 0);
+
+            const matchedRider = riders.find(rider => {
+              const riderFullname = normalizeText(
+                `${rider.firstnameWithoutSpecialChars || rider.firstname || ''} ${rider.lastnameWithoutSpecialChars || rider.lastname || ''}`
+              );
+              
+              // Check multiple matching strategies
+              if (riderFullname.includes(normalizedSearch)) return true;
+              if (normalizedSearch.includes(riderFullname)) return true;
+              
+              // Check if all name parts match anywhere in rider's name
+              return nameParts.every(part => riderFullname.includes(normalizeText(part)));
+            });
+
+            if (matchedRider) {
+              updatedEntries.push({ riderId: matchedRider.id });
+              newSearchFilters[idx] = `${matchedRider.firstname} ${matchedRider.lastname}`;
+              matchedCount++;
+              console.log(`✅ Gevonden: "${fullName}" -> ${matchedRider.firstname} ${matchedRider.lastname}`);
+            } else {
+              updatedEntries.push({ riderId: null });
+              newSearchFilters[idx] = `⚠️ ${fullName} - niet gevonden`;
+              console.log(`⚠️ Niet gevonden: "${fullName}"`);
+            }
+          }
+        });
+
+        setParticipantEntries(updatedEntries);
+        setParticipantSearchFilters(newSearchFilters);
+        alert(`✅ Excel gegevens ingeladen! ${rows.length} rijen verwerkt, ${matchedCount} renners gevonden.`);
+      } catch (error) {
+        console.error('Fout bij importeren Excel:', error);
+        alert('❌ Fout bij importeren Excel-bestand');
+      }
+    };
+    
+    reader.readAsArrayBuffer(file);
+    event.target.value = '';
+  };
+
+  const submitParticipants = async () => {
+    const raceId = showParticipantsModal;
+    
+    // Valideer dat alle invoervelden ingevuld zijn
+    const allFilled = participantEntries.every(entry => entry.riderId !== null);
+    if (!allFilled) {
+      alert('Alle renners moeten ingevuld zijn');
+      return;
+    }
+
+    try {
+      await saveRaceParticipants(raceId, participantEntries);
+      
+      setShowParticipantsModal(null);
+      setParticipantEntries([]);
+      setParticipantSearchFilters({});
+      alert('✅ Startlijst opgeslagen');
+    } catch (error) {
+      console.error('Error submitting participants:', error);
+      alert('Fout bij opslaan startlijst');
     }
   };
 
@@ -573,6 +687,13 @@ export default function RacesTab() {
                       </button>
                       <button 
                         className="btn-edit"
+                        onClick={() => handleParticipantsAction(race.id)}
+                        title="Startlijst importeren"
+                      >
+                        Startlijst
+                      </button>
+                      <button 
+                        className="btn-edit"
                         onClick={() => handleResultAction(race.id)}
                         title="Resultaat toevoegen"
                       >
@@ -749,6 +870,129 @@ export default function RacesTab() {
         <div 
           className="result-modal-overlay"
           onClick={() => setShowResultModal(null)}
+        />
+      )}
+
+      {showParticipantsModal !== null && (
+        <div className="result-modal-content">
+          <h3>Startlijst importeren</h3>
+          <p className="result-modal-info">
+            Race ID: <strong>{showParticipantsModal}</strong>
+          </p>
+
+          <div className="excel-import-section">
+            <label className="excel-import-label">
+              <input
+                type="file"
+                accept=".xlsx,.xls,.csv"
+                onChange={handleParticipantsExcelImport}
+              />
+              <span className="excel-import-button">
+                📊 Excel importeren
+              </span>
+              <span className="excel-import-hint">(Kolom A: Renner voornaam en achternaam)</span>
+            </label>
+          </div>
+
+          <div>
+            <table className="result-entry-table">
+              <thead>
+                <tr>
+                  <th>Renner</th>
+                  <th>Acties</th>
+                </tr>
+              </thead>
+              <tbody>
+                {participantEntries.map((entry, idx) => {
+                  const searchTerm = participantSearchFilters[idx] || '';
+                  const normalizedSearch = normalizeText(searchTerm);
+                  const filteredRiders = riders.filter(rider => {
+                    const riderFullName = `${rider.firstnameWithoutSpecialChars || ''} ${rider.lastnameWithoutSpecialChars || ''}`.toLowerCase();
+                    return riderFullName.includes(normalizedSearch);
+                  });
+                  const selectedRider = riders.find(r => r.id === entry.riderId);
+                  
+                  return (
+                    <tr key={idx}>
+                      <td className="result-entry-renner-cell">
+                        <input
+                          type="text"
+                          placeholder="Type renner naam..."
+                          value={searchTerm}
+                          onChange={(e) => {
+                            setParticipantSearchFilters({...participantSearchFilters, [idx]: e.target.value});
+                            setOpenParticipantDropdowns({...openParticipantDropdowns, [idx]: true});
+                          }}
+                          onFocus={() => setOpenParticipantDropdowns({...openParticipantDropdowns, [idx]: true})}
+                          onBlur={() => setTimeout(() => setOpenParticipantDropdowns({...openParticipantDropdowns, [idx]: false}), 200)}
+                          className="result-entry-renner-input"
+                        />
+                        {openParticipantDropdowns[idx] && (
+                          <div className="result-entry-dropdown">
+                            {filteredRiders.length === 0 ? (
+                              <div className="result-entry-dropdown-empty">Geen renners gevonden</div>
+                            ) : (
+                              filteredRiders.map((rider) => (
+                                <div
+                                  key={rider.id}
+                                  onClick={() => {
+                                    updateParticipantEntry(idx, rider.id);
+                                    setParticipantSearchFilters({...participantSearchFilters, [idx]: `${rider.firstname} ${rider.lastname}`});
+                                    setOpenParticipantDropdowns({...openParticipantDropdowns, [idx]: false});
+                                  }}
+                                  className={`result-entry-dropdown-item ${entry.riderId === rider.id ? 'selected' : ''}`}
+                                >
+                                  {rider.firstname} {rider.lastname}
+                                </div>
+                              ))
+                            )}
+                          </div>
+                        )}
+                      </td>
+                      <td>
+                        <button 
+                          onClick={() => removeParticipantEntry(idx)}
+                          className="btn-delete"
+                          style={{ padding: '5px 10px', fontSize: '12px' }}
+                        >
+                          Verwijder
+                        </button>
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+            <button 
+              onClick={addParticipantEntry}
+              className="btn-edit"
+              style={{ marginTop: '10px' }}
+            >
+              + Renner toevoegen
+            </button>
+          </div>
+
+          <div className="result-modal-buttons">
+            <button 
+              onClick={() => setShowParticipantsModal(null)}
+              className="result-modal-cancel-btn"
+            >
+              Annuleren
+            </button>
+            <button 
+              onClick={submitParticipants}
+              className="result-modal-save-btn"
+            >
+              Opslaan
+            </button>
+          </div>
+        </div>
+      )}
+
+      {showParticipantsModal !== null && (
+        <div 
+          className="result-modal-overlay"
+          onClick={() => setShowParticipantsModal(null)}
         />
       )}
     </div>

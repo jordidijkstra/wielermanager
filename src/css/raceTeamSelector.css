@@ -11,8 +11,22 @@
 .race-selector {
   display: flex;
   align-items: center;
-  gap: 0.5em;
+  gap: 1em;
   padding: 1em 0;
+  flex-wrap: wrap;
+}
+
+.race-selector-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 1em;
+  flex: 1;
+  min-width: 300px;
+}
+
+.race-selector-select {
+  flex: 1;
+  min-width: 300px;
 }
 
 .race-selector label {
@@ -31,6 +45,29 @@
 .race-selector select option:disabled {
   background-color: #f5f5f5;
   color: #999;
+}
+
+.race-deadline-badge {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: #fff3cd;
+  border: 2px solid #ffc107;
+  border-radius: 6px;
+  padding: 10px 15px;
+  font-weight: 600;
+  color: #856404;
+  white-space: nowrap;
+}
+
+.deadline-label {
+  font-size: 14px;
+}
+
+.deadline-date {
+  font-size: 16px;
+  font-weight: bold;
+  color: #d39e00;
 }
 
 .btn-auto-all {
@@ -71,6 +108,25 @@
   background: #f9f9f9;
   padding: 20px;
   border-radius: 8px;
+}
+
+.deadline-passed-warning {
+  margin-bottom: 20px;
+  padding: 15px;
+  background: linear-gradient(135deg, #ffe5e5 0%, #fff0e5 100%);
+  border: 2px solid #ff6b6b;
+  border-radius: 6px;
+  color: #c92a2a;
+}
+
+.deadline-passed-warning h3 {
+  margin: 0 0 10px 0;
+  font-size: 1.1em;
+}
+
+.deadline-passed-warning p {
+  margin: 0;
+  font-size: 0.95em;
 }
 
 .race-info {
@@ -179,6 +235,12 @@
   border-color: #fca311;
 }
 
+.rider-item.saved {
+  background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);
+  border-color: #28a745;
+  box-shadow: 0 0 8px rgba(40, 167, 69, 0.3);
+}
+
 .rider-item.unavailable {
   background: #f5f5f5;
   border-color: #ccc;
@@ -197,8 +259,20 @@
   color: #fca311;
 }
 
+.rider-item.saved .rider-name {
+  color: #28a745;
+}
+
+.rider-item.selected .rider-name {
+  color: #fca311;
+}
+
 .rider-item.selected .rider-price {
   color: #fca311;
+}
+
+.rider-item.saved .rider-price {
+  color: #28a745;
 }
 
 .checkmark {
@@ -207,6 +281,13 @@
   right: 10px;
   font-size: 20px;
   color: #fca311;
+}
+
+.saved-checkmark {
+  color: #28a745;
+  font-weight: bold;
+  font-size: 24px;
+  text-shadow: 0 0 3px rgba(40, 167, 69, 0.5);
 }
 
 .unavailable-badge {

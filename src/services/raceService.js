@@ -209,4 +209,14 @@ export const filterRidersByParticipants = (riders, participants) => {
   });
 };
 
+// Sla deelnemerslijst op voor een race
+export const saveRaceParticipants = async (raceId, participants) => {
+  if (!raceId) throw new Error('raceId is verplicht');
+  
+  await setDoc(doc(db, 'raceParticipants', String(raceId)), {
+    participants: participants || [],
+    updatedAt: new Date().toISOString()
+  });
+};
+
 

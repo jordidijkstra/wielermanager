@@ -1,0 +1,226 @@
+.race-countdown-container {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 12px 20px;
+  background: rgba(102, 126, 234, 0.95);
+  border-top: 1px solid rgba(255, 255, 255, 0.2);
+  z-index: 100;
+  backdrop-filter: blur(8px);
+  height: 10dvh;
+}
+
+.countdown-card {
+  background: transparent;
+  border-radius: 0;
+  padding: 0;
+  text-align: center;
+  box-shadow: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  flex-wrap: wrap;
+  max-width: 100%;
+}
+
+.countdown-card h2 {
+  margin: 0;
+  color: white;
+  font-size: 0.95em;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}
+
+.race-name {
+  font-size: 0.9em;
+  font-weight: 500;
+  color: white;
+  margin: 0;
+}
+
+.race-date {
+  font-size: 0.85em;
+  color: rgba(255, 255, 255, 0.8);
+  margin: 0;
+}
+
+.races-deadline-list {
+  display: flex;
+  flex-direction: row;
+  gap: 15px;
+  margin: 0;
+  align-items: center;
+}
+
+.race-deadline-item {
+  background: transparent;
+  border-left: none;
+  padding: 0;
+  border-radius: 0;
+  text-align: center;
+  min-width: auto;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.85em;
+}
+
+.race-separator {
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 1.2em;
+  margin: 0 4px;
+}
+
+.race-deadline-item .race-name {
+  margin: 0;
+  font-size: 0.9em;
+  color: white;
+  font-weight: 500;
+  padding: 2px 4px;
+  border-radius: 3px;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.race-start-time {
+  font-size: 0.8em;
+  color: rgba(255, 255, 255, 0.7);
+  margin: 0;
+  font-weight: 400;
+}
+
+.deadline-date {
+  font-size: 0.8em;
+  color: rgba(255, 255, 255, 0.9);
+  font-weight: 500;
+  margin: 0;
+}
+
+.countdown-timer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 3px;
+  margin: 0;
+  flex-wrap: nowrap;
+}
+
+.countdown-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: rgba(255, 255, 255, 0.15);
+  padding: 6px 10px;
+  border-radius: 4px;
+  min-width: auto;
+}
+
+.countdown-value {
+  font-size: 1.1em;
+  font-weight: bold;
+  color: white;
+  line-height: 1;
+}
+
+.countdown-label {
+  font-size: 0.65em;
+  color: rgba(255, 255, 255, 0.8);
+  margin-top: 2px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.countdown-separator {
+  font-size: 1em;
+  color: rgba(255, 255, 255, 0.6);
+  margin: 0 2px;
+  font-weight: bold;
+}
+
+.countdown-message {
+  font-size: 1em;
+  color: #d9534f;
+  font-weight: 600;
+  margin-top: 20px;
+  margin-bottom: 0;
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+  .countdown-card {
+    gap: 10px;
+  }
+  
+  .countdown-timer {
+    gap: 2px;
+  }
+}
+
+@media (max-width: 768px) {
+  .race-countdown-container {
+    padding: 10px 15px;
+  }
+
+  .countdown-card {
+    gap: 8px;
+  }
+
+  .countdown-card h2 {
+    font-size: 0.85em;
+  }
+
+  .race-deadline-item {
+    font-size: 0.8em;
+    gap: 6px;
+  }
+
+  .countdown-value {
+    font-size: 0.9em;
+  }
+
+  .countdown-item {
+    padding: 4px 8px;
+  }
+
+  .countdown-label {
+    font-size: 0.6em;
+  }
+}
+
+@media (max-width: 480px) {
+  .race-countdown-container {
+    padding: 8px 10px;
+  }
+
+  .countdown-card {
+    gap: 5px;
+    flex-direction: column;
+  }
+
+  .countdown-card h2 {
+    font-size: 0.75em;
+    display: none;
+  }
+
+  .countdown-timer {
+    gap: 1px;
+  }
+
+  .countdown-value {
+    font-size: 0.8em;
+  }
+
+  .countdown-item {
+    min-width: auto;
+    padding: 3px 6px;
+  }
+
+  .countdown-separator {
+    display: none;
+  }
+
+  .race-deadline-item {
+    font-size: 0.75em;
+  }
+}

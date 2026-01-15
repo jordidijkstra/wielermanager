@@ -1,20 +1,34 @@
-export function RaceSelector({ races, selectedRaceId, onRaceChange, batchSaveStatus, onSaveAll }) {
+export function RaceSelector({ races, selectedRaceId, selectedRaceDeadline, onRaceChange, batchSaveStatus, onSaveAll }) {
   return (
     <div className="race-selector">
-      <label>Kies een race:</label>
-      <select value={selectedRaceId} onChange={(e) => onRaceChange(e.target.value)}>
-        <option value="">- Race -</option>
-        {races.map(race => (
-          <option
-            key={race.id}
-            value={race.id}
-            disabled={race.disabled}
-            title={race.title}
-          >
-            {race.label}
-          </option>
-        ))}
-      </select>
+      <div className="race-selector-wrapper">
+        <div className="race-selector-select">
+          <label>Kies een race:</label>
+          <select value={selectedRaceId} onChange={(e) => onRaceChange(e.target.value)}>
+            <option value="">- Race -</option>
+            {races.map(race => (
+              <option
+                key={race.id}
+                value={race.id}
+                disabled={race.disabled}
+                title={race.title}
+              >
+                {race.label}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        {selectedRaceDeadline && (
+          <div className="race-deadline-badge">
+            <span className="deadline-label">⏱️ Deadline:</span>
+            <span className="deadline-date">
+              {selectedRaceDeadline.toLocaleDateString('nl-NL', { weekday: 'short', month: 'short', day: 'numeric' })} {selectedRaceDeadline.toLocaleTimeString('nl-NL', { hour: '2-digit', minute: '2-digit' })}
+            </span>
+          </div>
+        )}
+      </div>
+
       <button className="btn-save-all" onClick={onSaveAll}>
         Alle Selecties Opslaan
       </button>

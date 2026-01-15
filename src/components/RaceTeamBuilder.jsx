@@ -14,8 +14,15 @@ export function RaceTeamBuilder({
   onRiderToggle,
   onSaveTeam,
   saveStatus,
+  isDeadlinePassed,
+  userRaceTeams,
 }) {
   if (!selectedRace) return null;
+
+  // Get saved riders for this race
+  const savedTeamRiderIds = new Set(
+    userRaceTeams?.find(rt => rt.raceId === selectedRace.id)?.riderIds || []
+  );
 
   const availableCount = getAvailableCount(selectedRace);
   const overlappingRaces = getAllOverlappingRaces(selectedRace);
@@ -28,6 +35,13 @@ export function RaceTeamBuilder({
         availableCount={availableCount}
         overlappingRaces={overlappingRaces}
       />
+
+      {isDeadlinePassed && (
+        <div className="deadline-passed-warning">
+          <h3>⏱️ Deadline Verstreken</h3>
+          <p>De inschrijving voor deze race is gesloten. Je selectie is automatisch opgeslagen.</p>
+        </div>
+      )}
 
       {raceParticipants === null ? (
         <div className="available-riders-for-race">
@@ -47,11 +61,13 @@ export function RaceTeamBuilder({
               getTeamJerseyPath={getTeamJerseyPath}
               filterRidersByParticipants={filterRidersByParticipants}
               onRiderToggle={onRiderToggle}
+              isDeadlinePassed={isDeadlinePassed}
+              savedTeamRiderIds={savedTeamRiderIds}
             />
           </div>
 
-          <button className="btn-save" onClick={onSaveTeam}>
-            Selectie Opslaan
+          <button className="btn-save" onClick={onSaveTeam} disabled={isDeadlinePassed}>
+            {isDeadlinePassed ? '✓ Selectie Opgeslagen' : 'Selectie Opslaan'}
           </button>
           {saveStatus && <p className="save-status">{saveStatus}</p>}
         </>

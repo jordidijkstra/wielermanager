@@ -11,6 +11,10 @@ service cloud.firestore {
         && get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin';
     }
 
+    function getUserBudget(userId) {
+      return get(/databases/$(database)/documents/users/$(userId)).data.budget;
+    }
+
     // Users collectie - create allowed for new users, read/write for self
     match /users/{userId} {
       allow create: if isLoggedIn();
@@ -26,11 +30,15 @@ service cloud.firestore {
       allow delete: if isLoggedIn() && request.auth.uid == userId;
     }
 
-    // Teams (user's complete team/budget team) - users kunnen hun eigen team lezen/schrijven
+    // Teams (user's complete team/budget team) - validate budget on write
     match /teams/{userId} {
       allow read: if isLoggedIn() && request.auth.uid == userId;
-      allow write: if isLoggedIn() && request.auth.uid == userId;
-      allow create: if isLoggedIn() && request.auth.uid == userId;
+      allow write: if isLoggedIn() 
+        && request.auth.uid == userId 
+        && request.resource.data.totalSpent <= getUserBudget(userId);
+      allow create: if isLoggedIn() 
+        && request.auth.uid == userId 
+        && request.resource.data.totalSpent <= getUserBudget(userId);
       allow delete: if isLoggedIn() && request.auth.uid == userId;
     }
 
@@ -77,4 +85,5 @@ service cloud.firestore {
     }
   }
 }
+
 

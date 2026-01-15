@@ -8,6 +8,7 @@ footer{
     background-color: #e5e5e5;
     color: #14213d;
     position: relative;
+    margin-bottom:10dvh;
 }
 
 @media (max-width: 768px) {

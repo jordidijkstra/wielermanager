@@ -1,37 +1,47 @@
 import { useState } from 'react';
 import { signInWithEmailAndPassword, createUserWithEmailAndPassword, signInWithPopup, GoogleAuthProvider } from 'firebase/auth';
 import { auth } from '../firebase/config';
+import { ensureUserDocument } from '../services/userService';
 import '../css/login.css';
 
-export default function Login({ setUser, onClose }) {
+export default function Login({ onClose }) {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [isRegister, setIsRegister] = useState(false);
     const [error, setError] = useState('');
+    const [isLoading, setIsLoading] = useState(false);
 
     const handleGoogleSignIn = async () => {
         const provider = new GoogleAuthProvider();
+        setIsLoading(true);
         try {
             const result = await signInWithPopup(auth, provider);
-            setUser(result.user);
+            await ensureUserDocument(result.user);
+            // Firebase auth state change will trigger useAuth hook
+            // No need to call setUser - let the hook handle it
             if (onClose) onClose();
         } catch (error) {
             console.error('Google sign-in error:', error);
             setError('Google inloggen mislukt. Probeer opnieuw.');
+        } finally {
+            setIsLoading(false);
         }
     };
 
     const handleAuth = async (e) => {
         e.preventDefault();
         setError('');
+        setIsLoading(true);
         try {
             if (isRegister) {
                 const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-                setUser(userCredential.user);
+                await ensureUserDocument(userCredential.user);
             } else {
                 const userCredential = await signInWithEmailAndPassword(auth, email, password);
-                setUser(userCredential.user);
+                await ensureUserDocument(userCredential.user);
             }
+            // Firebase auth state change will trigger useAuth hook
+            // No need to call setUser - let the hook handle it
             if (onClose) onClose();
         } catch (error) {
             console.error('Auth error:', error);
@@ -46,6 +56,8 @@ export default function Login({ setUser, onClose }) {
             } else {
                 setError('Er ging iets mis. Probeer opnieuw.');
             }
+        } finally {
+            setIsLoading(false);
         }
     };
 
@@ -64,7 +76,7 @@ export default function Login({ setUser, onClose }) {
                             <path d="M9 3.6c1.3 0 2.5.4 3.4 1.3L15 2.3A9 9 0 0 0 1 5l3 2.4a5.4 5.4 0 0 1 5-3.7z" fill="#EA4335"/>
                         </g>
                     </svg>
-                    Doorgaan met Google
+                    {isLoading ? 'Bezig...' : 'Doorgaan met Google'}
                 </button>
 
                 <div className="divider">
@@ -96,8 +108,8 @@ export default function Login({ setUser, onClose }) {
                             required
                         />
                     </div>
-                    <button type="submit" className="btn-primary">
-                        {isRegister ? 'Account aanmaken' : 'Inloggen'}
+                    <button type="submit" className="btn-primary" disabled={isLoading}>
+                        {isLoading ? 'Bezig...' : (isRegister ? 'Account aanmaken' : 'Inloggen')}
                     </button>
                 </form>
 

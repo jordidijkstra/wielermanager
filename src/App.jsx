@@ -8,6 +8,7 @@ import Login from './components/Login';
 import TeamBuilder from './components/TeamBuilder';
 import RaceTeamSelector from './components/RaceTeamSelector';
 import PointsTables from './components/PointsTables';
+import RaceCountdown from './components/RaceCountdown';
 import Footer from './components/Footer';
 import '@fortawesome/fontawesome-free/css/all.min.css';
 
@@ -68,6 +69,7 @@ function App() {
   return (
     <>
       <Nav setCurrentPage={setCurrentPage} setShowLoginModal={setShowLoginModal} />
+      {user && <RaceCountdown user={user} />}
       {renderPage()}
       {showLoginModal && <Login onClose={() => setShowLoginModal(false)} />}
       <Footer />
