@@ -54,6 +54,7 @@
   display: flex;
   gap: 10px;
   align-items: center;
+  min-width: 200px;
 }
 
 .search-box input {
@@ -62,6 +63,26 @@
   border: 1px solid #ddd;
   border-radius: 4px;
   font-size: 14px;
+}
+
+.team-filter {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  white-space: nowrap;
+}
+
+.team-filter label {
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.team-filter select {
+  padding: 10px 12px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 14px;
+  min-width: 150px;
 }
 
 .result-count {

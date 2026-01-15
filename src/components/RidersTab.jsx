@@ -11,6 +11,7 @@ export default function RidersTab() {
   const [showAddForm, setShowAddForm] = useState(false);
   const [sortBy, setSortBy] = useState('id-asc');
   const [currentPage, setCurrentPage] = useState(1);
+  const [selectedTeamFilter, setSelectedTeamFilter] = useState(null);
   const RIDERS_PER_PAGE = 50;
   const [newRider, setNewRider] = useState({
     firstname: '',
@@ -93,10 +94,12 @@ export default function RidersTab() {
     }
   };
 
-  const filteredRiders = riders.filter(rider =>
-    (rider.firstnameWithoutSpecialChars?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    rider.lastnameWithoutSpecialChars?.toLowerCase().includes(searchTerm.toLowerCase()))
-  );
+  const filteredRiders = riders.filter(rider => {
+    const matchesSearch = rider.firstnameWithoutSpecialChars?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                         rider.lastnameWithoutSpecialChars?.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesTeam = !selectedTeamFilter || rider.teamId === selectedTeamFilter;
+    return matchesSearch && matchesTeam;
+  });
 
   const sortedRiders = [...filteredRiders].sort((a, b) => {
     const idA = parseInt(a.id) || 0;
@@ -115,7 +118,7 @@ export default function RidersTab() {
 
   useEffect(() => {
     setCurrentPage(1);
-  }, [searchTerm]);
+  }, [searchTerm, selectedTeamFilter]);
 
   if (loading) return <div><p>Renners laden...</p></div>;
 
@@ -131,6 +134,22 @@ export default function RidersTab() {
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
           />
+        </div>
+
+        <div className="team-filter">
+          <label htmlFor="team-filter">Filter op team:</label>
+          <select
+            id="team-filter"
+            value={selectedTeamFilter || ''}
+            onChange={(e) => setSelectedTeamFilter(e.target.value ? parseInt(e.target.value) : null)}
+          >
+            <option value="">-- Alle teams --</option>
+            {[...teams].sort((a, b) => a.name.localeCompare(b.name)).map(team => (
+              <option key={team.id} value={team.id}>
+                {team.name}
+              </option>
+            ))}
+          </select>
         </div>
         
         <button 
@@ -211,7 +230,7 @@ export default function RidersTab() {
                 style={{ padding: '12px 10px 8px 10px', border: '2px solid #ddd', borderRadius: '4px', fontSize: '14px', background: '#f9f9f9' }}
               >
                 <option value="">-- Selecteer team --</option>
-                {teams.map((team) => (
+                {[...teams].sort((a, b) => a.name.localeCompare(b.name)).map((team) => (
                   <option key={team.id} value={team.id}>{team.name || team.id}</option>
                 ))}
               </select>
@@ -224,8 +243,8 @@ export default function RidersTab() {
 
       <div className="admin-stats">
         <p>
-          Totaal renners: <strong>{searchTerm ? sortedRiders.length : riders.length}</strong>
-          {searchTerm && <> | Gevonden: <strong>{sortedRiders.length}</strong></>}
+          Totaal renners: <strong>{riders.length}</strong>
+          {(searchTerm || selectedTeamFilter) && <> | Gevonden: <strong>{sortedRiders.length}</strong></>}
           | Per pagina: <strong>{RIDERS_PER_PAGE}</strong>
         </p>
       </div>

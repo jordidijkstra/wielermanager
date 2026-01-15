@@ -22,6 +22,7 @@ export default function RacesTab() {
   const [riderSearchFilters, setRiderSearchFilters] = useState({});
   const [openRiderDropdowns, setOpenRiderDropdowns] = useState({});
   const [selectedCategoryFilter, setSelectedCategoryFilter] = useState(null);
+  const [searchTerm, setSearchTerm] = useState('');
   const racesPerPage = 50;
   const [newRace, setNewRace] = useState({
     name: '',
@@ -223,10 +224,12 @@ export default function RacesTab() {
     return dateA - dateB;
   });
 
-  // Filter by category if selected
-  const filteredRaces = selectedCategoryFilter
-    ? sortedRaces.filter(race => race.categoryId === selectedCategoryFilter)
-    : sortedRaces;
+  // Filter by category and search term
+  const filteredRaces = sortedRaces.filter(race => {
+    const matchesCategory = !selectedCategoryFilter || race.categoryId === selectedCategoryFilter;
+    const matchesSearch = !searchTerm || race.name.toLowerCase().includes(searchTerm.toLowerCase());
+    return matchesCategory && matchesSearch;
+  });
 
   // Pagination logic
   const totalPages = Math.ceil(filteredRaces.length / racesPerPage);
@@ -421,24 +424,39 @@ export default function RacesTab() {
         <p>Totaal Races: <strong>{filteredRaces.length}</strong></p>
       </div>
 
-      {/* Category Filter Dropdown */}
-      <div className="category-filter">
-        <label htmlFor="category-filter">Filter op categorie:</label>
-        <select
-          id="category-filter"
-          value={selectedCategoryFilter || ''}
-          onChange={(e) => {
-            setSelectedCategoryFilter(e.target.value ? parseInt(e.target.value) : null);
-            setCurrentPage(1);
-          }}
-        >
-          <option value="">-- Alle categorieën --</option>
-          {categories.map(category => (
-            <option key={category.id} value={category.id}>
-              {category.name}
-            </option>
-          ))}
-        </select>
+      {/* Search and Category Filter */}
+      <div className="races-filters">
+        <div className="search-box">
+          <input
+            type="text"
+            placeholder="Zoek op racenaam..."
+            value={searchTerm}
+            onChange={(e) => {
+              setSearchTerm(e.target.value);
+              setCurrentPage(1);
+            }}
+            className="search-input"
+          />
+        </div>
+
+        <div className="category-filter">
+          <label htmlFor="category-filter">Filter op categorie:</label>
+          <select
+            id="category-filter"
+            value={selectedCategoryFilter || ''}
+            onChange={(e) => {
+              setSelectedCategoryFilter(e.target.value ? parseInt(e.target.value) : null);
+              setCurrentPage(1);
+            }}
+          >
+            <option value="">-- Alle categorieën --</option>
+            {categories.map(category => (
+              <option key={category.id} value={category.id}>
+                {category.name}
+              </option>
+            ))}
+          </select>
+        </div>
       </div>
 
       <div className="riders-table">

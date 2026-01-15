@@ -2,12 +2,14 @@ import { useState, useEffect } from 'react';
 import { useRiders } from '../hooks/useRiders';
 import { useUserTeam } from '../hooks/useUserTeam';
 import { useCyclingTeams } from '../hooks/useCyclingTeams';
+import { useUserBudget } from '../hooks/useUserBudget';
 import { getTeamJerseyPath } from '../services/cyclingTeamService';
 
 import '../css/TeamBuilder.css';
 
 function TeamBuilder({ user }) {
-  const [budget] = useState(200000000);
+
+  const { budget, loading: budgetLoading } = useUserBudget(user);
 
   const { riders, loading } = useRiders();
   const { selectedRiders, addRider, removeRider, saveTeam, saveStatus, getTotalSpent } = useUserTeam(user, budget);
@@ -22,6 +24,8 @@ function TeamBuilder({ user }) {
   const getRemainingBudget = () => budget - getTotalSpent();
   const formatPrice = (price) => '€' + (price / 1000000).toFixed(1) + 'M';
   const getFullName = (rider) => `${rider.firstname} ${rider.lastname}`;
+
+
 
   const filteredRiders = riders
   .filter(r => {
@@ -65,8 +69,8 @@ function TeamBuilder({ user }) {
     return pages;
   };
 
-  if (loading) {
-    return <div className="team-builder loading">Riders laden...</div>;
+  if (loading || budgetLoading) {
+    return <div className="team-builder loading">Laden...</div>;
   }
 
   return (

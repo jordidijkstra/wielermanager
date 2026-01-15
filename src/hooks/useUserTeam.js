@@ -6,7 +6,7 @@ export function useUserTeam(user, budget) {
   const [saveStatus, setSaveStatus] = useState('');
 
   useEffect(() => {
-    if (!user) return; // Only run if user exists
+    if (!user) return;
     
     const loadTeam = async () => {
       try {
@@ -26,6 +26,7 @@ export function useUserTeam(user, budget) {
   const addRider = (rider) => {
     if (selectedRiders.length >= 30) return alert('Max 30 renners!');
     if (selectedRiders.find(r => r.id === rider.id)) return alert('Deze renner zit al in je team!');
+    // Server validates final budget on save, but prevent obvious overspend
     if (getTotalSpent() + rider.price > budget) return alert('Budget overschreden!');
     setSelectedRiders([...selectedRiders, rider]);
   };
@@ -46,12 +47,13 @@ export function useUserTeam(user, budget) {
         userId: user.uid,
         riders: selectedRiders,
         totalSpent: getTotalSpent(),
+        budget: budget,
         lastUpdated: new Date().toISOString()
       });
       setSaveStatus('Team opgeslagen! ✓');
       setTimeout(() => setSaveStatus(''), 3000);
     } catch (err) {
-      setSaveStatus('Fout bij opslaan');
+      setSaveStatus('Fout bij opslaan: Budget overschreden');
       console.error(err);
     }
   };
