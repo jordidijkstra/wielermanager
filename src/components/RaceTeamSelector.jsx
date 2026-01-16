@@ -146,34 +146,9 @@ export default function RaceTeamSelector({ user, selectedRiders }) {
             [selectedRace.id]: existingTeam.riderIds
           }));
         } else if (participants) {
-          // Intelligent auto-selection for this race
-          const raceImportance = getRaceImportance(selectedRace);
-          
-          // Get all other races and their importance
-          const filteredRaces = getFilteredRaces();
-          const moreImportantRaces = filteredRaces.filter(r => 
-            getRaceImportance(r) < raceImportance && raceTeams[r.id]?.length > 0
-          );
-          
-          // Get riders already used in more important races (only if races overlap)
-          let usedInMoreImportant = new Set();
-          for (const moreImportantRace of moreImportantRaces) {
-            // Only exclude riders if races overlap
-            if (selectedRace.overlappingRaces?.includes(moreImportantRace.id)) {
-              moreImportantRace.riderIds?.forEach(id => usedInMoreImportant.add(id));
-            }
-          }
-          
-          // Get riders in overlapping races
-          const overlappingRiderIds = new Set(
-            (selectedRace.overlappingRaces || []).flatMap(rId => raceTeams[rId] || [])
-          );
-
+          // Simple auto-selection for this race
           const availableRiders = filterRidersByParticipants(userTeamRiders, participants)
-            .filter(rider => {
-              const riderId = parseInt(rider.id);
-              return !usedInMoreImportant.has(riderId) && !overlappingRiderIds.has(riderId);
-            })
+            .filter(rider => parseInt(rider.id) !== 911) // Exclude dummy rider 911
             .sort((a, b) => b.price - a.price); // Sort by price (best riders first)
 
           const autoSelectedIds = availableRiders
@@ -246,42 +221,8 @@ export default function RaceTeamSelector({ user, selectedRiders }) {
     );
   };
 
-  // Get race importance based on category priority
-  const getRaceImportance = (race) => {
-    const categoryImportance = {
-      1: 1,    // Grand Tours (most important)
-      2: 2,    // Stage Races
-      3: 3,    // One-day races
-      4: 4,    // Other
-    };
-    return categoryImportance[race.categoryId] || 10;
-  };
-
   const getAvailableCount = (race) => {
-    if (!race.overlappingRaces) return selectedRiders.length;
-
-    const overlappingRiderIds = new Set(
-      race.overlappingRaces.flatMap(raceId => raceTeams[raceId] || [])
-    );
-
-    return selectedRiders.filter(
-      rider => (!overlappingRiderIds.has(parseInt(rider.id)) && rider.price > 0)
-    ).length;
-  };
-
-  const getRidersInOverlappingRaces = () => {
-    if (!selectedRace?.overlappingRaces) return new Set();
-
-    return new Set(
-      selectedRace.overlappingRaces.flatMap(raceId => raceTeams[raceId] || [])
-    );
-  };
-
-  const getAllOverlappingRaces = (race) => {
-    const sortedRaces = getFilteredRaces();
-    return (race.overlappingRaces || [])
-      .map(raceId => sortedRaces.find(r => r.id === raceId))
-      .filter(Boolean);
+    return userTeamRiders.length;
   };
 
   const saveRaceTeam = async () => {
@@ -359,13 +300,9 @@ export default function RaceTeamSelector({ user, selectedRiders }) {
 
   const sortedRaces = getFilteredRaces();
   const currentTeam = selectedRace ? raceTeams[selectedRace.id] || [] : [];
-  const ridersInOverlappingRaces = getRidersInOverlappingRaces();
 
   // Prepare race options for selector
   const raceOptions = sortedRaces.map(race => {
-    const available = getAvailableCount(race);
-    const hasOverlap = race.overlappingRaces?.length > 0;
-    const isUnavailable = available === 0;
     const hasSavedTeam = userRaceTeams?.some(rt => rt.raceId === race.id);
     const startDate = new Date(race.startDate);
     const formattedDate = startDate.toLocaleDateString('nl-NL', { 
@@ -377,13 +314,7 @@ export default function RaceTeamSelector({ user, selectedRiders }) {
 
     return {
       id: race.id,
-      label: `${race.startDate} - ${race.name}${
-        hasSavedTeam ? ' ✅' : ''
-      }${
-        isUnavailable ? ' ❌ (geen renners beschikbaar)' : ''
-      }${hasOverlap && !isUnavailable ? ` ⚠️ (${race.overlappingRaces.length} overlap)` : ''}`,
-      disabled: isUnavailable,
-      title: isUnavailable ? 'Geen renners beschikbaar' : '',
+      label: `${race.startDate} - ${race.name}${hasSavedTeam ? ' ✅' : ''}`,
       race,
       deadline: formattedDeadline,
     };
@@ -412,12 +343,10 @@ export default function RaceTeamSelector({ user, selectedRiders }) {
         selectedRace={selectedRace}
         currentTeam={currentTeam}
         raceParticipants={raceParticipants}
-        ridersInOverlappingRaces={ridersInOverlappingRaces}
         selectedRiders={userTeamRiders}
         getTeamJerseyPath={getTeamJerseyPath}
         filterRidersByParticipants={filterRidersByParticipants}
         getAvailableCount={getAvailableCount}
-        getAllOverlappingRaces={getAllOverlappingRaces}
         onRiderToggle={handleRiderToggle}
         onSaveTeam={saveRaceTeam}
         saveStatus={saveStatus}

@@ -5,12 +5,10 @@ export function RaceTeamBuilder({
   selectedRace,
   currentTeam,
   raceParticipants,
-  ridersInOverlappingRaces,
   selectedRiders,
   getTeamJerseyPath,
   filterRidersByParticipants,
   getAvailableCount,
-  getAllOverlappingRaces,
   onRiderToggle,
   onSaveTeam,
   saveStatus,
@@ -25,7 +23,6 @@ export function RaceTeamBuilder({
   );
 
   const availableCount = getAvailableCount(selectedRace);
-  const overlappingRaces = getAllOverlappingRaces(selectedRace);
 
   return (
     <div className="race-team-builder">
@@ -33,7 +30,6 @@ export function RaceTeamBuilder({
         race={selectedRace}
         currentTeam={currentTeam}
         availableCount={availableCount}
-        overlappingRaces={overlappingRaces}
       />
 
       {isDeadlinePassed && (
@@ -57,7 +53,6 @@ export function RaceTeamBuilder({
               riders={selectedRiders}
               currentTeam={currentTeam}
               raceParticipants={raceParticipants}
-              ridersInOverlappingRaces={ridersInOverlappingRaces}
               getTeamJerseyPath={getTeamJerseyPath}
               filterRidersByParticipants={filterRidersByParticipants}
               onRiderToggle={onRiderToggle}

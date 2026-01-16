@@ -8,6 +8,7 @@ import Login from './components/Login';
 import TeamBuilder from './components/TeamBuilder';
 import RaceTeamSelector from './components/RaceTeamSelector';
 import PointsTables from './components/PointsTables';
+import YourPoints from './components/YourPoints';
 import RaceCountdown from './components/RaceCountdown';
 import Footer from './components/Footer';
 import '@fortawesome/fontawesome-free/css/all.min.css';
@@ -55,6 +56,8 @@ function App() {
         return isAdmin ? <Admin /> : <Home user={user} setCurrentPage={setCurrentPage} setShowLoginModal={setShowLoginModal} />;
       case 'team':
         return <TeamBuilder user={user}/>;
+      case 'points':
+        return user ? <YourPoints user={user} /> : <Home user={user} setCurrentPage={setCurrentPage} setShowLoginModal={setShowLoginModal} />;
       case 'raceTeams':
         return <RaceTeamSelector user={user} selectedRiders={selectedRiders}/>;
       case 'pointsTables':

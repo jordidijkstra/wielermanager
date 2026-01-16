@@ -4,7 +4,6 @@ export function RidersGrid({
   riders,
   currentTeam,
   raceParticipants,
-  ridersInOverlappingRaces,
   getTeamJerseyPath,
   filterRidersByParticipants,
   onRiderToggle,
@@ -12,6 +11,7 @@ export function RidersGrid({
   savedTeamRiderIds,
 }) {
   const availableRiders = riders.filter(rider =>
+    parseInt(rider.id) !== 911 && // Exclude dummy rider 911
     filterRidersByParticipants([rider], raceParticipants).length > 0
   );
 
@@ -25,7 +25,6 @@ export function RidersGrid({
         const riderId = parseInt(rider.id);
         const isSelected = currentTeam.includes(riderId);
         const isSaved = (savedTeamRiderIds?.has(riderId) && isSelected) || false;
-        const isUnavailable = ridersInOverlappingRaces.has(riderId);
 
         return (
           <RiderItem
@@ -33,10 +32,10 @@ export function RidersGrid({
             rider={rider}
             isSelected={isSelected}
             isSaved={isSaved}
-            isUnavailable={(ridersInOverlappingRaces.has(riderId) && !isSelected) || isDeadlinePassed}
+            isUnavailable={isDeadlinePassed}
             jerseyPath={getTeamJerseyPath(rider.teamId)}
             onToggle={() =>
-              (!ridersInOverlappingRaces.has(riderId) || isSelected) && !isDeadlinePassed && onRiderToggle(riderId)
+              !isDeadlinePassed && onRiderToggle(riderId)
             }
           />
         );

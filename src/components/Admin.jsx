@@ -2,6 +2,7 @@ import { useState } from 'react';
 import RidersTab from './RidersTab';
 import RacesTab from './RacesTab';
 import ResultsTab from './ResultsTab';
+import ParticipantsTab from './ParticipantsTab';
 import '../css/admin.css';
 
 export default function Admin() {
@@ -31,6 +32,12 @@ export default function Admin() {
         >
           🏆 Resultaten
         </button>
+        <button 
+          className={`tab-button ${activeTab === 'participants' ? 'active' : ''}`}
+          onClick={() => setActiveTab('participants')}
+        >
+          📋 Startlijsten
+        </button>
       </div>
 
       {/* Riders Tab */}
@@ -41,6 +48,9 @@ export default function Admin() {
 
       {/* Results Tab */}
       {activeTab === 'results' && <ResultsTab />}
+
+      {/* Participants Tab */}
+      {activeTab === 'participants' && <ParticipantsTab />}
     </div>
   );
 }

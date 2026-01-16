@@ -18,7 +18,7 @@ export default function RidersTab() {
     lastname: '',
     firstnameWithoutSpecialChars: '',
     lastnameWithoutSpecialChars: '',
-    price: 0,
+    price: 500000,
     teamId: null,
     points: 0
   });
@@ -86,7 +86,7 @@ export default function RidersTab() {
         lastname: '',
         firstnameWithoutSpecialChars: '',
         lastnameWithoutSpecialChars: '',
-        price: 0,
+        price: 500000,
         teamId: null,
         points: 0
       });

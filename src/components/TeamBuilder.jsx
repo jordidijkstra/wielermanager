@@ -29,6 +29,8 @@ function TeamBuilder({ user }) {
 
   const filteredRiders = riders
   .filter(r => {
+    const riderId = parseInt(r.id);
+    if (riderId === 911) return false; // Exclude dummy rider 911
     const fullName = getFullName(r).toLowerCase();
     const search = searchTerm.toLowerCase();
     const priceOk = !maxPrice || r.price <= parseInt(maxPrice) * 1000000;

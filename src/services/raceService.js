@@ -20,45 +20,9 @@ export const getAllRaces = async () => {
       return dateA - dateB;
     });
   
-  // Detecteer overlaps en voeg informatie toe
-  return races.map(race => ({
-    ...race,
-    overlappingRaces: getOverlappingRaceIds(race, races)
-  }));
+  return races;
 };
 
-// Detecteer welke races overlappen met een gegeven race
-const getOverlappingRaceIds = (race, allRaces) => {
-  // Valide race check
-  if (!race.startDate || !race.endDate || race.startDate.includes('xx') || !race.name?.trim()) return [];
-  
-  const raceStart = new Date(race.startDate);
-  const raceEnd = new Date(race.endDate);
-  
-  if (isNaN(raceStart.getTime()) || isNaN(raceEnd.getTime())) return [];
-  
-  return allRaces
-    .filter(other => {
-      if (other.id === race.id) return false; // Sluit jezelf uit
-      
-      // Veel strengere filtering - alleen valide races
-      if (!other.startDate || !other.endDate) return false;
-      if (other.startDate.includes('xx') || other.endDate.includes('xx')) return false;
-      if (!other.name || !other.name.trim()) return false;
-      if (other.tourId !== null) return false; // Stages uitsluiten
-      if (other.name.includes('Championship')) return false;
-      if (other.name.includes('Stage')) return false;
-      
-      const otherStart = new Date(other.startDate);
-      const otherEnd = new Date(other.endDate);
-      
-      if (isNaN(otherStart.getTime()) || isNaN(otherEnd.getTime())) return false;
-      
-      // Check of races overlappen
-      return raceStart <= otherEnd && raceEnd >= otherStart;
-    })
-    .map(race => race.id);
-};
 
 // Haal een specifieke race op
 export const getRaceById = async (raceId) => {
@@ -93,40 +57,6 @@ export const getUserRaceTeams = async (userId) => {
   }));
 };
 
-// Selecteer automatisch de beste renners voor een race
-export const getAutoSelectedRiders = (race, allRiders, raceTeams, ridersInOverlappingRaces, raceParticipants = null) => {
-  if (!race || !allRiders) return [];
-  
-  const minRiders = race.minRiders || 1;
-  const maxRiders = race.maxRiders || 7;
-  
-  // Filter beschikbare renners:
-  // - Moeten prijs hebben
-  // - Mogen niet al in overlappende race zitten
-  // - Moeten deelnemer zijn (als deelnemerslijst beschikbaar)
-  const availableRiders = allRiders.filter(rider => {
-    if (!rider.price || rider.price <= 0) return false;
-    if (ridersInOverlappingRaces.includes(parseInt(rider.id))) return false;
-    
-    // Filter op race participants als beschikbaar
-    if (raceParticipants && raceParticipants.length > 0) {
-      const riderId = parseInt(rider.id);
-      const isParticipant = raceParticipants.some(p => p.riderId === riderId);
-      if (!isParticipant) return false;
-    }
-    
-    return true;
-  });
-  
-  // Sorteer op prijs (hoogste eerst = beste waarde)
-  const sortedByPrice = availableRiders.sort((a, b) => b.price - a.price);
-  
-  // Selecteer tot maxRiders, maar liever minRiders als minimum
-  const targetCount = Math.min(maxRiders, Math.max(minRiders, Math.floor(sortedByPrice.length * 0.6)));
-  
-  return sortedByPrice.slice(0, targetCount).map(r => parseInt(r.id));
-};
-
 // Selecteer automatisch de beste renners voor ALLE races
 export const getAutoSelectedForAllRaces = (races, allRiders) => {
   if (!races || !allRiders) return {};
@@ -138,17 +68,10 @@ export const getAutoSelectedForAllRaces = (races, allRiders) => {
     const minRiders = race.minRiders || 1;
     const maxRiders = race.maxRiders || 7;
     
-    // Renners die al in overlappende races geselecteerd zijn
-    const ridersInOverlappingRaces = new Set();
-    (race.overlappingRaces || []).forEach(overlapRaceId => {
-      const overlapTeam = allRaceTeams[overlapRaceId] || [];
-      overlapTeam.forEach(riderId => ridersInOverlappingRaces.add(riderId));
-    });
-    
     // Filter beschikbare renners
     const availableRiders = allRiders.filter(rider => {
+      if (parseInt(rider.id) === 911) return false; // Exclude dummy rider 911
       if (!rider.price || rider.price <= 0) return false;
-      if (ridersInOverlappingRaces.has(parseInt(rider.id))) return false;
       return true;
     });
     
@@ -164,17 +87,6 @@ export const getAutoSelectedForAllRaces = (races, allRiders) => {
   });
   
   return result;
-};
-
-// Controleer hoeveel beschikbare renners er zijn voor een race
-export const getAvailableRidersCount = (race, allRiders, ridersInOverlappingRaces) => {
-  if (!race || !allRiders) return 0;
-  
-  return allRiders.filter(rider => {
-    if (!rider.price || rider.price <= 0) return false;
-    if (ridersInOverlappingRaces.includes(parseInt(rider.id))) return false;
-    return true;
-  }).length;
 };
 
 // Haal deelnemerslijst op voor een race
