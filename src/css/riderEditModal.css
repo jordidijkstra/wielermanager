@@ -120,12 +120,12 @@
   transition: all 0.3s;
 }
 
-.btn-save {
+.btn-save-rider-modal {
   background-color: #4CAF50;
   color: white;
 }
 
-.btn-save:hover {
+.btn-save-rider-modal:hover {
   background-color: #45a049;
 }
 

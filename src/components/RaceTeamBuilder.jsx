@@ -61,7 +61,7 @@ export function RaceTeamBuilder({
             />
           </div>
 
-          <button className="btn-save" onClick={onSaveTeam} disabled={isDeadlinePassed}>
+          <button className="btn-save-race-team" onClick={onSaveTeam} disabled={isDeadlinePassed}>
             {isDeadlinePassed ? '✓ Selectie Opgeslagen' : 'Selectie Opslaan'}
           </button>
           {saveStatus && <p className="save-status">{saveStatus}</p>}

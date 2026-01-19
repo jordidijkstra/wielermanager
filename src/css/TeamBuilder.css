@@ -1,7 +1,7 @@
 .team-builder {
   padding: 20px;
   max-width: 1400px;
-  margin: 0 auto;
+  margin: 10dvh auto;
 }
 
 .team-header {
@@ -10,7 +10,7 @@
 
 .team-header h1 {
   margin: 0 0 20px 0;
-  color: #333;
+  color: #f6f6f6;
 }
 
 .budget-info {
@@ -80,7 +80,7 @@
   color: #333;
 }
 
-.btn-save {
+.btn-save-teambuilder {
   padding: 10px 20px;
   background: #28a745;
   color: white;
@@ -91,11 +91,11 @@
   transition: background 0.2s;
 }
 
-.btn-save:hover {
+.btn-save-teambuilder:hover {
   background: #218838;
 }
 
-.btn-save:disabled {
+.btn-save-teambuilder:disabled {
   opacity: 0.5;
   cursor: not-allowed;
   background: #ccc;
@@ -103,7 +103,7 @@
   border: 1px solid #bbb;
 }
 
-.btn-save:disabled:hover {
+.btn-save-teambuilder:disabled:hover {
   transform: none;
 }
 

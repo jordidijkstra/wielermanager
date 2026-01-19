@@ -210,7 +210,7 @@ export default function ParticipantsTab() {
           </div>
 
           <div className="form-actions">
-            <button className="btn-save" onClick={() => saveEdit(editingRaceId)}>
+            <button className="btn-save-participants" onClick={() => saveEdit(editingRaceId)}>
               💾 Opslaan
             </button>
             <button

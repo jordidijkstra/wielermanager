@@ -209,7 +209,7 @@ export default function YourPoints({ user }) {
           disabled={currentSpeeldagIndex === 0}
           aria-label="Vorige speeldag"
         >
-          ◀
+          &lt;
         </button>
 
         <div className="yourpoints-speeldag-section">
@@ -288,7 +288,7 @@ export default function YourPoints({ user }) {
           disabled={currentSpeeldagIndex === sortedDates.length - 1}
           aria-label="Volgende speeldag"
         >
-          ▶
+          &gt;
         </button>
       </div>
 

@@ -156,27 +156,6 @@
   color: #666;
 }
 
-.overlap-warning {
-  margin: 15px 0;
-  padding: 12px;
-  background-color: #fff3cd;
-  border: 2px solid #ffc107;
-  border-radius: 6px;
-  color: #856404;
-  font-weight: 500;
-}
-
-.overlap-warning ul {
-  margin: 8px 0 0 20px;
-  padding: 0;
-  list-style: disc;
-}
-
-.overlap-warning li {
-  margin: 4px 0;
-  color: #856404;
-}
-
 .team-count {
   font-weight: 600;
   color: #fca311;
@@ -305,7 +284,7 @@
   white-space: nowrap;
 }
 
-.btn-save {
+.btn-save-race-team {
   color: white;
   padding: 12px 30px;
   border: none;
@@ -317,7 +296,7 @@
   margin-right: 10px;
 }
 
-.btn-save:hover {
+.btn-save-race-team:hover {
   transform: translateY(-2px);
 }
 

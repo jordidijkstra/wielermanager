@@ -862,12 +862,12 @@ table input:focus {
   background-color: #28a745;
 }
 
-.btn-save {
+.btn-save-admin {
   background-color: #0066cc;
   color: white;
 }
 
-.btn-save:hover {
+.btn-save-admin:hover {
   background-color: #0052a3;
 }
 

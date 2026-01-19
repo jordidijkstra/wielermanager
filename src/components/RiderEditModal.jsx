@@ -88,7 +88,7 @@ export default function RiderEditModal({ rider, onSave, onCancel }) {
             <button type="button" className="btn-cancel" onClick={onCancel}>
               Annuleren
             </button>
-            <button type="submit" className="btn-save">
+            <button type="submit" className="btn-save-rider-modal">
               Opslaan
             </button>
           </div>

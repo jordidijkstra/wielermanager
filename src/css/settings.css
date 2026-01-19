@@ -107,7 +107,7 @@
   margin-top: 5px;
 }
 
-.btn-save {
+.btn-save-settings {
   background: linear-gradient(135deg, #667ee6 0%, #764ba2 100%);
   color: white;
   border: none;
@@ -120,12 +120,12 @@
   width: 100%;
 }
 
-.btn-save:hover:not(:disabled) {
+.btn-save-settings:hover:not(:disabled) {
   transform: translateY(-2px);
   box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
 }
 
-.btn-save:disabled {
+.btn-save-settings:disabled {
   opacity: 0.6;
   cursor: not-allowed;
 }
@@ -196,7 +196,7 @@
     padding: 15px;
   }
 
-  .btn-save {
+  .btn-save-settings {
     padding: 10px 20px;
   }
 }

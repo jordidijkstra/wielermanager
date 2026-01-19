@@ -1,10 +1,9 @@
 export function RaceSelector({ races, selectedRaceId, selectedRaceDeadline, onRaceChange, batchSaveStatus, onSaveAll }) {
   return (
     <div className="race-selector">
-      <div className="race-selector-wrapper">
         <div className="race-selector-select">
-          <label>Kies een race:</label>
-          <select value={selectedRaceId} onChange={(e) => onRaceChange(e.target.value)}>
+          <label htmlFor="race-select">Kies een race:</label>
+          <select id="race-select" value={selectedRaceId} onChange={(e) => onRaceChange(e.target.value)}>
             <option value="">- Race -</option>
             {races.map(race => (
               <option
@@ -27,7 +26,6 @@ export function RaceSelector({ races, selectedRaceId, selectedRaceDeadline, onRa
             </span>
           </div>
         )}
-      </div>
 
       <button className="btn-save-all" onClick={onSaveAll}>
         Alle Selecties Opslaan

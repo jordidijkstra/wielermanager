@@ -135,7 +135,7 @@ export default function Settings({ user }) {
               <small className="form-hint">Email kan niet worden gewijzigd</small>
             </div>
 
-            <button type="submit" className="btn-save" disabled={isSaving}>
+            <button type="submit" className="btn-save-settings" disabled={isSaving}>
               {isSaving ? 'Bezig...' : 'Wijzigingen opslaan'}
             </button>
           </form>

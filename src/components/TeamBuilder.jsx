@@ -107,7 +107,7 @@ function TeamBuilder({ user }) {
             <h2>Jouw Team</h2>
             {selectedRiders.length > 0 && (
               <button
-                className="btn-save"
+                className="btn-save-teambuilder"
                 onClick={saveTeam}
                 disabled={selectedRiders.length < 14}
                 title={selectedRiders.length < 14 ? "Je team moet minimaal 14 renners bevatten" : ""}
@@ -159,22 +159,6 @@ function TeamBuilder({ user }) {
         </div>        <div className="available-riders">
           <div className="section-header">
             <h2>Beschikbare Renners ({filteredRiders.length})</h2>
-            {user.email === 'dijkstrajordi@gmail.com' && (
-              <div style={{ display: 'flex', gap: '10px' }}>
-                <button className="btn-download">
-                  Download CSV
-                </button>
-                <label htmlFor="csv-upload" className="btn-download" style={{ cursor: 'pointer' }}>
-                  Upload CSV
-                  <input 
-                    id="csv-upload"
-                    type="file" 
-                    accept=".csv"
-                    style={{ display: 'none' }}
-                  />
-                </label>
-              </div>
-            )}
           </div>
           
           <div className="filters">

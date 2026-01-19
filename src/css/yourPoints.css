@@ -1,14 +1,13 @@
 .your-points {
   padding: 20px;
   max-width: 1200px;
-  margin: 0 auto;
-  padding-bottom: 40px;
+  margin: 10dvh auto;
 }
 
 .your-points h1 {
   font-size: 2em;
   margin-bottom: 30px;
-  color: #14213d;
+  color: #f6f6f6;
 }
 
 .your-points h2 {
@@ -263,13 +262,26 @@
   }
 
   .yourpoints-speeldag-container {
-    flex-direction: column;
-    gap: 15px;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
   }
 
   .btn-speeldag-nav {
-    width: 100%;
-    height: 40px;
+    width: 45px;
+    height: 45px;
+    flex-shrink: 0;
+  }
+
+  .yourpoints-header {
+    flex: 1 1 auto;
+    min-width: 150px;
+    order: -1;
+  }
+
+  .yourpoints-speeldag-section {
+    flex-basis: 100%;
+    order: 1;
   }
 
   .speeldag-header {
