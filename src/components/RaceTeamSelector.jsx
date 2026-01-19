@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useRaces } from '../hooks/useRaces';
 import { getRaceParticipants, filterRidersByParticipants } from '../services/raceService';
 import { getCyclingTeams } from '../services/cyclingTeamService';
@@ -17,6 +17,7 @@ export default function RaceTeamSelector({ user, selectedRiders }) {
   const [raceParticipants, setRaceParticipants] = useState(null);
   const [cyclingTeams, setCyclingTeams] = useState([]);
   const [userTeamRiders, setUserTeamRiders] = useState([]);
+  const autoSavedRaces = useRef(new Set()); // Track which races have been auto-saved
   
   const { races, loading, userRaceTeams, saveTeamForRace, saveStatus } = useRaces(user);
 
@@ -106,26 +107,88 @@ export default function RaceTeamSelector({ user, selectedRiders }) {
     }
   }, [races, selectedRace]);
 
-  // Check if deadline has passed and auto-save
+  // Clear auto-save tracking when race is selected/changed
+  // This allows reprocessing if race data is updated (e.g., deadline changed)
   useEffect(() => {
-    if (!selectedRace || !selectedRaceDeadline) return;
+    if (selectedRace) {
+      autoSavedRaces.current.delete(selectedRace.id);
+    }
+  }, [selectedRace?.id]);
+
+  // Check if deadline has passed and auto-save/auto-fill
+  useEffect(() => {
+    if (!selectedRace || !raceParticipants) return;
 
     const now = new Date();
     const deadline = new Date(selectedRace.startDate);
     deadline.setHours(9, 0, 0, 0); // Deadline is 09:00 on startDate
     const deadlineHasPassed = deadline <= now;
 
-    if (deadlineHasPassed) {
-      const raceId = selectedRace.id;
-      const team = raceTeams[raceId] || [];
-      
-      // Only auto-save if we have a valid team and it hasn't been saved yet
-      if (team.length > 0 && !userRaceTeams?.some(rt => rt.raceId === raceId)) {
-        console.log(`⏱️ Deadline verstreken voor race ${selectedRace.name}. Automatisch opslaan...`);
+    if (!deadlineHasPassed) return;
+
+    const raceId = selectedRace.id;
+    
+    // Only process each race once
+    if (autoSavedRaces.current.has(raceId)) return;
+    
+    autoSavedRaces.current.add(raceId);
+    
+    const currentTeam = raceTeams[raceId] || [];
+    const maxRidersForRace = selectedRace.maxRiders || INITIAL_RIDERS_COUNT;
+    const existingSavedTeam = userRaceTeams?.find(rt => rt.raceId === raceId);
+    
+    console.log(`⏱️ Deadline verstreken voor race ${selectedRace.name}. Processing...`);
+    
+    // Determine which team to work with
+    const teamToProcess = existingSavedTeam?.riderIds || currentTeam;
+    const teamSize = teamToProcess.length;
+    
+    if (teamSize === 0) {
+      // No team at all - skip
+      return;
+    }
+    
+    if (teamSize >= maxRidersForRace) {
+      // Team already at max - just save if not saved yet
+      if (!existingSavedTeam && currentTeam.length > 0) {
+        console.log(`✅ Saving unsaved team with ${teamSize} riders...`);
         saveRaceTeam();
       }
+      return;
     }
-  }, [selectedRace, selectedRaceDeadline, raceTeams, userRaceTeams]);
+    
+    // Team has less than maxRiders - auto-fill
+    console.log(`⏱️ Auto-filling race ${selectedRace.name} from ${teamSize} to ${maxRidersForRace} riders...`);
+    
+    const availableRiders = filterRidersByParticipants(userTeamRiders, raceParticipants)
+      .filter(rider => 
+        parseInt(rider.id) !== 911 && // Exclude dummy rider 911
+        !teamToProcess.includes(parseInt(rider.id)) // Exclude already selected riders
+      )
+      .sort((a, b) => b.price - a.price); // Sort by price (best riders first)
+    
+    const additionalRiders = availableRiders
+      .slice(0, maxRidersForRace - teamSize)
+      .map(rider => parseInt(rider.id));
+    
+    const updatedTeam = [...teamToProcess, ...additionalRiders];
+    
+    // Update state
+    setRaceTeams(prevTeams => ({
+      ...prevTeams,
+      [raceId]: updatedTeam
+    }));
+    
+    // Auto-save the updated team
+    setTimeout(() => {
+      const selectedRidersForRace = userTeamRiders.filter(r =>
+        updatedTeam.includes(parseInt(r.id))
+      );
+      const totalPrice = selectedRidersForRace.reduce((sum, r) => sum + r.price, 0);
+      console.log(`✅ Auto-saving race ${selectedRace.name} with ${updatedTeam.length} riders`);
+      saveTeamForRace(raceId, updatedTeam, selectedRidersForRace, totalPrice);
+    }, 100);
+  }, [selectedRace, raceParticipants, raceTeams, userRaceTeams, userTeamRiders]);
 
   // Load participants and auto-select riders when race is selected
   useEffect(() => {
@@ -136,23 +199,44 @@ export default function RaceTeamSelector({ user, selectedRiders }) {
         const participants = await getRaceParticipants(selectedRace.id);
         setRaceParticipants(participants);
 
+        const maxRidersForRace = selectedRace.maxRiders || INITIAL_RIDERS_COUNT;
+        
         // Check if there's already a saved team for this race
         const existingTeam = userRaceTeams?.find(rt => rt.raceId === selectedRace.id);
         
         if (existingTeam && existingTeam.riderIds) {
           // Use the saved team
+          let teamToUse = [...existingTeam.riderIds];
+          
+          // If saved team has less than maxRiders, try to fill it up
+          if (teamToUse.length < maxRidersForRace && participants) {
+            const availableRiders = filterRidersByParticipants(userTeamRiders, participants)
+              .filter(rider => 
+                parseInt(rider.id) !== 911 && // Exclude dummy rider 911
+                !teamToUse.includes(parseInt(rider.id)) // Exclude already selected riders
+              )
+              .sort((a, b) => b.price - a.price); // Sort by price (best riders first)
+            
+            const additionalRiders = availableRiders
+              .slice(0, maxRidersForRace - teamToUse.length)
+              .map(rider => parseInt(rider.id));
+            
+            teamToUse = [...teamToUse, ...additionalRiders];
+          }
+          
           setRaceTeams(prevTeams => ({
             ...prevTeams,
-            [selectedRace.id]: existingTeam.riderIds
+            [selectedRace.id]: teamToUse
           }));
         } else if (participants) {
-          // Simple auto-selection for this race
+          // Auto-selection: selecteer renners tot maxRiders bereikt is
+          // Kies altijd de duurste renners eerst (beste renners)
           const availableRiders = filterRidersByParticipants(userTeamRiders, participants)
             .filter(rider => parseInt(rider.id) !== 911) // Exclude dummy rider 911
             .sort((a, b) => b.price - a.price); // Sort by price (best riders first)
 
           const autoSelectedIds = availableRiders
-            .slice(0, selectedRace.maxRiders || INITIAL_RIDERS_COUNT)
+            .slice(0, maxRidersForRace)
             .map(rider => parseInt(rider.id));
 
           setRaceTeams(prevTeams => ({
@@ -212,13 +296,24 @@ export default function RaceTeamSelector({ user, selectedRiders }) {
   };
 
   const getFilteredRaces = () => {
-    return races.filter(race =>
-      race.tourId == null &&
-      !race.name?.includes('Championship') &&
-      race.name?.trim() &&
-      !race.name.includes('Stage') &&
-      !race.startDate?.includes('xx')
-    );
+    const now = new Date();
+    return races.filter(race => {
+      // Basisfilters
+      if (race.tourId != null) return false;
+      if (race.name?.includes('Championship')) return false;
+      if (!race.name?.trim()) return false;
+      if (race.name.includes('Stage')) return false;
+      if (race.startDate?.includes('xx')) return false;
+      
+      // Check deadline: exclude races where deadline has passed (09:00 on startDate)
+      if (race.startDate) {
+        const deadline = new Date(race.startDate);
+        deadline.setHours(9, 0, 0, 0);
+        if (deadline <= now) return false;
+      }
+      
+      return true;
+    });
   };
 
   const getAvailableCount = (race) => {
@@ -305,18 +400,14 @@ export default function RaceTeamSelector({ user, selectedRiders }) {
   const raceOptions = sortedRaces.map(race => {
     const hasSavedTeam = userRaceTeams?.some(rt => rt.raceId === race.id);
     const startDate = new Date(race.startDate);
-    const formattedDate = startDate.toLocaleDateString('nl-NL', { 
-      weekday: 'short', 
-      month: 'short', 
-      day: 'numeric' 
-    });
-    const formattedDeadline = `${formattedDate}, 09:00`;
+    const deadline = new Date(race.startDate);
+    deadline.setHours(9, 0, 0, 0);
 
     return {
       id: race.id,
       label: `${race.startDate} - ${race.name}${hasSavedTeam ? ' ✅' : ''}`,
       race,
-      deadline: formattedDeadline,
+      deadline: deadline,
     };
   });
 

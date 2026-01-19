@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { getUserTeam, saveUserTeam } from '../services/teamService';
+import { removeRiderFromAllRaceTeams } from '../services/raceService';
 
 export function useUserTeam(user, budget) {
   const [selectedRiders, setSelectedRiders] = useState([]);
@@ -43,6 +44,18 @@ export function useUserTeam(user, budget) {
     setSaveStatus('Opslaan...');
     console.log('Saving team for user:', user.uid);
     try {
+      // EERST: Haal de oude teamdata op (voor het opslaan)
+      let oldRiderIds = new Set();
+      try {
+        const oldTeamData = await getUserTeam(user.uid);
+        if (oldTeamData && oldTeamData.riders) {
+          oldRiderIds = new Set(oldTeamData.riders.map(r => r.id));
+        }
+      } catch (err) {
+        console.error('Fout bij laden oude team:', err);
+      }
+      
+      // DAARNA: Sla het nieuwe team op
       await saveUserTeam({
         userId: user.uid,
         riders: selectedRiders,
@@ -50,6 +63,22 @@ export function useUserTeam(user, budget) {
         budget: budget,
         lastUpdated: new Date().toISOString()
       });
+      
+      // TEN SLOTTE: Verwijder renners uit race teams die niet meer in het huidige team zitten
+      try {
+        const currentRiderIds = new Set(selectedRiders.map(r => r.id));
+        
+        // Vind renners die zijn verwijderd
+        for (const riderId of oldRiderIds) {
+          if (!currentRiderIds.has(riderId)) {
+            await removeRiderFromAllRaceTeams(user.uid, riderId);
+          }
+        }
+      } catch (cleanupErr) {
+        console.error('Fout bij opschonen race teams:', cleanupErr);
+        // Dit is niet kritiek, dus niet tonen als error
+      }
+      
       setSaveStatus('Team opgeslagen! ✓');
       setTimeout(() => setSaveStatus(''), 3000);
     } catch (err) {

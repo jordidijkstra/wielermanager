@@ -2,6 +2,7 @@
   padding: 20px;
   max-width: 1200px;
   margin: 0 auto;
+  padding-bottom: 40px;
 }
 
 .your-points h1 {
@@ -16,23 +17,98 @@
   color: #14213d;
 }
 
-.yourpoints-section {
+.yourpoints-header {
+  background: linear-gradient(135deg, #667ee6 0%, #764ba2 100%);
+  color: white;
+  padding: 20px;
+  border-radius: 8px;
+  margin-bottom: 30px;
+  text-align: center;
+  box-shadow: 0 2px 8px rgba(102, 126, 234, 0.2);
+}
+
+.yourpoints-header h2 {
+  color: white;
+  font-size: 2em;
+  margin: 0;
+}
+
+/* Speeldag navigation container */
+.yourpoints-speeldag-container {
+  display: flex;
+  align-items: flex-start;
+  gap: 20px;
+  margin-bottom: 20px;
+}
+
+.btn-speeldag-nav {
+  background: linear-gradient(135deg, #667ee6 0%, #764ba2 100%);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  width: 50px;
+  height: 50px;
+  font-size: 1.5em;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: all 0.2s;
+  box-shadow: 0 2px 8px rgba(102, 126, 234, 0.2);
+}
+
+.btn-speeldag-nav:hover:not(:disabled) {
+  transform: scale(1.05);
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+}
+
+.btn-speeldag-nav:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+/* Speeldag sections */
+.yourpoints-speeldag-section {
   background: white;
   border-radius: 8px;
   padding: 20px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  flex: 1;
 }
 
-.yourpoints-header {
+.speeldag-header {
   display: flex;
   justify-content: space-between;
-  align-items: center;
-  margin-bottom: 20px;
+  align-items: flex-start;
   padding-bottom: 15px;
   border-bottom: 2px solid #f0f0f0;
+  margin-bottom: 20px;
 }
 
-.yourpoints-total-points {
+.speeldag-info h3 {
+  font-size: 1.3em;
+  color: #14213d;
+  margin: 0 0 8px 0;
+}
+
+.speeldag-races {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.race-badge {
+  display: inline-block;
+  background: #f0f0f0;
+  padding: 4px 10px;
+  border-radius: 4px;
+  font-size: 0.85em;
+  color: #666;
+  font-weight: 500;
+}
+
+.speeldag-points {
   display: flex;
   align-items: center;
   gap: 8px;
@@ -41,15 +117,15 @@
   padding: 8px 15px;
   border-radius: 8px;
   font-weight: bold;
-  font-size: 0.9em;
+  white-space: nowrap;
 }
 
-.yourpoints-total-points .label {
+.speeldag-points .label {
   font-size: 0.8em;
 }
 
-.yourpoints-total-points .value {
-  font-size: 1.2em;
+.speeldag-points .value {
+  font-size: 1.3em;
 }
 
 .yourpoints-riders-list {
@@ -70,18 +146,32 @@
   border-radius: 6px;
   background: #f9f9f9;
   transition: all 0.2s;
+  opacity: 0.5;
 }
 
-.yourpoints-rider:hover:not(.placeholder) {
-  background: #f0f0f0;
+.yourpoints-rider.selected {
+  opacity: 1;
+  background: #f0f7ff;
   border-color: #667ee6;
-  box-shadow: 0 2px 6px rgba(102, 126, 234, 0.15);
+}
+
+.yourpoints-rider.selected:hover {
+  background: #e8f0ff;
+  border-color: #667ee6;
+  box-shadow: 0 2px 6px rgba(102, 126, 234, 0.2);
+}
+
+.yourpoints-rider.not-selected:hover {
+  opacity: 0.7;
+  background: #f5f5f5;
+  border-color: #ccc;
 }
 
 .yourpoints-rider.placeholder {
   border: 2px dashed #e0e0e0;
   background: transparent;
   cursor: default;
+  opacity: 0.3;
 }
 
 .yourpoints-rider.placeholder:hover {
@@ -108,6 +198,12 @@
   font-size: 0.85em;
 }
 
+.yourpoints-rider-status {
+  font-size: 0.75em;
+  color: #999;
+  margin-top: 2px;
+}
+
 .yourpoints-rider-actions {
   grid-area: actions;
   display: flex;
@@ -123,6 +219,30 @@
   background: rgba(118, 75, 162, 0.1);
   padding: 2px 6px;
   border-radius: 4px;
+}
+
+.yourpoints-rider-points.active {
+  color: white;
+  background: linear-gradient(135deg, #667ee6 0%, #764ba2 100%);
+}
+
+.yourpoints-legend {
+  grid-column: 1 / -1;
+  text-align: center;
+  color: #999;
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px solid #f0f0f0;
+}
+
+.speeldag-indicator {
+  text-align: center;
+  color: #666;
+  font-size: 0.9em;
+  padding: 10px;
+  background: #f5f5f5;
+  border-radius: 6px;
+  margin-top: 20px;
 }
 
 .no-data-message {
@@ -142,10 +262,24 @@
     margin-bottom: 20px;
   }
 
-  .yourpoints-header {
+  .yourpoints-speeldag-container {
+    flex-direction: column;
+    gap: 15px;
+  }
+
+  .btn-speeldag-nav {
+    width: 100%;
+    height: 40px;
+  }
+
+  .speeldag-header {
     flex-direction: column;
     align-items: flex-start;
     gap: 15px;
+  }
+
+  .speeldag-races {
+    flex-direction: column;
   }
 
   .yourpoints-riders-list {

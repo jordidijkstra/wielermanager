@@ -18,28 +18,28 @@ service cloud.firestore {
     // Users collectie - create allowed for new users, read/write for self
     match /users/{userId} {
       allow create: if isLoggedIn();
-      allow read: if isLoggedIn() && request.auth.uid == userId;
+      allow read: if isLoggedIn() && (request.auth.uid == userId || isAdmin());
       allow write: if isLoggedIn() && request.auth.uid == userId;
     }
 
     // Race Teams per user - subcollection teams
     match /users/{userId}/teams/{raceId} {
-      allow read: if isLoggedIn() && request.auth.uid == userId;
-      allow write: if isLoggedIn() && request.auth.uid == userId;
-      allow create: if isLoggedIn() && request.auth.uid == userId;
-      allow delete: if isLoggedIn() && request.auth.uid == userId;
+      allow read: if isLoggedIn() && (request.auth.uid == userId || isAdmin());
+      allow write: if isLoggedIn() && (request.auth.uid == userId || isAdmin());
+      allow create: if isLoggedIn() && (request.auth.uid == userId || isAdmin());
+      allow delete: if isLoggedIn() && (request.auth.uid == userId || isAdmin());
     }
 
     // Teams (user's complete team/budget team) - validate budget on write
     match /teams/{userId} {
-      allow read: if isLoggedIn() && request.auth.uid == userId;
+      allow read: if isLoggedIn() && (request.auth.uid == userId || isAdmin());
       allow write: if isLoggedIn() 
-        && request.auth.uid == userId 
-        && request.resource.data.totalSpent <= getUserBudget(userId);
+        && ((request.auth.uid == userId && request.resource.data.totalSpent <= getUserBudget(userId)) 
+            || isAdmin());
       allow create: if isLoggedIn() 
-        && request.auth.uid == userId 
-        && request.resource.data.totalSpent <= getUserBudget(userId);
-      allow delete: if isLoggedIn() && request.auth.uid == userId;
+        && ((request.auth.uid == userId && request.resource.data.totalSpent <= getUserBudget(userId)) 
+            || isAdmin());
+      allow delete: if isLoggedIn() && (request.auth.uid == userId || isAdmin());
     }
 
     // Riders - iedereen ingelogd kan lezen, alleen admins kunnen schrijven

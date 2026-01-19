@@ -3,6 +3,7 @@ import RidersTab from './RidersTab';
 import RacesTab from './RacesTab';
 import ResultsTab from './ResultsTab';
 import ParticipantsTab from './ParticipantsTab';
+import AdminToolsTab from './AdminToolsTab';
 import '../css/admin.css';
 
 export default function Admin() {
@@ -38,6 +39,12 @@ export default function Admin() {
         >
           📋 Startlijsten
         </button>
+        <button 
+          className={`tab-button ${activeTab === 'tools' ? 'active' : ''}`}
+          onClick={() => setActiveTab('tools')}
+        >
+          🔧 Tools
+        </button>
       </div>
 
       {/* Riders Tab */}
@@ -51,6 +58,9 @@ export default function Admin() {
 
       {/* Participants Tab */}
       {activeTab === 'participants' && <ParticipantsTab />}
+
+      {/* Tools Tab */}
+      {activeTab === 'tools' && <AdminToolsTab />}
     </div>
   );
 }

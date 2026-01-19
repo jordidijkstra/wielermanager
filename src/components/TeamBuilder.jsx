@@ -156,9 +156,7 @@ function TeamBuilder({ user }) {
               ))}
             </div>
           )}
-        </div>
-
-        <div className="available-riders">
+        </div>        <div className="available-riders">
           <div className="section-header">
             <h2>Beschikbare Renners ({filteredRiders.length})</h2>
             {user.email === 'dijkstrajordi@gmail.com' && (

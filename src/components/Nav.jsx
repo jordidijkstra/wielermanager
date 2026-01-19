@@ -46,16 +46,9 @@ export default function Nav({ setCurrentPage, setShowLoginModal}) {
             {!showMobileMenu && (
                 <ul className="nav-menu desktop">
                     <li><a href="#" onClick={() => handleNavClick('home')}>Home</a></li>
-                    {user && (
-                        <>
-                            {!isDeadlinePassed() ? (
-                                <li><a href="#" onClick={() => handleNavClick('team')}>Jouw team</a></li>
-                            ) : (
-                                <li><a href="#" onClick={() => handleNavClick('points')}>Jouw punten</a></li>
-                            )}
-                        </>
-                    )}
-                    {user && <li><a href="#" onClick={() => handleNavClick('raceTeams')}>Race selecties</a></li>}
+                    {user && !isDeadlinePassed() && <li><a href="#" onClick={() => handleNavClick('team')}>Jouw team</a></li>}
+                    {user && <li><a href="#" onClick={() => handleNavClick('points')}>Jouw punten</a></li>}
+                    {user && <li><a href="#" onClick={() => handleNavClick('raceTeams')}>Jouw selecties</a></li>}
                     <li><a href="#" onClick={() => handleNavClick('pointsTables')}>Puntentabellen</a></li>
                     <li><a href="#" onClick={() => handleNavClick('rankings')}>Rankings</a></li>
                     
@@ -101,15 +94,8 @@ export default function Nav({ setCurrentPage, setShowLoginModal}) {
             {showMobileMenu && (
                 <ul className="nav-menu mobile">
                     <li><a href="#" onClick={() => handleNavClick('home')}>Home</a></li>
-                    {user && (
-                        <>
-                            {!isDeadlinePassed() ? (
-                                <li><a href="#" onClick={() => handleNavClick('team')}>Jouw team</a></li>
-                            ) : (
-                                <li><a href="#" onClick={() => handleNavClick('points')}>Jouw punten</a></li>
-                            )}
-                        </>
-                    )}
+                    {user && !isDeadlinePassed() && <li><a href="#" onClick={() => handleNavClick('team')}>Jouw team</a></li>}
+                    {user && <li><a href="#" onClick={() => handleNavClick('points')}>Jouw punten</a></li>}
                     {user && <li><a href="#" onClick={() => handleNavClick('raceTeams')}>Race selecties</a></li>}
                     <li><a href="#" onClick={() => handleNavClick('pointsTables')}>Puntentabellen</a></li>
                     <li><a href="#" onClick={() => handleNavClick('rankings')}>Rankings</a></li>

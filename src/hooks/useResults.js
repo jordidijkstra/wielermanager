@@ -31,7 +31,6 @@ export function useResults() {
 
       const docData = {
         id: newId,
-        status: 'nog geen resultaat',
         ...resultData
       };
       
@@ -52,10 +51,7 @@ export function useResults() {
   // Edit result
   const editResult = async (resultId, resultData) => {
     try {
-      await setDoc(doc(db, 'results', String(resultId)), {
-        status: 'nog geen resultaat',
-        ...resultData
-      });
+      await setDoc(doc(db, 'results', String(resultId)), resultData);
       await loadResults();
     } catch (err) {
       console.error('Fout bij bijwerken result:', err);

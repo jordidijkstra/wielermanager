@@ -20,9 +20,9 @@ export function RaceSelector({ races, selectedRaceId, selectedRaceDeadline, onRa
         </div>
 
         {selectedRaceDeadline && (
-          <div className="race-deadline-badge">
+          <div className="deadline-date-selected-race">
             <span className="deadline-label">⏱️ Deadline:</span>
-            <span className="deadline-date">
+            <span className="deadline-date-text">
               {selectedRaceDeadline.toLocaleDateString('nl-NL', { weekday: 'short', month: 'short', day: 'numeric' })} {selectedRaceDeadline.toLocaleTimeString('nl-NL', { hour: '2-digit', minute: '2-digit' })}
             </span>
           </div>

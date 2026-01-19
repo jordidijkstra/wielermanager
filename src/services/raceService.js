@@ -1,4 +1,4 @@
-import { collection, doc, getDocs, getDoc, setDoc, query, where } from 'firebase/firestore';
+import { collection, doc, getDocs, getDoc, setDoc, query, where, deleteDoc } from 'firebase/firestore';
 import { db } from '../firebase/config';
 
 // Haal alle races op, gesorteerd op startDate
@@ -65,7 +65,7 @@ export const getAutoSelectedForAllRaces = (races, allRiders) => {
   const result = {};
   
   races.forEach(race => {
-    const minRiders = race.minRiders || 1;
+    const minRiders = race.minRiders || 0;
     const maxRiders = race.maxRiders || 7;
     
     // Filter beschikbare renners
@@ -129,6 +129,52 @@ export const saveRaceParticipants = async (raceId, participants) => {
     participants: participants || [],
     updatedAt: new Date().toISOString()
   });
+};
+
+// Verwijder een renner uit alle race teams van een user
+export const removeRiderFromAllRaceTeams = async (userId, riderId) => {
+  if (!userId || !riderId) throw new Error('userId en riderId zijn verplicht');
+  
+  try {
+    // Haal alle race teams voor deze user
+    const userRaceTeams = await getUserRaceTeams(userId);
+    
+    // Voor elk race team: verwijder de renner
+    for (const raceTeam of userRaceTeams) {
+      const raceId = raceTeam.raceId;
+      const currentRiderIds = raceTeam.riderIds || [];
+      
+      // Filter de verwijderde renner eruit
+      const updatedRiderIds = currentRiderIds.filter(id => id !== riderId);
+      
+      // Haal de rider objecten op voor de remaining riders
+      const updatedRiders = raceTeam.riders ? 
+        raceTeam.riders.filter(r => r.id !== riderId) : 
+        [];
+      
+      // Bereken de nieuwe totale prijs
+      const updatedTotalPrice = updatedRiders.reduce((sum, r) => sum + (r.price || 0), 0);
+      
+      // Update of verwijder het race team
+      if (updatedRiderIds.length === 0) {
+        // Als er geen renners meer zijn, verwijder het hele team
+        await deleteDoc(doc(db, 'users', userId, 'teams', String(raceId)));
+        console.log(`✅ Race team ${raceId} verwijderd (geen renners meer)`);
+      } else {
+        // Update het race team met de gefilterde renners
+        await setDoc(doc(db, 'users', userId, 'teams', String(raceId)), {
+          riderIds: updatedRiderIds,
+          riders: updatedRiders,
+          totalPrice: updatedTotalPrice,
+          savedAt: new Date().toISOString()
+        });
+        console.log(`✅ Renner ${riderId} verwijderd uit race team ${raceId}`);
+      }
+    }
+  } catch (error) {
+    console.error(`Error removing rider ${riderId} from all race teams:`, error);
+    throw error;
+  }
 };
 
 

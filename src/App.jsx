@@ -14,14 +14,12 @@ import Footer from './components/Footer';
 import '@fortawesome/fontawesome-free/css/all.min.css';
 
 const BUDGET = 200000000; // €200 miljoen
-const ADMIN_EMAIL = 'dijkstrajordi@gmail.com';
 
 function App() {
-  const { user, loading } = useAuth();
+  const { user, loading, isAdmin } = useAuth();
   const [currentPage, setCurrentPage] = useState('home');
   const [showLoginModal, setShowLoginModal] = useState(false);
   const { selectedRiders } = useUserTeam(user, BUDGET);
-  const isAdmin = user && user.email === ADMIN_EMAIL;
 
   // Reset to home when user logs out
   if (!user && currentPage !== 'home') {

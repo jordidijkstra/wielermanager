@@ -47,7 +47,7 @@
   color: #999;
 }
 
-.race-deadline-badge {
+.deadline-date-selected-race {
   display: flex;
   align-items: center;
   gap: 8px;
@@ -64,7 +64,7 @@
   font-size: 14px;
 }
 
-.deadline-date {
+.deadline-date-text {
   font-size: 16px;
   font-weight: bold;
   color: #d39e00;
