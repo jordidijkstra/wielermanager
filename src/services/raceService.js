@@ -1,8 +1,22 @@
 import { collection, doc, getDocs, getDoc, setDoc, query, where, deleteDoc } from 'firebase/firestore';
 import { db } from '../firebase/config';
 
-// Haal alle races op, gesorteerd op startDate
+// Cache for races
+let racesCache = null;
+let racesCacheTimestamp = 0;
+const RACES_CACHE_DURATION = 5 * 60 * 1000; // 5 minutes
+
+// Haal alle races op, gesorteerd op startDate (met caching)
 export const getAllRaces = async () => {
+  const now = Date.now();
+  
+  // Check if cache is still valid
+  if (racesCache && (now - racesCacheTimestamp) < RACES_CACHE_DURATION) {
+    console.log('✅ Using cached races');
+    return racesCache;
+  }
+  
+  console.log('📡 Fetching races from Firestore');
   const querySnapshot = await getDocs(collection(db, 'races'));
   const races = querySnapshot.docs
     .map(doc => ({
@@ -20,6 +34,8 @@ export const getAllRaces = async () => {
       return dateA - dateB;
     });
   
+  racesCache = races;
+  racesCacheTimestamp = now;
   return races;
 };
 
@@ -177,4 +193,9 @@ export const removeRiderFromAllRaceTeams = async (userId, riderId) => {
   }
 };
 
-
+// Cache invalidation functions
+export const invalidateRacesCache = () => {
+  console.log('🔄 Invalidating races cache');
+  racesCache = null;
+  racesCacheTimestamp = 0;
+};

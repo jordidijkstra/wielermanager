@@ -56,6 +56,13 @@
   font-size: 28px;
 }
 
+.setup-intro {
+  text-align: center;
+  color: #666;
+  margin-bottom: 25px;
+  font-size: 0.95em;
+}
+
 .btn-google {
   width: 100%;
   padding: 14px;

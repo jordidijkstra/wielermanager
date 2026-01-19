@@ -1,12 +1,30 @@
 import { collection, getDocs, doc, setDoc } from 'firebase/firestore';
 import { db } from '../firebase/config';
 
+// Cache for riders
+let ridersCache = null;
+let ridersCacheTimestamp = 0;
+const RIDERS_CACHE_DURATION = 10 * 60 * 1000; // 10 minutes
+
 export const getAllRiders = async () => {
+  const now = Date.now();
+  
+  // Check if cache is still valid
+  if (ridersCache && (now - ridersCacheTimestamp) < RIDERS_CACHE_DURATION) {
+    console.log('✅ Using cached riders');
+    return ridersCache;
+  }
+  
+  console.log('📡 Fetching riders from Firestore');
   const snapshot = await getDocs(collection(db, 'riders'));
-  return snapshot.docs.map(doc => ({
+  const riders = snapshot.docs.map(doc => ({
     id: doc.id,
     ...doc.data()
   }));
+  
+  ridersCache = riders;
+  ridersCacheTimestamp = now;
+  return riders;
 };
 
 export const getAverageRiderPrice = async () => {
@@ -104,4 +122,14 @@ export const removeRidersPointsFromResults = async (raceResults) => {
       console.error(`Error removing points for rider ${riderId}:`, error);
     }
   }
+  
+  // Invalidate cache
+  invalidateRidersCache();
+};
+
+// Cache invalidation function
+export const invalidateRidersCache = () => {
+  console.log('🔄 Invalidating riders cache');
+  ridersCache = null;
+  ridersCacheTimestamp = 0;
 };

@@ -8,6 +8,8 @@ import Login from './components/Login';
 import TeamBuilder from './components/TeamBuilder';
 import RaceTeamSelector from './components/RaceTeamSelector';
 import PointsTables from './components/PointsTables';
+import Rankings from './components/Rankings';
+import Settings from './components/Settings';
 import YourPoints from './components/YourPoints';
 import RaceCountdown from './components/RaceCountdown';
 import Footer from './components/Footer';
@@ -60,8 +62,10 @@ function App() {
         return <RaceTeamSelector user={user} selectedRiders={selectedRiders}/>;
       case 'pointsTables':
         return <PointsTables />;
+      case 'rankings':
+        return <Rankings user={user} />;
       case 'settings':
-        return <Home user={user} setCurrentPage={setCurrentPage} setShowLoginModal={setShowLoginModal} />; // Placeholder voor instellingen
+        return user ? <Settings user={user} /> : <Home user={user} setCurrentPage={setCurrentPage} setShowLoginModal={setShowLoginModal} />;
       default:
         return <Home user={user} setCurrentPage={setCurrentPage} setShowLoginModal={setShowLoginModal} />;
     }

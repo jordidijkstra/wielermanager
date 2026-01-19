@@ -1,0 +1,312 @@
+.rankings {
+  padding: 20px;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding-bottom: 40px;
+}
+
+.rankings h1 {
+  font-size: 2em;
+  margin-bottom: 30px;
+  color: #14213d;
+}
+
+.rankings h2 {
+  font-size: 1.5em;
+  color: #14213d;
+  margin-bottom: 20px;
+}
+
+.rankings h3 {
+  font-size: 1.2em;
+  color: #14213d;
+  margin-bottom: 15px;
+}
+
+.no-teams-message,
+.no-riders,
+.loading-message {
+  text-align: center;
+  color: #999;
+  font-size: 1.1em;
+  padding: 40px 20px;
+}
+
+/* Rankings Table */
+.rankings-table-container {
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  overflow: auto;
+}
+
+.rankings-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.95em;
+}
+
+.rankings-table thead {
+  background: linear-gradient(135deg, #667ee6 0%, #764ba2 100%);
+  color: white;
+  font-weight: 600;
+}
+
+.rankings-table th {
+  padding: 15px;
+  text-align: left;
+  border-bottom: 2px solid #f0f0f0;
+}
+
+.rankings-table th.rank {
+  width: 50px;
+  text-align: center;
+}
+
+.rankings-table th.action {
+  width: 120px;
+  text-align: center;
+}
+
+.rankings-table tbody tr {
+  border-bottom: 1px solid #f0f0f0;
+  transition: all 0.2s;
+}
+
+.rankings-table tbody tr:hover {
+  background: #f9f9f9;
+}
+
+.rankings-table tbody tr:nth-child(even) {
+  background: #fafafa;
+}
+
+.rankings-table td {
+  padding: 12px 15px;
+}
+
+.rankings-table .rank {
+  font-weight: 600;
+  color: #667ee6;
+  text-align: center;
+  font-size: 1.1em;
+}
+
+.rankings-table .team-id {
+  font-family: monospace;
+  font-size: 0.9em;
+  color: #666;
+}
+
+.rankings-table .points {
+  text-align: center;
+}
+
+.points-badge {
+  background: linear-gradient(135deg, #667ee6 0%, #764ba2 100%);
+  color: white;
+  padding: 5px 12px;
+  border-radius: 20px;
+  font-weight: 600;
+  display: inline-block;
+  min-width: 50px;
+  text-align: center;
+}
+
+.rankings-table .riders {
+  text-align: center;
+  color: #666;
+}
+
+.rankings-table .budget {
+  text-align: right;
+  color: #666;
+}
+
+.rankings-table .action {
+  text-align: center;
+}
+
+.btn-view-team {
+  background: linear-gradient(135deg, #667ee6 0%, #764ba2 100%);
+  color: white;
+  border: none;
+  padding: 8px 15px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: all 0.2s;
+  font-size: 0.9em;
+}
+
+.btn-view-team:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+}
+
+/* Team Details */
+.team-details {
+  background: white;
+  border-radius: 8px;
+  padding: 30px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.btn-back {
+  background: #f0f0f0;
+  color: #14213d;
+  border: 1px solid #ddd;
+  padding: 10px 20px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 500;
+  margin-bottom: 20px;
+  transition: all 0.2s;
+}
+
+.btn-back:hover {
+  background: #e0e0e0;
+  transform: translateX(-2px);
+}
+
+.team-info {
+  background: linear-gradient(135deg, #667ee6 0%, #764ba2 100%);
+  color: white;
+  padding: 20px;
+  border-radius: 8px;
+  margin-bottom: 30px;
+}
+
+.team-info p {
+  margin: 10px 0;
+  font-size: 1.05em;
+}
+
+.team-info strong {
+  display: inline-block;
+  min-width: 150px;
+}
+
+.team-points {
+  font-size: 1.3em;
+  font-weight: bold;
+}
+
+.team-riders {
+  margin-top: 30px;
+}
+
+.riders-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 15px;
+  margin-top: 15px;
+}
+
+.rider-card {
+  background: white;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  overflow: hidden;
+  transition: all 0.2s;
+  cursor: default;
+}
+
+.rider-card:hover {
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.2);
+  border-color: #667ee6;
+  transform: translateY(-2px);
+}
+
+.rider-image {
+  width: 100%;
+  height: 120px;
+  object-fit: cover;
+  background: #f0f0f0;
+}
+
+.rider-info {
+  padding: 10px;
+}
+
+.rider-name {
+  font-weight: 600;
+  color: #14213d;
+  margin: 5px 0;
+  font-size: 0.9em;
+}
+
+.rider-team {
+  font-size: 0.75em;
+  color: #666;
+  margin: 3px 0;
+}
+
+.rider-price {
+  font-size: 0.8em;
+  color: #667ee6;
+  font-weight: 500;
+  margin: 3px 0;
+}
+
+.rider-points {
+  font-size: 0.85em;
+  color: white;
+  background: linear-gradient(135deg, #667ee6 0%, #764ba2 100%);
+  padding: 3px 6px;
+  border-radius: 4px;
+  margin-top: 5px;
+  text-align: center;
+  font-weight: 600;
+}
+
+@media (max-width: 768px) {
+  .rankings {
+    padding: 10px;
+  }
+
+  .rankings h1 {
+    font-size: 1.5em;
+    margin-bottom: 20px;
+  }
+
+  .rankings-table {
+    font-size: 0.85em;
+  }
+
+  .rankings-table th,
+  .rankings-table td {
+    padding: 8px 10px;
+  }
+
+  .rankings-table th.team-id,
+  .rankings-table td.team-id {
+    display: none;
+  }
+
+  .btn-view-team {
+    padding: 6px 10px;
+    font-size: 0.8em;
+  }
+
+  .team-details {
+    padding: 15px;
+  }
+
+  .riders-grid {
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    gap: 10px;
+  }
+
+  .team-info {
+    padding: 15px;
+  }
+
+  .team-info p {
+    font-size: 0.95em;
+  }
+
+  .team-info strong {
+    min-width: 120px;
+  }
+}
