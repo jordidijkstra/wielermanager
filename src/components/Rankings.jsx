@@ -3,6 +3,7 @@ import { collection, getDocs } from 'firebase/firestore';
 import { db } from '../firebase/config';
 import { useRaces } from '../hooks/useRaces';
 import { useResults } from '../hooks/useResults';
+import { getAllUsers } from '../services/userService';
 import '../css/rankings.css';
 
 // Simple cache for teams data
@@ -14,13 +15,14 @@ export default function Rankings({ user }) {
   const { races } = useRaces(user);
   const { results } = useResults();
   const [allTeams, setAllTeams] = useState([]);
+  const [allUsers, setAllUsers] = useState([]);
   const [teamDetails, setTeamDetails] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 
-  // Load all teams from Firestore (cached)
+  // Load all teams and users from Firestore (cached)
   useEffect(() => {
-    const loadAllTeams = async () => {
+    const loadData = async () => {
       try {
         setLoading(true);
         setError('');
@@ -31,32 +33,37 @@ export default function Rankings({ user }) {
           console.log('Using cached teams data');
           setAllTeams(teamsCache);
           setLoading(false);
-          return;
+        } else {
+          console.log('Fetching teams from Firestore');
+          const teamsSnapshot = await getDocs(collection(db, 'teams'));
+          const teams = [];
+          
+          teamsSnapshot.forEach(doc => {
+            teams.push({
+              id: doc.id,
+              ...doc.data()
+            });
+          });
+
+          teamsCache = teams;
+          cacheTimestamp = now;
+          setAllTeams(teams);
         }
         
-        console.log('Fetching teams from Firestore');
-        const teamsSnapshot = await getDocs(collection(db, 'teams'));
-        const teams = [];
+        // Load all users
+        const usersData = await getAllUsers();
+        setAllUsers(usersData);
         
-        teamsSnapshot.forEach(doc => {
-          teams.push({
-            id: doc.id,
-            ...doc.data()
-          });
-        });
-
-        teamsCache = teams;
-        cacheTimestamp = now;
-        setAllTeams(teams);
+        setLoading(false);
       } catch (err) {
-        console.error('Fout bij laden teams:', err);
-        setError('Kon teams niet laden. Controleer je Firestore permissions.');
+        console.error('Fout bij laden data:', err);
+        setError('Kon data niet laden. Controleer je Firestore permissions.');
       } finally {
         setLoading(false);
       }
     };
 
-    loadAllTeams();
+    loadData();
   }, []);
 
   // Calculate total points for a team (memoized)
@@ -91,6 +98,26 @@ export default function Rankings({ user }) {
 
   const getRiderName = (rider) => {
     return `${rider.firstname} ${rider.lastname}`;
+  };
+
+  const getUserName = (userId) => {
+    const userData = allUsers.find(u => u.id === userId);
+    if (userData) {
+      return `${userData.firstname} ${userData.lastname}`;
+    }
+    return userId; // Fallback to user ID if user not found
+  };
+
+  const isTeamCreationDeadlinePassed = () => {
+    // Check if first race has passed (deadline is day before race start at 09:00)
+    if (races.length === 0) return false;
+    
+    const firstRace = races[0];
+    if (!firstRace.startDate) return false;
+    
+    const deadline = new Date(firstRace.startDate);
+    deadline.setHours(9, 0, 0, 0);
+    return new Date() > deadline;
   };
 
   const handleTeamClick = (team) => {
@@ -185,7 +212,9 @@ export default function Rankings({ user }) {
     <div className="rankings">
       <h1>Rankings</h1>
 
-      {rankedTeams.length === 0 ? (
+      {!isTeamCreationDeadlinePassed() ? (
+        <p className="no-teams-message">Rankings zijn zichtbaar nadat teams ingediend zijn</p>
+      ) : rankedTeams.length === 0 ? (
         <p className="no-teams-message">Geen teams gevonden</p>
       ) : (
         <div className="rankings-table-container">
@@ -193,7 +222,7 @@ export default function Rankings({ user }) {
             <thead>
               <tr>
                 <th className="rank">#</th>
-                <th className="team-id">Team ID</th>
+                <th className="team-name">Team Manager</th>
                 <th className="points">Punten</th>
                 <th className="riders">Renners</th>
                 <th className="budget">Budget</th>
@@ -204,7 +233,7 @@ export default function Rankings({ user }) {
               {rankedTeams.map((team, index) => (
                 <tr key={team.id} className="team-row">
                   <td className="rank">{index + 1}</td>
-                  <td className="team-id">{team.id}</td>
+                  <td className="team-name">{getUserName(team.id)}</td>
                   <td className="points">
                     <span className="points-badge">{team.totalPoints}</span>
                   </td>

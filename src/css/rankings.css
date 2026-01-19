@@ -92,10 +92,9 @@
   font-size: 1.1em;
 }
 
-.rankings-table .team-id {
-  font-family: monospace;
-  font-size: 0.9em;
-  color: #666;
+.rankings-table .team-name {
+  font-weight: 500;
+  color: #14213d;
 }
 
 .rankings-table .points {
