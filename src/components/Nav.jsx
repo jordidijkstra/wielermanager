@@ -49,8 +49,8 @@ export default function Nav({ setCurrentPage, handleRankingsClick, setShowLoginM
                     {user && !isDeadlinePassed() && <li><a href="#" onClick={() => handleNavClick('team')}>Jouw team</a></li>}
                     {user && <li><a href="#" onClick={() => handleNavClick('points')}>Jouw punten</a></li>}
                     {user && <li><a href="#" onClick={() => handleNavClick('raceTeams')}>Jouw selecties</a></li>}
-                    <li><a href="#" onClick={() => handleNavClick('pointsTables')}>Puntentabellen</a></li>
-                    <li><a href="#" onClick={() => handleRankingsClick()}>Rankings</a></li>
+                    {user && <li><a href="#" onClick={() => handleNavClick('pointsTables')}>Puntentabellen</a></li>}
+                    {user && <li><a href="#" onClick={() => handleRankingsClick()}>Klassement</a></li>}
                     
                     {user ? (
                         <li className="profile-menu">
@@ -97,8 +97,8 @@ export default function Nav({ setCurrentPage, handleRankingsClick, setShowLoginM
                     {user && !isDeadlinePassed() && <li><a href="#" onClick={() => handleNavClick('team')}>Jouw team</a></li>}
                     {user && <li><a href="#" onClick={() => handleNavClick('points')}>Jouw punten</a></li>}
                     {user && <li><a href="#" onClick={() => handleNavClick('raceTeams')}>Race selecties</a></li>}
-                    <li><a href="#" onClick={() => handleNavClick('pointsTables')}>Puntentabellen</a></li>
-                    <li><a href="#" onClick={() => handleRankingsClick()}>Rankings</a></li>
+                    {user && <li><a href="#" onClick={() => handleNavClick('pointsTables')}>Puntentabellen</a></li>}
+                    {user && <li><a href="#" onClick={() => handleRankingsClick()}>Klassement</a></li>}
                     
                     {user ? (
                         <>

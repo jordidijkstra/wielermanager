@@ -1,75 +1,19 @@
-import { useState, useEffect } from 'react';
 import { useRiders } from '../hooks/useRiders';
 import { useUserTeam } from '../hooks/useUserTeam';
 import { useCyclingTeams } from '../hooks/useCyclingTeams';
 import { useUserBudget } from '../hooks/useUserBudget';
-import { getTeamJerseyPath } from '../services/cyclingTeamService';
-
+import SelectedTeam from './SelectedTeam';
+import AvailableRiders from './AvailableRiders';
+import { formatPrice } from '../utils/formatters';
 import '../css/TeamBuilder.css';
 
 function TeamBuilder({ user }) {
-
   const { budget, loading: budgetLoading } = useUserBudget(user);
-
   const { riders, loading } = useRiders();
   const { selectedRiders, addRider, removeRider, saveTeam, saveStatus, getTotalSpent } = useUserTeam(user, budget);
-  const { teams, loadingTeams } = useCyclingTeams();
-
-  const [searchTerm, setSearchTerm] = useState('');
-  const [currentPage, setCurrentPage] = useState(1);
-  const [maxPrice, setMaxPrice] = useState('');
-  const [teamFilter, setTeamFilter] = useState('');
-  const ridersPerPage = 13;
+  const { teams } = useCyclingTeams();
 
   const getRemainingBudget = () => budget - getTotalSpent();
-  const formatPrice = (price) => '€' + (price / 1000000).toFixed(1) + 'M';
-  const getFullName = (rider) => `${rider.firstname} ${rider.lastname}`;
-
-
-
-  const filteredRiders = riders
-  .filter(r => {
-    const riderId = parseInt(r.id);
-    if (riderId === 911) return false; // Exclude dummy rider 911
-    const fullName = getFullName(r).toLowerCase();
-    const search = searchTerm.toLowerCase();
-    const priceOk = !maxPrice || r.price <= parseInt(maxPrice) * 1000000;
-    const teamOk = !teamFilter || String(r.teamId) === String(teamFilter);
-    return fullName.includes(search) && priceOk && teamOk;
-  })
-  .sort((a, b) => b.price - a.price);
-
-  // Pagination
-  const indexOfLastRider = currentPage * ridersPerPage;
-  const indexOfFirstRider = indexOfLastRider - ridersPerPage;
-  const currentRiders = filteredRiders.slice(indexOfFirstRider, indexOfLastRider);
-  const totalPages = Math.ceil(filteredRiders.length / ridersPerPage);
-
-  useEffect(() => setCurrentPage(1), [searchTerm]);
-
-  const goToPage = (pageNumber) => setCurrentPage(pageNumber);
-  const goToNextPage = () => currentPage < totalPages && setCurrentPage(currentPage + 1);
-  const goToPrevPage = () => currentPage > 1 && setCurrentPage(currentPage - 1);
-
-  const getPaginationPages = () => {
-    const pages = [];
-    const maxVisible = 7;
-    if (totalPages <= maxVisible) {
-      for (let i = 1; i <= totalPages; i++) pages.push(i);
-    } else {
-      pages.push(1);
-      if (currentPage <= 4) {
-        for (let i = 2; i <= 5; i++) pages.push(i);
-        pages.push('...', totalPages);
-      } else if (currentPage >= totalPages - 3) {
-        pages.push('...');
-        for (let i = totalPages - 4; i <= totalPages; i++) pages.push(i);
-      } else {
-        pages.push('...', currentPage - 1, currentPage, currentPage + 1, '...', totalPages);
-      }
-    }
-    return pages;
-  };
 
   if (loading || budgetLoading) {
     return <div className="team-builder loading">Laden...</div>;
@@ -102,177 +46,19 @@ function TeamBuilder({ user }) {
       </div>
 
       <div className="team-content">
-        <div className="selected-team">
-          <div className="section-header">
-            <h2>Jouw Team</h2>
-            {selectedRiders.length > 0 && (
-              <button
-                className="btn-save-teambuilder"
-                onClick={saveTeam}
-                disabled={selectedRiders.length < 14}
-                title={selectedRiders.length < 14 ? "Je team moet minimaal 14 renners bevatten" : ""}
-              >
-                Opslaan <i className="fas fa-save"></i>
-              </button>
-            )}
-          </div>
-          {saveStatus && <div className="save-status">{saveStatus}</div>}
-          
-          {selectedRiders.length === 0 ? (
-            <div className="empty-team">
-              <p>Je hebt nog geen renners geselecteerd.</p>
-              <p>Kies maximaal 30 renners uit de lijst hiernaast.</p>
-            </div>
-          ) : (
-            <div className="selected-riders-list">
-              {[...selectedRiders]
-              .sort((a, b) => b.price - a.price)
-              .map(rider => {
-                const jerseyPath = getTeamJerseyPath(rider.teamId);
-                return (
-                <div key={rider.id} className="selected-rider">
-                  <img 
-                    src={jerseyPath}
-                    alt="jersey" 
-                    className="selected-rider-jersey"
-                    onError={(e) => e.target.src = '/assets/default.webp'}
-                  />
-                  <div className="selected-rider-info">
-                    <div className="selected-rider-name">{getFullName(rider)}</div>
-                  </div>
-                  <div className="selected-rider-actions">
-                    <span className="selected-rider-price">{formatPrice(rider.price)}</span>
-                    <button 
-                      className="btn-remove"
-                      onClick={() => removeRider(rider.id)}
-                    >
-                      <i className="fas fa-times"></i>
-                    </button>
-                  </div>
-                </div>
-              )})}
-              {Array.from({ length: 30 - selectedRiders.length }).map((_, idx) => (
-                <div key={`placeholder-${idx}`} className="selected-rider placeholder"></div>
-              ))}
-            </div>
-          )}
-        </div>        <div className="available-riders">
-          <div className="section-header">
-            <h2>Beschikbare Renners ({filteredRiders.length})</h2>
-          </div>
-          
-          <div className="filters">
-            <input 
-              type="text" 
-              placeholder="Zoek renner..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="search-input"
-            />
-            <div className="filter-selects">
-              <select
-                value={maxPrice}
-                onChange={e => setMaxPrice(e.target.value)}
-                className="filter-select max-price-select"
-              >
-                <option value="">Max</option>
-                <option value="60">60 miljoen</option>
-                <option value="50">50 miljoen</option>
-                <option value="40">40 miljoen</option>
-                <option value="30">30 miljoen</option>
-                <option value="20">20 miljoen</option>
-                <option value="10">10 miljoen</option>
-                <option value="5">5 miljoen</option>
-                <option value="1">1 miljoen</option>
-              </select>
-
-              <select
-                value={teamFilter}
-                onChange={e => setTeamFilter(e.target.value)}
-                className="filter-select team-select"
-              >
-                <option value="">Alle teams</option>
-                {teams.map((team, index) => (
-                  <option key={index} value={team.id}>{team.name}</option>
-                ))}
-              </select>
-            </div>
-          </div>
-
-          <div className="riders-list-teambuilder">
-            {currentRiders.length === 0 ? (
-              <div className="no-riders">Geen renners gevonden</div>
-            ) : (
-              currentRiders.map(rider => (
-                <div key={rider.id} className="rider-card-teambuilder">
-                  <img 
-                    src={getTeamJerseyPath(rider.teamId)}
-                    alt="jersey" 
-                    className="rider-jersey-teambuilder"
-                    onError={(e) => e.target.src = '/assets/default.webp'}
-                  />
-                  <div className="rider-info-teambuilder">
-                    <div className="rider-name-teambuilder">{getFullName(rider)}</div>
-                  </div>
-                  <div className="rider-actions-teambuilder">
-                    <span className="rider-price-teambuilder">{formatPrice(rider.price)}</span>
-                    {selectedRiders.find(r => r.id === rider.id) ? (
-                      <span style={{ display: 'inline-block', width: '32px', height: '32px' }}></span>
-                    ) : getRemainingBudget() >= rider.price ? (
-                      <button
-                        className="btn-add"
-                        onClick={() => addRider(rider)}
-                      >
-                        <i className="fas fa-plus"></i>
-                      </button>
-                    ) : (
-                      <span style={{ display: 'inline-block', width: '32px', height: '32px' }}></span>
-                    )}
-                  </div>
-                </div>
-              ))
-            )}
-          </div>
-
-          {/* Pagination Controls */}
-          {filteredRiders.length > ridersPerPage && (
-            <div className="pagination">
-              <button 
-                className="pagination-btn"
-                onClick={goToPrevPage}
-                disabled={currentPage === 1}
-              >
-                <i className="fas fa-chevron-left"></i>
-              </button>
-              
-              <div className="pagination-pages">
-                {getPaginationPages().map((page, index) => (
-                  page === '...' ? (
-                    <span key={`ellipsis-${index}`} className="pagination-ellipsis">
-                      ...
-                    </span>
-                  ) : (
-                    <button
-                      key={page}
-                      className={`pagination-btn ${currentPage === page ? 'active' : ''}`}
-                      onClick={() => goToPage(page)}
-                    >
-                      {page}
-                    </button>
-                  )
-                ))}
-              </div>
-
-              <button 
-                className="pagination-btn"
-                onClick={goToNextPage}
-                disabled={currentPage === totalPages}
-              >
-                <i className="fas fa-chevron-right"></i>
-              </button>
-            </div>
-          )}
-        </div>
+        <SelectedTeam
+          selectedRiders={selectedRiders}
+          onRemoveRider={removeRider}
+          onSaveTeam={saveTeam}
+          saveStatus={saveStatus}
+        />
+        <AvailableRiders
+          riders={riders}
+          teams={teams}
+          selectedRiders={selectedRiders}
+          remainingBudget={getRemainingBudget()}
+          onAddRider={addRider}
+        />
       </div>
     </div>
   );

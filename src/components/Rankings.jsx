@@ -5,6 +5,7 @@ import { useRaces } from '../hooks/useRaces';
 import { useResults } from '../hooks/useResults';
 import { useCyclingTeams } from '../hooks/useCyclingTeams';
 import { getAllUsers } from '../services/userService';
+import TeamDetails from './TeamDetails';
 import '../css/rankings.css';
 
 // Simple cache for teams data
@@ -195,67 +196,17 @@ export default function Rankings({ user, resetTrigger }) {
 
   // Render team details view
   if (teamDetails) {
-    const teamPoints = calculateTeamPoints(teamDetails);
-    
     return (
-      <div className="rankings">
-        <div className="team-details-header">
-          <button 
-            className="btn-back" 
-            onClick={handleCloseDetails}
-            title="Terug naar Rankings (of druk ESC)"
-          >
-            ← Terug naar Rankings
-          </button>
-        </div>
-        
-        <div className="team-details">
-          <h2>Team Details</h2>
-          <div className="team-info">
-            <p><strong>Team:</strong> {getUserName(teamDetails.id)}</p>
-            <p><strong>Totale Punten:</strong> <span className="team-points">{teamPoints}</span></p>
-          </div>
-
-          <div className="team-riders">
-            <h3>Renners in dit team:</h3>
-            {teamDetails.riders && teamDetails.riders.length > 0 ? (
-              <div className="riders-grid">
-                {teamDetails.riders
-                  .sort((a, b) => b.price - a.price)
-                  .map(rider => {
-                    const riderPoints = races.reduce((sum, race) => {
-                      const raceResult = results.find(r => r.raceId === race.id);
-                      if (raceResult && raceResult.entries) {
-                        const entry = raceResult.entries.find(e => e.riderId === rider.id);
-                        return sum + (entry?.points || 0);
-                      }
-                      return sum;
-                    }, 0);
-
-                    return (
-                      <div key={rider.id} className="rider-card">
-                        <img
-                          src={getCyclingJerseyPath(rider.teamId)}
-                          alt={getRiderName(rider)}
-                          className="rider-image"
-                          onError={(e) => e.target.src = '/assets/default.webp'}
-                        />
-                        <div className="rider-info">
-                          <p className="rider-name">{getRiderName(rider)}</p>
-                          <p className="rider-team">{rider.team}</p>
-                          <p className="rider-price">€{(rider.price / 1000000).toFixed(1)}M</p>
-                          <p className="rider-points">{riderPoints} pts</p>
-                        </div>
-                      </div>
-                    );
-                  })}
-              </div>
-            ) : (
-              <p className="no-riders">Geen renners in dit team</p>
-            )}
-          </div>
-        </div>
-      </div>
+      <TeamDetails
+        teamDetails={teamDetails}
+        calculateTeamPoints={calculateTeamPoints}
+        races={races}
+        results={results}
+        getRiderName={getRiderName}
+        getCyclingJerseyPath={getCyclingJerseyPath}
+        getUserName={getUserName}
+        handleCloseDetails={handleCloseDetails}
+      />
     );
   }
 
@@ -272,12 +223,10 @@ export default function Rankings({ user, resetTrigger }) {
           <table className="rankings-table">
             <thead>
               <tr>
-                <th className="rank">#</th>
-                <th className="team-name">Team Manager</th>
+                <th className="rank">Plaats</th>
+                <th className="team-name">Ploeg</th>
                 <th className="points">Punten</th>
-                <th className="riders">Renners</th>
-                <th className="budget">Budget</th>
-                <th className="action">Bekijk</th>
+                <th className="action"></th>
               </tr>
             </thead>
             <tbody>
@@ -293,14 +242,12 @@ export default function Rankings({ user, resetTrigger }) {
                   <td className="points">
                     <span className="points-badge">{team.totalPoints}</span>
                   </td>
-                  <td className="riders">{team.riders?.length || 0}</td>
-                  <td className="budget">€{(team.totalSpent || 0).toLocaleString('nl-NL')}</td>
                   <td className="action">
                     <button 
                       className="btn-view-team"
                       onClick={() => handleTeamClick(team)}
                     >
-                      Bekijk →
+                      Bekijk ploeg
                     </button>
                   </td>
                 </tr>

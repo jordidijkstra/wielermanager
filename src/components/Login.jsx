@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { signInWithEmailAndPassword, createUserWithEmailAndPassword, signInWithPopup, GoogleAuthProvider } from 'firebase/auth';
 import { auth } from '../firebase/config';
 import { ensureUserDocument } from '../services/userService';
@@ -18,17 +18,32 @@ export default function Login({ onClose }) {
 
     const handleGoogleSignIn = async () => {
         const provider = new GoogleAuthProvider();
+        provider.setCustomParameters({ prompt: 'select_account' });
         setIsLoading(true);
+        setError('');
         try {
+            console.log('Starting Google sign in...');
             const result = await signInWithPopup(auth, provider);
+            console.log('Google sign in result:', result.user.email);
+            
             // Set up mode for Google users to add firstname/lastname
             setPendingUser(result.user);
             setSetupMode(true);
-            setFirstname(result.user.displayName?.split(' ')[0] || '');
-            setLastname(result.user.displayName?.split(' ').slice(1).join(' ') || '');
+            setIsLoading(false);
         } catch (error) {
             console.error('Google sign-in error:', error);
-            setError('Google inloggen mislukt. Probeer opnieuw.');
+            console.error('Error code:', error.code);
+            console.error('Error message:', error.message);
+            
+            if (error.code === 'auth/popup-closed-by-user') {
+                console.log('User closed the popup');
+                setError('Popup gesloten. Probeer opnieuw.');
+            } else if (error.code === 'auth/cancelled-popup-request') {
+                console.log('Popup request cancelled');
+                setError('Login geannuleerd.');
+            } else {
+                setError(`Google inloggen mislukt: ${error.message}`);
+            }
             setIsLoading(false);
         }
     };
