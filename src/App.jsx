@@ -21,7 +21,14 @@ function App() {
   const { user, loading, isAdmin } = useAuth();
   const [currentPage, setCurrentPage] = useState('home');
   const [showLoginModal, setShowLoginModal] = useState(false);
+  const [rankingsResetTrigger, setRankingsResetTrigger] = useState(0);
   const { selectedRiders } = useUserTeam(user, BUDGET);
+
+  // Reset Rankings when clicked in menu
+  const handleRankingsClick = () => {
+    setCurrentPage('rankings');
+    setRankingsResetTrigger(prev => prev + 1);
+  };
 
   // Reset to home when user logs out
   if (!user && currentPage !== 'home') {
@@ -63,7 +70,7 @@ function App() {
       case 'pointsTables':
         return <PointsTables />;
       case 'rankings':
-        return <Rankings user={user} />;
+        return <Rankings user={user} resetTrigger={rankingsResetTrigger} />;
       case 'settings':
         return user ? <Settings user={user} /> : <Home user={user} setCurrentPage={setCurrentPage} setShowLoginModal={setShowLoginModal} />;
       default:
@@ -73,7 +80,7 @@ function App() {
 
   return (
     <>
-      <Nav setCurrentPage={setCurrentPage} setShowLoginModal={setShowLoginModal} />
+      <Nav setCurrentPage={setCurrentPage} handleRankingsClick={handleRankingsClick} setShowLoginModal={setShowLoginModal} />
       {user && <RaceCountdown user={user} />}
       {renderPage()}
       {showLoginModal && <Login onClose={() => setShowLoginModal(false)} />}

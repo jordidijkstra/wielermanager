@@ -12,7 +12,7 @@ let teamsCache = null;
 let cacheTimestamp = 0;
 const CACHE_DURATION = 5 * 60 * 1000; // 5 minutes
 
-export default function Rankings({ user }) {
+export default function Rankings({ user, resetTrigger }) {
   const { races } = useRaces(user);
   const { results } = useResults();
   const { teams } = useCyclingTeams();
@@ -22,10 +22,11 @@ export default function Rankings({ user }) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 
-  // Reset team details when component mounts/user changes (voor terug naar rankings)
+  // Reset team details when Rankings menu is clicked (resetTrigger changes)
   useEffect(() => {
+    console.log('Resetting teamDetails due to resetTrigger:', resetTrigger);
     setTeamDetails(null);
-  }, [user]);
+  }, [resetTrigger]);
 
   // Load all teams and users from Firestore (cached)
   useEffect(() => {
@@ -130,11 +131,23 @@ export default function Rankings({ user }) {
   const getUserName = (userId) => {
     const userData = allUsers.find(u => u.id === userId);
     if (userData) {
+      return userData.firstname && userData.lastname 
+        ? `${userData.firstname} ${userData.lastname}`
+        : userId;
+    }
+    return userId; // Fallback to user ID if user not found
+  };
+
+  const getTeamDisplayName = (userId) => {
+    const userData = allUsers.find(u => u.id === userId);
+    if (userData) {
       // Als teamnaam is ingesteld, toon die; anders toon voornaam en achternaam
       if (userData.teamName && userData.teamName.trim()) {
         return userData.teamName;
       }
-      return `${userData.firstname} ${userData.lastname}`;
+      return userData.firstname && userData.lastname 
+        ? `${userData.firstname} ${userData.lastname}`
+        : userId;
     }
     return userId; // Fallback to user ID if user not found
   };
@@ -271,7 +284,12 @@ export default function Rankings({ user }) {
               {rankedTeams.map((team, index) => (
                 <tr key={team.id} className="team-row">
                   <td className="rank">{index + 1}</td>
-                  <td className="team-name">{getUserName(team.id)}</td>
+                  <td className="team-name">
+                    <div className="team-info-cell">
+                      <div className="team-name-display">{getTeamDisplayName(team.id)}</div>
+                      <div className="manager-name-display">{getUserName(team.id)}</div>
+                    </div>
+                  </td>
                   <td className="points">
                     <span className="points-badge">{team.totalPoints}</span>
                   </td>

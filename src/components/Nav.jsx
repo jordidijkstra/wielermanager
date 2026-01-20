@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { useAuth } from '../hooks/useAuth';
 import { useLogout } from '../hooks/useLogout';
 
-export default function Nav({ setCurrentPage, setShowLoginModal}) {
+export default function Nav({ setCurrentPage, handleRankingsClick, setShowLoginModal}) {
     const { user, isAdmin } = useAuth();
     const logout = useLogout();
     const [showProfileMenu, setShowProfileMenu] = useState(false);
@@ -50,7 +50,7 @@ export default function Nav({ setCurrentPage, setShowLoginModal}) {
                     {user && <li><a href="#" onClick={() => handleNavClick('points')}>Jouw punten</a></li>}
                     {user && <li><a href="#" onClick={() => handleNavClick('raceTeams')}>Jouw selecties</a></li>}
                     <li><a href="#" onClick={() => handleNavClick('pointsTables')}>Puntentabellen</a></li>
-                    <li><a href="#" onClick={() => handleNavClick('rankings')}>Rankings</a></li>
+                    <li><a href="#" onClick={() => handleRankingsClick()}>Rankings</a></li>
                     
                     {user ? (
                         <li className="profile-menu">
@@ -98,7 +98,7 @@ export default function Nav({ setCurrentPage, setShowLoginModal}) {
                     {user && <li><a href="#" onClick={() => handleNavClick('points')}>Jouw punten</a></li>}
                     {user && <li><a href="#" onClick={() => handleNavClick('raceTeams')}>Race selecties</a></li>}
                     <li><a href="#" onClick={() => handleNavClick('pointsTables')}>Puntentabellen</a></li>
-                    <li><a href="#" onClick={() => handleNavClick('rankings')}>Rankings</a></li>
+                    <li><a href="#" onClick={() => handleRankingsClick()}>Rankings</a></li>
                     
                     {user ? (
                         <>

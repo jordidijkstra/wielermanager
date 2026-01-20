@@ -101,6 +101,25 @@
   text-align: center;
 }
 
+/* Team info cell - team name and manager name */
+.team-info-cell {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.team-name-display {
+  font-weight: 600;
+  color: #14213d;
+  font-size: 1em;
+}
+
+.manager-name-display {
+  font-size: 0.85em;
+  color: #666;
+  font-weight: 400;
+}
+
 .points-badge {
   background: linear-gradient(135deg, #667ee6 0%, #764ba2 100%);
   color: white;
