@@ -115,7 +115,7 @@ export default function Rankings({ user }) {
     const firstRace = races[0];
     if (!firstRace.startDate) return false;
     
-    const deadline = new Date(firstRace.startDate);
+    const deadline = new Date(2026, 0, 19);
     deadline.setHours(9, 0, 0, 0);
     return new Date() > deadline;
   };

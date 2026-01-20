@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { autoFillRaceTeamsLocal } from '../services/autoFillService';
+import '../css/adminTools.css';
 
 export default function AdminToolsTab() {
   const [isProcessing, setIsProcessing] = useState(false);
@@ -50,31 +51,15 @@ export default function AdminToolsTab() {
           className="btn-admin-tool"
           onClick={handleAutoFill}
           disabled={isProcessing}
-          style={{
-            padding: '10px 20px',
-            backgroundColor: isProcessing ? '#ccc' : '#4CAF50',
-            color: 'white',
-            border: 'none',
-            borderRadius: '4px',
-            cursor: isProcessing ? 'not-allowed' : 'pointer',
-            fontSize: '14px',
-            fontWeight: 'bold'
-          }}
         >
           {isProcessing ? '⏳ Verwerking...' : '🚀 Auto-Fill Starten'}
         </button>
       </div>
 
       {summary && (
-        <div className="tools-summary" style={{
-          marginTop: '20px',
-          padding: '15px',
-          backgroundColor: summary.success ? '#e8f5e9' : '#ffebee',
-          border: `2px solid ${summary.success ? '#4CAF50' : '#f44336'}`,
-          borderRadius: '4px'
-        }}>
-          <h4 style={{ margin: '0 0 10px 0', color: summary.success ? '#2e7d32' : '#c62828' }}>
-            {summary.success ? '✅ Voltooид' : '❌ Fout'}
+        <div className={`tools-summary ${summary.success ? 'success' : 'error'}`}>
+          <h4>
+            {summary.success ? '✅ Voltooid' : '❌ Fout'}
           </h4>
           <p><strong>Users verwerkt:</strong> {summary.processedUsers}</p>
           <p><strong>Race teams ingevuld:</strong> {summary.filledTeams}</p>
@@ -82,20 +67,10 @@ export default function AdminToolsTab() {
       )}
 
       {results.length > 0 && (
-        <div className="tools-results" style={{
-          marginTop: '20px',
-          padding: '15px',
-          backgroundColor: '#f5f5f5',
-          border: '1px solid #ddd',
-          borderRadius: '4px',
-          maxHeight: '300px',
-          overflowY: 'auto',
-          fontFamily: 'monospace',
-          fontSize: '12px'
-        }}>
+        <div className="tools-results">
           <h4>Details:</h4>
           {results.map((result, idx) => (
-            <div key={idx} style={{ marginBottom: '5px', whiteSpace: 'pre-wrap', wordBreak: 'break-word' }}>
+            <div key={idx}>
               {result}
             </div>
           ))}
