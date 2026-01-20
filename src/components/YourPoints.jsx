@@ -1,4 +1,6 @@
 import { useState, useEffect } from 'react';
+import { doc, getDoc } from 'firebase/firestore';
+import { db } from '../firebase/config';
 import { useUserTeam } from '../hooks/useUserTeam';
 import { useCyclingTeams } from '../hooks/useCyclingTeams';
 import { useRaces } from '../hooks/useRaces';
@@ -14,6 +16,7 @@ export default function YourPoints({ user }) {
   const [userRaceTeams, setUserRaceTeams] = useState({});
   const [currentSpeeldagIndex, setCurrentSpeeldagIndex] = useState(0);
   const [showAllRacers, setShowAllRacers] = useState(false);
+  const [teamName, setTeamName] = useState('');
 
   // Load user's race teams
   useEffect(() => {
@@ -27,6 +30,14 @@ export default function YourPoints({ user }) {
           teamsMap[team.raceId] = team.riderIds || [];
         });
         setUserRaceTeams(teamsMap);
+
+        // Load user's team name
+        const userRef = doc(db, 'users', user.uid);
+        const snap = await getDoc(userRef);
+        if (snap.exists()) {
+          const data = snap.data();
+          setTeamName(data.teamName || `${data.firstname} ${data.lastname}`);
+        }
       } catch (err) {
         console.error('Fout bij laden race teams:', err);
       }
@@ -199,7 +210,7 @@ export default function YourPoints({ user }) {
       <h1>Jouw Punten</h1>
 
       <div className="yourpoints-header">
-        <h2>Totaal: {totalPoints} Punten</h2>
+        <h2>{teamName || 'Jouw Team'}: {totalPoints} Punten</h2>
       </div>
 
       <div className="yourpoints-speeldag-container">

@@ -51,8 +51,15 @@ export function useResults() {
   // Edit result
   const editResult = async (resultId, resultData) => {
     try {
+      console.log('📝 Editing result:', String(resultId));
+      console.log('📝 New data:', resultData);
+      
       await setDoc(doc(db, 'results', String(resultId)), resultData);
+      console.log('✅ Result saved to Firestore');
+      
+      // Reload all results to ensure UI is updated
       await loadResults();
+      console.log('✅ Results reloaded');
     } catch (err) {
       console.error('Fout bij bijwerken result:', err);
       throw err;

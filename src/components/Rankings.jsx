@@ -3,6 +3,7 @@ import { collection, getDocs } from 'firebase/firestore';
 import { db } from '../firebase/config';
 import { useRaces } from '../hooks/useRaces';
 import { useResults } from '../hooks/useResults';
+import { useCyclingTeams } from '../hooks/useCyclingTeams';
 import { getAllUsers } from '../services/userService';
 import '../css/rankings.css';
 
@@ -14,11 +15,17 @@ const CACHE_DURATION = 5 * 60 * 1000; // 5 minutes
 export default function Rankings({ user }) {
   const { races } = useRaces(user);
   const { results } = useResults();
+  const { teams } = useCyclingTeams();
   const [allTeams, setAllTeams] = useState([]);
   const [allUsers, setAllUsers] = useState([]);
   const [teamDetails, setTeamDetails] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+
+  // Reset team details when component mounts/user changes (voor terug naar rankings)
+  useEffect(() => {
+    setTeamDetails(null);
+  }, [user]);
 
   // Load all teams and users from Firestore (cached)
   useEffect(() => {
@@ -66,6 +73,19 @@ export default function Rankings({ user }) {
     loadData();
   }, []);
 
+  // Add keyboard shortcut (ESC) to close team details
+  useEffect(() => {
+    const handleKeyPress = (e) => {
+      if (e.key === 'Escape' && teamDetails) {
+        console.log('ESC toets ingedrukt, terug naar rankings');
+        handleCloseDetails();
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyPress);
+    return () => window.removeEventListener('keydown', handleKeyPress);
+  }, [teamDetails]);
+
   // Calculate total points for a team (memoized)
   const calculateTeamPoints = useCallback((team) => {
     let totalPoints = 0;
@@ -100,9 +120,20 @@ export default function Rankings({ user }) {
     return `${rider.firstname} ${rider.lastname}`;
   };
 
+  const getCyclingJerseyPath = (teamId) => {
+    const team = teams?.find(t => t.id === teamId);
+    return team?.cyclingKit
+      ? `/assets/${team.cyclingKit}`
+      : '/assets/default.webp';
+  };
+
   const getUserName = (userId) => {
     const userData = allUsers.find(u => u.id === userId);
     if (userData) {
+      // Als teamnaam is ingesteld, toon die; anders toon voornaam en achternaam
+      if (userData.teamName && userData.teamName.trim()) {
+        return userData.teamName;
+      }
       return `${userData.firstname} ${userData.lastname}`;
     }
     return userId; // Fallback to user ID if user not found
@@ -125,6 +156,7 @@ export default function Rankings({ user }) {
   };
 
   const handleCloseDetails = () => {
+    console.log('Terug naar rankings geklikt');
     setTeamDetails(null);
   };
 
@@ -154,15 +186,21 @@ export default function Rankings({ user }) {
     
     return (
       <div className="rankings">
-        <button className="btn-back" onClick={handleCloseDetails}>← Terug naar Rankings</button>
+        <div className="team-details-header">
+          <button 
+            className="btn-back" 
+            onClick={handleCloseDetails}
+            title="Terug naar Rankings (of druk ESC)"
+          >
+            ← Terug naar Rankings
+          </button>
+        </div>
         
         <div className="team-details">
           <h2>Team Details</h2>
           <div className="team-info">
-            <p><strong>Team ID:</strong> {teamDetails.id}</p>
-            <p><strong>Totale Budget:</strong> €{(teamDetails.totalSpent || 0).toLocaleString('nl-NL')}</p>
+            <p><strong>Team:</strong> {getUserName(teamDetails.id)}</p>
             <p><strong>Totale Punten:</strong> <span className="team-points">{teamPoints}</span></p>
-            <p><strong>Aantal Renners:</strong> {teamDetails.riders?.length || 0}</p>
           </div>
 
           <div className="team-riders">
@@ -184,7 +222,7 @@ export default function Rankings({ user }) {
                     return (
                       <div key={rider.id} className="rider-card">
                         <img
-                          src={rider.image || '/assets/default.webp'}
+                          src={getCyclingJerseyPath(rider.teamId)}
                           alt={getRiderName(rider)}
                           className="rider-image"
                           onError={(e) => e.target.src = '/assets/default.webp'}

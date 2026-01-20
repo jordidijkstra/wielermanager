@@ -7,6 +7,7 @@ export default function Settings({ user }) {
   const [firstname, setFirstname] = useState('');
   const [lastname, setLastname] = useState('');
   const [email, setEmail] = useState('');
+  const [teamName, setTeamName] = useState('');
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
   const [message, setMessage] = useState('');
@@ -24,6 +25,7 @@ export default function Settings({ user }) {
           setFirstname(data.firstname || '');
           setLastname(data.lastname || '');
           setEmail(user.email || '');
+          setTeamName(data.teamName || '');
         }
         setIsLoading(false);
       } catch (err) {
@@ -52,10 +54,11 @@ export default function Settings({ user }) {
       const userRef = doc(db, 'users', user.uid);
       await updateDoc(userRef, {
         firstname: firstname.trim(),
-        lastname: lastname.trim()
+        lastname: lastname.trim(),
+        teamName: teamName.trim()
       });
 
-      setMessage('✅ Profielprofiel succesvol bijgewerkt!');
+      setMessage('✅ Profiel succesvol bijgewerkt!');
       setMessageType('success');
     } catch (err) {
       console.error('Fout bij bijwerken profiel:', err);
@@ -120,6 +123,18 @@ export default function Settings({ user }) {
                 onChange={(e) => setLastname(e.target.value)}
                 required
               />
+            </div>
+
+            <div className="form-group">
+              <label htmlFor="teamName">Teamnaam</label>
+              <input
+                id="teamName"
+                type="text"
+                placeholder="Teamnaam (optioneel)"
+                value={teamName}
+                onChange={(e) => setTeamName(e.target.value)}
+              />
+              <small className="form-hint">Je teamnaam wordt getoond in de ranking</small>
             </div>
 
             <div className="form-group">

@@ -212,14 +212,20 @@ export default function ResultsTab() {
     if (!approvingResult) return;
     
     try {
+      console.log('Goedkeuren resultaat:', approvingResult.id);
+      
+      // Zorg ervoor dat status op 'gecontrolleerd' staat
       const updatedResult = {
         ...approvingResult,
         entries: approveRenners,
         status: 'gecontrolleerd'
       };
       
-      // Update the result status
-      await editResult(approvingResult.id, updatedResult);
+      console.log('Updated result with status:', updatedResult);
+      
+      // Update the result in Firestore
+      const result = await editResult(approvingResult.id, updatedResult);
+      console.log('✅ Result opgeslagen in Firestore');
       
       // Update riders' points based on their results
       if (approveRenners && approveRenners.length > 0) {
@@ -236,14 +242,18 @@ export default function ResultsTab() {
         }
       }
       
+      // Reset alle states
       setApprovingResult(null);
       setApproveRenners([]);
       setApproveRiderSearchFilters({});
       setApproveOpenRiderDropdowns({});
-      console.log('✅ Uitslag goedgekeurd en punten geupdate');
+      setCurrentPage(1);
+      
+      console.log('✅ Uitslag goedgekeurd en UI gereset');
+      alert('✅ Uitslag goedgekeurd!');
     } catch (error) {
       console.error('Error approving result:', error);
-      alert('Fout bij goedkeuren resultaat');
+      alert('❌ Fout bij goedkeuren resultaat: ' + error.message);
     }
   };
 
@@ -345,8 +355,9 @@ export default function ResultsTab() {
                         onChange={(e) => setEditData({ ...editData, status: e.target.value })}
                       >
                         <option value="">-- Selecteer status --</option>
-                        <option value="ingediend">Ingediend</option>
                         <option value="nog geen resultaat">Nog geen resultaat</option>
+                        <option value="ingediend">Ingediend</option>
+                        <option value="gecontrolleerd">Gecontrolleerd</option>
                       </select>
                     ) : (
                       <span className={`status-badge status-${result.status?.toLowerCase().replace(/\s+/g, '-')}`}>
