@@ -61,6 +61,7 @@ export default function Rankings({ user, resetTrigger }) {
         
         // Load all users
         const usersData = await getAllUsers();
+        console.log('✅ Loaded users:', usersData.length, usersData.map(u => ({id: u.id, name: `${u.firstname} ${u.lastname}`, role: u.role})));
         setAllUsers(usersData);
         
         setLoading(false);
@@ -136,11 +137,13 @@ export default function Rankings({ user, resetTrigger }) {
         ? `${userData.firstname} ${userData.lastname}`
         : userId;
     }
+    console.warn('❌ User not found:', userId, 'Available users:', allUsers.map(u => u.id));
     return userId; // Fallback to user ID if user not found
   };
 
   const getTeamDisplayName = (userId) => {
     const userData = allUsers.find(u => u.id === userId);
+    console.log('👤 getTeamDisplayName for:', userId, '- Found:', !!userData, '- User data:', userData);
     if (userData) {
       // Als teamnaam is ingesteld, toon die; anders toon voornaam en achternaam
       if (userData.teamName && userData.teamName.trim()) {

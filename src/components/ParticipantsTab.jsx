@@ -1,17 +1,22 @@
 import { useState, useEffect } from 'react';
+import * as XLSX from 'xlsx';
 import { collection, getDocs, doc, setDoc, deleteDoc, query, where } from 'firebase/firestore';
 import { db } from '../firebase/config';
 import { getAllRaces } from '../services/raceService';
-import '../css/admin.css';
+import { getAllRiders } from '../services/riderService';
+import '../css/participantsTab.css';
 
 export default function ParticipantsTab() {
   const [races, setRaces] = useState([]);
+  const [riders, setRiders] = useState([]);
   const [participants, setParticipants] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selectedRaceId, setSelectedRaceId] = useState(null);
   const [editingRaceId, setEditingRaceId] = useState(null);
   const [editData, setEditData] = useState({});
   const [approvingRaceId, setApprovingRaceId] = useState(null);
+  const [riderSearchFilters, setRiderSearchFilters] = useState({});
+  const [openRiderDropdowns, setOpenRiderDropdowns] = useState({});
 
   // Load all races and participants
   useEffect(() => {
@@ -20,6 +25,9 @@ export default function ParticipantsTab() {
         setLoading(true);
         const allRaces = await getAllRaces();
         setRaces(allRaces);
+        
+        const allRiders = await getAllRiders();
+        setRiders(allRiders);
         
         // Load participants for all races
         const participantsSnapshot = await getDocs(collection(db, 'raceParticipants'));
@@ -43,8 +51,24 @@ export default function ParticipantsTab() {
     loadData();
   }, []);
 
+  // Helper function to normalize text (remove diacritics and special characters)
+  const normalizeText = (text) => {
+    return text
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '') // Remove diacritics
+      .toLowerCase();
+  };
+
   const getRaceName = (raceId) => {
     return races.find(r => String(r.id) === String(raceId))?.name || `Race ${raceId}`;
+  };
+
+  const getRiderName = (riderId) => {
+    const rider = riders.find(r => r.id === riderId);
+    if (rider) {
+      return `${rider.firstname} ${rider.lastname}`;
+    }
+    return `Renner ${riderId}`;
   };
 
   const getRaceStartDate = (raceId) => {
@@ -55,6 +79,103 @@ export default function ParticipantsTab() {
     if (!dateString) return '-';
     const date = new Date(dateString);
     return date.toLocaleDateString('nl-NL', { year: 'numeric', month: '2-digit', day: '2-digit' });
+  };
+
+  const handleExcelImportParticipants = (event) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      try {
+        const data = e.target?.result;
+        const workbook = XLSX.read(data, { type: 'array' });
+        const worksheet = workbook.Sheets[workbook.SheetNames[0]];
+        const rows = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
+
+        const updatedParticipants = [];
+        const seenRiderIds = new Set();
+        const duplicates = [];
+        let matchedCount = 0;
+        
+        rows.forEach((row, rowIdx) => {
+          const fullName = String(row[0] || '').trim();
+
+          if (!fullName) return; // Skip empty rows
+
+          // Find rider with fuzzy matching on normalized full name
+          const normalizedSearch = normalizeText(fullName);
+          
+          // Split name to try both orders (voornaam achternaam vs achternaam voornaam)
+          const nameParts = fullName.split(/\s+/).filter(p => p.length > 0);
+
+          const matchedRider = riders.find(rider => {
+            const riderFullname = normalizeText(
+              `${rider.firstnameWithoutSpecialChars || rider.firstname || ''} ${rider.lastnameWithoutSpecialChars || rider.lastname || ''}`
+            );
+            
+            // Check multiple matching strategies
+            if (riderFullname.includes(normalizedSearch)) return true;
+            if (normalizedSearch.includes(riderFullname)) return true;
+            
+            // Check if all name parts match anywhere in rider's name
+            return nameParts.every(part => riderFullname.includes(normalizeText(part)));
+          });
+
+          if (matchedRider) {
+            // Check for duplicates
+            if (seenRiderIds.has(matchedRider.id)) {
+              duplicates.push(`${matchedRider.firstname} ${matchedRider.lastname} (rij ${rowIdx + 1})`);
+              return;
+            }
+            
+            seenRiderIds.add(matchedRider.id);
+            updatedParticipants.push({ riderId: matchedRider.id });
+            matchedCount++;
+            console.log(`✅ Gevonden: "${fullName}" -> ${matchedRider.firstname} ${matchedRider.lastname}`);
+          } else {
+            console.log(`⚠️ Niet gevonden: "${fullName}"`);
+          }
+        });
+
+        if (duplicates.length > 0) {
+          const duplicateList = duplicates.join('\n');
+          alert(`❌ Dubbele renners gevonden:\n\n${duplicateList}\n\nZe zijn niet toegevoegd. Controleer het Excel-bestand.`);
+          return;
+        }
+
+        if (matchedCount === 0) {
+          alert('❌ Geen renners gevonden in het Excel-bestand');
+          return;
+        }
+
+        setEditData({
+          ...editData,
+          participants: updatedParticipants
+        });
+
+        alert(`✅ Excel gegevens ingeladen! ${matchedCount} renners toegevoegd.`);
+      } catch (error) {
+        console.error('Fout bij importeren Excel:', error);
+        alert('❌ Fout bij importeren Excel-bestand');
+      }
+    };
+    
+    reader.readAsArrayBuffer(file);
+    event.target.value = '';
+  };
+
+  const getFilteredRiders = (index) => {
+    const searchText = riderSearchFilters[index] || '';
+    if (!searchText) return [];
+
+    const normalizedSearch = normalizeText(searchText);
+    return riders.filter(rider => {
+      const riderFullname = normalizeText(
+        `${rider.firstname || ''} ${rider.lastname || ''}`
+      );
+      return riderFullname.includes(normalizedSearch);
+    });
   };
 
   const handleApproveParticipants = async (raceId) => {
@@ -98,16 +219,31 @@ export default function ParticipantsTab() {
   const handleStartEdit = (participantData) => {
     setEditingRaceId(participantData.raceId);
     setEditData({ ...participantData });
+    
+    // Populate rider search filters with existing rider names
+    const newFilters = {};
+    participantData.participants?.forEach((p, idx) => {
+      if (p.riderId) {
+        newFilters[idx] = getRiderName(p.riderId);
+      }
+    });
+    setRiderSearchFilters(newFilters);
   };
 
   const saveEdit = async (raceId) => {
     try {
       const updatedData = {
         participants: editData.participants || [],
-        status: editData.status,
-        submittedAt: editData.submittedAt,
-        approvedAt: editData.approvedAt
+        status: editData.status
       };
+
+      // Only include timestamps if they exist
+      if (editData.submittedAt) {
+        updatedData.submittedAt = editData.submittedAt;
+      }
+      if (editData.approvedAt) {
+        updatedData.approvedAt = editData.approvedAt;
+      }
 
       await setDoc(doc(db, 'raceParticipants', raceId), updatedData);
 
@@ -184,28 +320,94 @@ export default function ParticipantsTab() {
           <div className="form-group">
             <label>Deelnemers ({editData.participants?.length || 0}):</label>
             <div className="participants-list-edit">
-              {editData.participants?.map((p, idx) => (
-                <div key={idx} className="participant-item">
-                  <input
-                    type="number"
-                    value={p.riderId}
-                    onChange={(e) => {
-                      const updated = [...(editData.participants || [])];
-                      updated[idx] = { ...p, riderId: parseInt(e.target.value) };
-                      setEditData({ ...editData, participants: updated });
-                    }}
-                  />
-                  <button
-                    className="btn-delete-small"
-                    onClick={() => {
-                      const updated = editData.participants.filter((_, i) => i !== idx);
-                      setEditData({ ...editData, participants: updated });
-                    }}
-                  >
-                    ✕
-                  </button>
-                </div>
-              ))}
+              {editData.participants?.map((p, idx) => {
+                const filteredRiders = getFilteredRiders(idx);
+                const isDropdownOpen = openRiderDropdowns[idx];
+                const searchValue = riderSearchFilters[idx] || '';
+                
+                return (
+                  <div key={idx} className="participant-item search-container">
+                    <div className="rider-search-wrapper">
+                      <input
+                        type="text"
+                        value={searchValue}
+                        onChange={(e) => {
+                          setRiderSearchFilters({ ...riderSearchFilters, [idx]: e.target.value });
+                          setOpenRiderDropdowns({ ...openRiderDropdowns, [idx]: true });
+                        }}
+                        onFocus={() => setOpenRiderDropdowns({ ...openRiderDropdowns, [idx]: true })}
+                        placeholder="Zoek renner..."
+                        className="rider-search-input"
+                      />
+                      
+                      {isDropdownOpen && searchValue && filteredRiders.length > 0 && (
+                        <div className="rider-dropdown">
+                          {filteredRiders.slice(0, 10).map((rider) => (
+                            <div
+                              key={rider.id}
+                              className="rider-option"
+                              onClick={() => {
+                                const updated = [...(editData.participants || [])];
+                                updated[idx] = { riderId: rider.id };
+                                setEditData({ ...editData, participants: updated });
+                                setRiderSearchFilters({ ...riderSearchFilters, [idx]: `${rider.firstname} ${rider.lastname}` });
+                                setOpenRiderDropdowns({ ...openRiderDropdowns, [idx]: false });
+                              }}
+                            >
+                              {rider.firstname} {rider.lastname}
+                            </div>
+                          ))}
+                        </div>
+                      )}
+
+                      {isDropdownOpen && searchValue && filteredRiders.length === 0 && (
+                        <div className="rider-dropdown">
+                          <div className="rider-option rider-option-notfound">
+                            Geen renners gevonden
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                    
+                    <button
+                      className="btn-delete-small"
+                      onClick={() => {
+                        const updated = editData.participants.filter((_, i) => i !== idx);
+                        setEditData({ ...editData, participants: updated });
+                        const newFilters = { ...riderSearchFilters };
+                        delete newFilters[idx];
+                        setRiderSearchFilters(newFilters);
+                      }}
+                    >
+                      ✕
+                    </button>
+                  </div>
+                );
+              })}
+            </div>
+            <div className="button-group">
+              <button
+                className="btn-add-small"
+                onClick={() => {
+                  setEditData({
+                    ...editData,
+                    participants: [...(editData.participants || []), { riderId: null }]
+                  });
+                }}
+              >
+                ➕ Renner toevoegen
+              </button>
+              <label className="excel-import-label excel-import-no-margin">
+                <input
+                  type="file"
+                  accept=".xlsx,.xls,.csv"
+                  onChange={handleExcelImportParticipants}
+                  className="file-input-hidden"
+                />
+                <span className="excel-import-button">
+                  📊 Excel importeren
+                </span>
+              </label>
             </div>
           </div>
 
@@ -236,7 +438,7 @@ export default function ParticipantsTab() {
             <table className="participants-mini-table">
               <thead>
                 <tr>
-                  <th>Rider ID</th>
+                  <th>Renner</th>
                 </tr>
               </thead>
               <tbody>
@@ -244,7 +446,7 @@ export default function ParticipantsTab() {
                   .find(p => p.raceId === approvingRaceId)
                   ?.participants?.map((p, idx) => (
                     <tr key={idx}>
-                      <td>{p.riderId}</td>
+                      <td>{getRiderName(p.riderId)}</td>
                     </tr>
                   ))}
               </tbody>

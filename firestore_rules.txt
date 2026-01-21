@@ -11,10 +11,10 @@ service cloud.firestore {
         && get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin';
     }
 
-    // Users collectie - create allowed for new users, read/write for self
+    // Users collectie - create allowed for new users, read all users for logged in, write only self
     match /users/{userId} {
       allow create: if isLoggedIn();
-      allow read: if isLoggedIn() && (request.auth.uid == userId || isAdmin());
+      allow read: if isLoggedIn(); // Allow all logged-in users to read any user (needed for Rankings)
       allow write: if isLoggedIn() && request.auth.uid == userId;
     }
 

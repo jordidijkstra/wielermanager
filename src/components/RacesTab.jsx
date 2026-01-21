@@ -1,5 +1,7 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import * as XLSX from 'xlsx';
+import { collection, getDocs } from 'firebase/firestore';
+import { db } from '../firebase/config';
 import { useRaces } from '../hooks/useRaces';
 import { useRacesCategories } from '../hooks/useRacesCategories';
 import { useResults } from '../hooks/useResults';
@@ -28,6 +30,7 @@ export default function RacesTab() {
   const [participantEntries, setParticipantEntries] = useState([]);
   const [participantSearchFilters, setParticipantSearchFilters] = useState({});
   const [openParticipantDropdowns, setOpenParticipantDropdowns] = useState({});
+  const [raceParticipants, setRaceParticipants] = useState({});
   const racesPerPage = 50;
   const [newRace, setNewRace] = useState({
     name: '',
@@ -37,6 +40,23 @@ export default function RacesTab() {
     maxRiders: 7,
     tourId: null,
   });
+
+  // Load race participants when component mounts
+  useEffect(() => {
+    const loadParticipants = async () => {
+      try {
+        const participantsSnapshot = await getDocs(collection(db, 'raceParticipants'));
+        const participantsMap = {};
+        participantsSnapshot.docs.forEach(doc => {
+          participantsMap[doc.id] = doc.data().participants || [];
+        });
+        setRaceParticipants(participantsMap);
+      } catch (err) {
+        console.error('Error loading race participants:', err);
+      }
+    };
+    loadParticipants();
+  }, []);
 
   // Helper function to normalize text (remove diacritics and special characters)
   const normalizeText = (text) => {
@@ -222,8 +242,21 @@ export default function RacesTab() {
 
   if (racesLoading) return <div><p>Races laden...</p></div>;
 
-  // Sort races by endDate
+  // Sort races: non-raced races first (by endDate), then raced races at the end
   const sortedRaces = [...races].sort((a, b) => {
+    const statusA = getStatusByDate(a.startDate, a.endDate);
+    const statusB = getStatusByDate(b.startDate, b.endDate);
+    
+    // 'raced' status at the end, others sorted by date
+    if (statusA === 'raced' && statusB === 'raced') {
+      const dateA = new Date(a.endDate || '9999-12-31');
+      const dateB = new Date(b.endDate || '9999-12-31');
+      return dateA - dateB;
+    }
+    if (statusA === 'raced') return 1; // a goes to end
+    if (statusB === 'raced') return -1; // b goes to end
+    
+    // Both not raced: sort by date
     const dateA = new Date(a.endDate || '9999-12-31');
     const dateB = new Date(b.endDate || '9999-12-31');
     return dateA - dateB;
@@ -386,6 +419,12 @@ export default function RacesTab() {
 
     try {
       await saveRaceParticipants(raceId, participantEntries);
+      
+      // Update local state
+      setRaceParticipants({
+        ...raceParticipants,
+        [raceId]: participantEntries
+      });
       
       setShowParticipantsModal(null);
       setParticipantEntries([]);
@@ -685,20 +724,32 @@ export default function RacesTab() {
                       >
                         Bewerk
                       </button>
-                      <button 
-                        className="btn-edit"
-                        onClick={() => handleParticipantsAction(race.id)}
-                        title="Startlijst importeren"
-                      >
-                        Startlijst
-                      </button>
-                      <button 
-                        className="btn-edit"
-                        onClick={() => handleResultAction(race.id)}
-                        title="Resultaat toevoegen"
-                      >
-                        Resultaat
-                      </button>
+                      {raceParticipants[race.id] ? (
+                        <span className="btn-disabled" title="Startlijst al ingediend">
+                          ✅ Startlijst
+                        </span>
+                      ) : (
+                        <button 
+                          className="btn-edit"
+                          onClick={() => handleParticipantsAction(race.id)}
+                          title="Startlijst importeren"
+                        >
+                          Startlijst
+                        </button>
+                      )}
+                      {results.find(r => String(r.id) === String(race.id)) ? (
+                        <span className="btn-disabled" title="Resultaat al ingediend">
+                          ✅ Resultaat
+                        </span>
+                      ) : (
+                        <button 
+                          className="btn-edit"
+                          onClick={() => handleResultAction(race.id)}
+                          title="Resultaat toevoegen"
+                        >
+                          Resultaat
+                        </button>
+                      )}
                       <button 
                         className="btn-delete"
                         onClick={() => deleteRace(race.id)}
