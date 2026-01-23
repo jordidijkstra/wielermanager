@@ -14,7 +14,7 @@ export default function YourPoints({ user }) {
   const { races } = useRaces(user);
   const { results } = useResults();
   const [userRaceTeams, setUserRaceTeams] = useState({});
-  const [currentSpeeldagIndex, setCurrentSpeeldagIndex] = useState(0);
+  const [currentSpeeldagIndex, setCurrentSpeeldagIndex] = useState(null); // Start null, will be set after dates are sorted
   const [showAllRacers, setShowAllRacers] = useState(false);
   const [teamName, setTeamName] = useState('');
 
@@ -44,6 +44,14 @@ export default function YourPoints({ user }) {
     };
     loadRaceTeams();
   }, [user]);
+
+  // Set index to most recent date on first render
+  useEffect(() => {
+    // This will be set when we have sorted dates
+    if (currentSpeeldagIndex === null && races.length > 0) {
+      // Don't set here - will set in the main render logic below
+    }
+  }, [races]);
 
   if (!selectedRiders || selectedRiders.length === 0) {
     return (
@@ -100,6 +108,29 @@ export default function YourPoints({ user }) {
         <p className="no-data-message">Geen races beschikbaar</p>
       </div>
     );
+  }
+
+  // Find the speeldag closest to today's date
+  let closestDateIndex = 0;
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  
+  let closestDiff = Math.abs(new Date(sortedDates[0]).getTime() - today.getTime());
+  
+  sortedDates.forEach((date, idx) => {
+    const speeldagDate = new Date(date);
+    speeldagDate.setHours(0, 0, 0, 0);
+    const diff = Math.abs(speeldagDate.getTime() - today.getTime());
+    
+    if (diff < closestDiff) {
+      closestDiff = diff;
+      closestDateIndex = idx;
+    }
+  });
+
+  // Initialize index to closest date (today or nearest)
+  if (currentSpeeldagIndex === null) {
+    setCurrentSpeeldagIndex(closestDateIndex);
   }
 
   // Get selected rider IDs for a race or tour
@@ -183,20 +214,22 @@ export default function YourPoints({ user }) {
       });
   };
 
-  const currentSpeeldagDate = sortedDates[currentSpeeldagIndex] || sortedDates[0];
+  // Use displayIndex instead of currentSpeeldagIndex for rendering
+  const displayIndex = currentSpeeldagIndex === null ? (sortedDates.length - 1) : currentSpeeldagIndex;
+  const currentSpeeldagDate = sortedDates[displayIndex] || sortedDates[0];
   const currentSpeeldagRaces = racesByDate[currentSpeeldagDate];
   const speeldagPoints = getPointsForSpeeldag(currentSpeeldagRaces);
   const ridersToDisplay = getAllRidersToDisplay(currentSpeeldagRaces);
 
   const handlePrevious = () => {
-    if (currentSpeeldagIndex > 0) {
-      setCurrentSpeeldagIndex(currentSpeeldagIndex - 1);
+    if (displayIndex > 0) {
+      setCurrentSpeeldagIndex(displayIndex - 1);
     }
   };
 
   const handleNext = () => {
-    if (currentSpeeldagIndex < sortedDates.length - 1) {
-      setCurrentSpeeldagIndex(currentSpeeldagIndex + 1);
+    if (displayIndex < sortedDates.length - 1) {
+      setCurrentSpeeldagIndex(displayIndex + 1);
     }
   };
 
@@ -217,7 +250,7 @@ export default function YourPoints({ user }) {
         <button 
           className="btn-speeldag-nav btn-prev"
           onClick={handlePrevious}
-          disabled={currentSpeeldagIndex === 0}
+          disabled={displayIndex === 0}
           aria-label="Vorige speeldag"
         >
           &lt;
@@ -296,7 +329,7 @@ export default function YourPoints({ user }) {
         <button 
           className="btn-speeldag-nav btn-next"
           onClick={handleNext}
-          disabled={currentSpeeldagIndex === sortedDates.length - 1}
+          disabled={displayIndex === sortedDates.length - 1}
           aria-label="Volgende speeldag"
         >
           &gt;
@@ -304,7 +337,7 @@ export default function YourPoints({ user }) {
       </div>
 
       <div className="speeldag-indicator">
-        Speeldag {currentSpeeldagIndex + 1} van {sortedDates.length}
+        Speeldag {displayIndex + 1} van {sortedDates.length}
       </div>
     </div>
   );

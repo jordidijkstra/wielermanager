@@ -333,7 +333,29 @@ export default function RacesTab() {
   };
 
   const removeParticipantEntry = (index) => {
-    setParticipantEntries(participantEntries.filter((_, i) => i !== index));
+    // Remove the entry from list
+    const updated = participantEntries.filter((_, i) => i !== index);
+    setParticipantEntries(updated);
+    
+    // Re-index search filters and dropdowns to avoid index misalignment
+    const newSearchFilters = {};
+    const newDropdowns = {};
+    let newIdx = 0;
+    
+    participantEntries.forEach((_, oldIdx) => {
+      if (oldIdx !== index) {
+        if (participantSearchFilters[oldIdx]) {
+          newSearchFilters[newIdx] = participantSearchFilters[oldIdx];
+        }
+        if (openParticipantDropdowns[oldIdx]) {
+          newDropdowns[newIdx] = openParticipantDropdowns[oldIdx];
+        }
+        newIdx++;
+      }
+    });
+    
+    setParticipantSearchFilters(newSearchFilters);
+    setOpenParticipantDropdowns(newDropdowns);
   };
 
   const updateParticipantEntry = (index, riderId) => {

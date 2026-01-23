@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import * as XLSX from 'xlsx';
-import { collection, getDocs, doc, setDoc, deleteDoc, query, where } from 'firebase/firestore';
+import { collection, getDocs, doc, setDoc, deleteDoc, getDoc, query, where } from 'firebase/firestore';
 import { db } from '../firebase/config';
 import { getAllRaces } from '../services/raceService';
 import { getAllRiders } from '../services/riderService';
@@ -178,6 +178,44 @@ export default function ParticipantsTab() {
     });
   };
 
+  const removeRidersFromUserTeams = async (raceId, participantRiderIds) => {
+    try {
+      // Get all users
+      const usersSnapshot = await getDocs(collection(db, 'users'));
+      
+      for (const userDoc of usersSnapshot.docs) {
+        const userId = userDoc.id;
+        
+        // Get this user's race team for this race
+        const raceTeamRef = doc(db, 'users', userId, 'teams', String(raceId));
+        const raceTeamSnap = await getDoc(raceTeamRef);
+        
+        if (raceTeamSnap.exists()) {
+          const raceTeam = raceTeamSnap.data();
+          const currentRiderIds = raceTeam.riderIds || [];
+          
+          // Filter out riders that are no longer in participants
+          const updatedRiderIds = currentRiderIds.filter(riderId => 
+            participantRiderIds.includes(riderId)
+          );
+          
+          // If any riders were removed, update the race team
+          if (updatedRiderIds.length < currentRiderIds.length) {
+            await setDoc(raceTeamRef, {
+              ...raceTeam,
+              riderIds: updatedRiderIds,
+              riders: raceTeam.riders?.filter(rider => updatedRiderIds.includes(rider.id)) || []
+            });
+            console.log(`✅ Verwijderde ${currentRiderIds.length - updatedRiderIds.length} rennerselecties voor user ${userId}`);
+          }
+        }
+      }
+    } catch (err) {
+      console.error('Error cleaning up user teams:', err);
+      // Don't throw - this is a secondary operation
+    }
+  };
+
   const handleApproveParticipants = async (raceId) => {
     try {
       setApprovingRaceId(null);
@@ -189,6 +227,10 @@ export default function ParticipantsTab() {
       };
 
       await setDoc(doc(db, 'raceParticipants', raceId), updatedData);
+
+      // Remove riders from user team selections if they're no longer in participants
+      const participantRiderIds = updatedData.participants.map(p => p.riderId);
+      await removeRidersFromUserTeams(raceId, participantRiderIds);
 
       // Update local state
       setParticipants(
@@ -208,6 +250,10 @@ export default function ParticipantsTab() {
 
     try {
       await deleteDoc(doc(db, 'raceParticipants', raceId));
+      
+      // Remove all riders from user team selections when entire startlijst is deleted
+      await removeRidersFromUserTeams(raceId, []);
+      
       setParticipants(participants.filter(p => p.raceId !== raceId));
       alert('✅ Startlijst verwijderd');
     } catch (err) {
@@ -246,6 +292,10 @@ export default function ParticipantsTab() {
       }
 
       await setDoc(doc(db, 'raceParticipants', raceId), updatedData);
+
+      // Remove riders from user team selections if they're no longer in participants
+      const participantRiderIds = updatedData.participants.map(p => p.riderId);
+      await removeRidersFromUserTeams(raceId, participantRiderIds);
 
       // Update local state
       setParticipants(
@@ -374,9 +424,26 @@ export default function ParticipantsTab() {
                       onClick={() => {
                         const updated = editData.participants.filter((_, i) => i !== idx);
                         setEditData({ ...editData, participants: updated });
-                        const newFilters = { ...riderSearchFilters };
-                        delete newFilters[idx];
+                        
+                        // Re-index riderSearchFilters and openRiderDropdowns after deletion
+                        const newFilters = {};
+                        const newDropdowns = {};
+                        let newIdx = 0;
+                        
+                        editData.participants.forEach((participant, originalIdx) => {
+                          if (originalIdx !== idx) {
+                            if (riderSearchFilters[originalIdx]) {
+                              newFilters[newIdx] = riderSearchFilters[originalIdx];
+                            }
+                            if (openRiderDropdowns[originalIdx]) {
+                              newDropdowns[newIdx] = openRiderDropdowns[originalIdx];
+                            }
+                            newIdx++;
+                          }
+                        });
+                        
                         setRiderSearchFilters(newFilters);
+                        setOpenRiderDropdowns(newDropdowns);
                       }}
                     >
                       ✕
