@@ -2,6 +2,24 @@ import { collection, getDocs, doc, setDoc, getDoc } from 'firebase/firestore';
 import { db } from '../firebase/config';
 
 /**
+ * Get manager name from user ID
+ */
+const getManagerName = async (userId) => {
+  try {
+    const userRef = doc(db, 'users', userId);
+    const userSnap = await getDoc(userRef);
+    if (userSnap.exists()) {
+      const userData = userSnap.data();
+      const teamName = userData.teamName || `${userData.firstname} ${userData.lastname}`;
+      return teamName;
+    }
+  } catch (err) {
+    console.error(`Error fetching user ${userId}:`, err);
+  }
+  return userId; // Fallback to ID if user not found
+};
+
+/**
  * Auto-fill race teams for all users after deadline has passed
  * This runs locally instead of via Cloud Function
  */
@@ -47,20 +65,23 @@ export const autoFillRaceTeamsLocal = async () => {
     for (const userDoc of usersSnapshot.docs) {
       const userId = userDoc.id;
       const userTeam = userDoc.data();
+      
+      // Get manager name
+      const managerName = await getManagerName(userId);
 
       if (!userTeam || !userTeam.riders || userTeam.riders.length === 0) {
-        console.log(`Skipping user ${userId} - no riders in team`);
+        console.log(`Skipping user ${userId} (${managerName}) - no riders in team`);
         continue;
       }
 
       processedUsers++;
       let userFilled = 0;
-      console.log(`Processing user ${userId} with ${userTeam.riders.length} riders`);
+      console.log(`Processing user ${userId} (${managerName}) with ${userTeam.riders.length} riders`);
 
       // Check each race with passed deadline
       for (const race of passedDeadlineRaces) {
         const raceId = race.id;
-        console.log(`  Checking race ${raceId} (${race.name}) for user ${userId}...`);
+        console.log(`  Checking race ${raceId} (${race.name}) for ${managerName}...`);
 
         try {
           // Check if user already has a saved team for this race
@@ -117,11 +138,11 @@ export const autoFillRaceTeamsLocal = async () => {
 
           if (sortedRiders.length === 0) {
             if (isExistingTeam && teamToProcess.length > 0) {
-              console.log(`    ⚠️ No additional riders available to fill team for user ${userId}, race ${raceId}`);
-              results.push(`⚠️ User ${userId}: team has ${teamToProcess.length}/${maxRiders} riders, no more available`);
+              console.log(`    ⚠️ No additional riders available to fill team for ${managerName}, race ${raceId}`);
+              results.push(`⚠️ ${managerName}: team has ${teamToProcess.length}/${maxRiders} riders, no more available`);
             } else {
-              console.log(`    ⚠️ No available riders for user ${userId} in race ${raceId}`);
-              results.push(`⚠️ No available riders for user ${userId}, race ${raceId}`);
+              console.log(`    ⚠️ No available riders for ${managerName} in race ${raceId}`);
+              results.push(`⚠️ No available riders for ${managerName}, race ${raceId}`);
             }
             continue;
           }
@@ -145,15 +166,15 @@ export const autoFillRaceTeamsLocal = async () => {
 
           filledTeams++;
           userFilled++;
-          console.log(`    ✅ ${isExistingTeam ? 'Updated' : 'Auto-filled'} race ${raceId} for user ${userId} with ${updatedRiderIds.length} riders`);
+          console.log(`    ✅ ${isExistingTeam ? 'Updated' : 'Auto-filled'} race ${raceId} for ${managerName} with ${updatedRiderIds.length} riders`);
         } catch (raceError) {
-          console.error(`    ❌ Error processing race ${raceId} for user ${userId}:`, raceError.message);
-          results.push(`❌ Error for user ${userId}, race ${raceId}: ${raceError.message}`);
+          console.error(`    ❌ Error processing race ${raceId} for ${managerName}:`, raceError.message);
+          results.push(`❌ Error for ${managerName}, race ${raceId}: ${raceError.message}`);
         }
       }
 
       if (userFilled > 0) {
-        results.push(`✅ User ${userId}: filled ${userFilled} race team(s)`);
+        results.push(`✅ ${managerName}: filled ${userFilled} race team(s)`);
       }
     }
 
