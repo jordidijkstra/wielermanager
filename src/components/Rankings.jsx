@@ -169,7 +169,8 @@ export default function Rankings({ user, resetTrigger }) {
   };
 
   const handleTeamClick = (team) => {
-    setTeamDetails(team);
+    // Pass both the team and the user ID
+    setTeamDetails({ ...team, userId: team.id });
   };
 
   const handleCloseDetails = () => {

@@ -1,5 +1,7 @@
 import PropTypes from 'prop-types';
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
+import { collection, getDocs, doc, getDoc } from 'firebase/firestore';
+import { db } from '../firebase/config';
 
 export default function TeamDetails({
   teamDetails,
@@ -12,7 +14,35 @@ export default function TeamDetails({
   handleCloseDetails
 }) {
   const [currentSpeeldagIndex, setCurrentSpeeldagIndex] = useState(null);
+  const [userRaceTeams, setUserRaceTeams] = useState({});
+  const [loading, setLoading] = useState(true);
   const teamPoints = calculateTeamPoints(teamDetails);
+
+  // Load user's race teams
+  useEffect(() => {
+    const loadRaceTeams = async () => {
+      try {
+        if (!teamDetails.userId) {
+          setLoading(false);
+          return;
+        }
+
+        // Get user's race teams
+        const teamsSnapshot = await getDocs(collection(db, `users/${teamDetails.userId}/teams`));
+        const teamsMap = {};
+        teamsSnapshot.docs.forEach(doc => {
+          teamsMap[parseInt(doc.id)] = doc.data().riderIds || [];
+        });
+        setUserRaceTeams(teamsMap);
+      } catch (err) {
+        console.error('Error loading race teams:', err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadRaceTeams();
+  }, [teamDetails.userId]);
 
   // Get unique race dates sorted
   const sortedDates = useMemo(() => {
@@ -87,6 +117,58 @@ export default function TeamDetails({
       .sort((a, b) => b.points - a.points);
   }, [teamDetails.riders, currentSpeeldagRaces, results]);
 
+  // Get riders that are selected for current speeldag (with or without points)
+  const ridersSelectedForSpeeldag = useMemo(() => {
+    if (!teamDetails.riders || teamDetails.riders.length === 0) return [];
+    if (currentSpeeldagRaces.length === 0) return [];
+    
+    // Collect all rider IDs selected for this speeldag
+    // For stages, use the main tour selection; for main races, use their own selection
+    const selectedRiderIds = new Set();
+    currentSpeeldagRaces.forEach(race => {
+      let raceIdToCheck = race.id;
+      
+      // If this is a stage, use the main tour selection
+      if (race.tourId != null) {
+        raceIdToCheck = race.tourId;
+      }
+      
+      const riderIds = userRaceTeams[raceIdToCheck] || [];
+      riderIds.forEach(riderId => selectedRiderIds.add(riderId));
+    });
+    
+    // Filter team riders to only those selected for this speeldag
+    return teamDetails.riders
+      .filter(rider => selectedRiderIds.has(rider.id))
+      .map(rider => {
+        const riderSpeeldagPoints = currentSpeeldagRaces.reduce((sum, race) => {
+          const raceResult = results.find(r => r.raceId === race.id);
+          if (raceResult && raceResult.entries) {
+            const entry = raceResult.entries.find(e => e.riderId === rider.id);
+            return sum + (entry?.points || 0);
+          }
+          return sum;
+        }, 0);
+        
+        return { ...rider, points: riderSpeeldagPoints };
+      })
+      .sort((a, b) => {
+        // Sort by: first those with points (descending), then by price (descending)
+        if (a.points !== b.points) {
+          return b.points - a.points;
+        }
+        return b.price - a.price;
+      });
+  }, [teamDetails.riders, currentSpeeldagRaces, results, userRaceTeams]);
+
+  if (loading) {
+    return (
+      <div className="rankings">
+        <p>Team laden...</p>
+      </div>
+    );
+  }
+
   return (
     <div className="rankings">
       <div className="team-details-header">
@@ -135,12 +217,12 @@ export default function TeamDetails({
           </div>
         )}
 
-        {/* Renners met punten op deze speeldag */}
-        {ridersWithSpeeldagPoints.length > 0 && (
+        {/* Renners die actief zijn op deze speeldag */}
+        {ridersSelectedForSpeeldag.length > 0 && (
           <div className="riders-active-speeldag">
-            <h3>Punten gescoord op deze speeldag:</h3>
+            <h3>Geselecteerd voor deze speeldag:</h3>
             <div className="riders-grid">
-              {ridersWithSpeeldagPoints.map(rider => {
+              {ridersSelectedForSpeeldag.map(rider => {
                 const riderTotalPoints = races.reduce((sum, race) => {
                   const raceResult = results.find(r => r.raceId === race.id);
                   if (raceResult && raceResult.entries) {
@@ -151,7 +233,7 @@ export default function TeamDetails({
                 }, 0);
 
                 return (
-                  <div key={rider.id} className="rider-card rider-card-active">
+                  <div key={rider.id} className={`rider-card ${rider.points > 0 ? 'rider-card-active' : 'rider-card-selected'}`}>
                     <img
                       src={getCyclingJerseyPath(rider.teamId)}
                       alt={getRiderName(rider)}

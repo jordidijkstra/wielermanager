@@ -369,6 +369,17 @@
   border-color: #764ba2;
 }
 
+.rider-card-selected {
+  box-shadow: 0 2px 8px rgba(102, 126, 234, 0.1);
+  border: 1px solid #667ee6;
+  opacity: 0.85;
+}
+
+.rider-card-selected:hover {
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.15);
+  opacity: 1;
+}
+
 .rider-points-breakdown {
   display: flex;
   flex-direction: column;
