@@ -51,7 +51,10 @@ export default function TeamDetails({
 
   // Get unique race dates sorted
   const sortedDates = useMemo(() => {
-    const uniqueDates = [...new Set(races.map(r => r.startDate))].filter(d => d);
+    const uniqueDates = [...new Set(races.map(r => {
+      // For main races (no tourId), use endDate; for stages, use startDate
+      return r.tourId == null ? (r.endDate || r.startDate) : (r.startDate || '');
+    }))].filter(d => d);
     return uniqueDates.sort((a, b) => new Date(a) - new Date(b));
   }, [races]);
 
@@ -82,7 +85,11 @@ export default function TeamDetails({
   const currentSpeeldagRaces = useMemo(() => {
     if (currentSpeeldagIndex === null || sortedDates.length === 0) return [];
     const currentDate = sortedDates[currentSpeeldagIndex];
-    return races.filter(r => r.startDate === currentDate);
+    return races.filter(r => {
+      // For main races, match on endDate; for stages, match on startDate
+      const raceDate = r.tourId == null ? (r.endDate || r.startDate) : (r.startDate || '');
+      return raceDate === currentDate;
+    });
   }, [races, currentSpeeldagIndex, sortedDates]);
 
   // Calculate points for current speeldag (only from selected riders)
@@ -92,15 +99,8 @@ export default function TeamDetails({
     currentSpeeldagRaces.forEach(race => {
       const raceIdNum = typeof race.id === 'string' ? parseInt(race.id) : race.id;
       
-      // Get selected riders for this race
-      // If it's a stage, use the main tour selection
-      let raceIdToCheck = raceIdNum;
-      if (race.tourId != null) {
-        raceIdToCheck = typeof race.tourId === 'string' ? parseInt(race.tourId) : race.tourId;
-      }
-      
-      // Get the pre-calculated points from userRaceTeams
-      const raceTeamData = userRaceTeams[raceIdToCheck];
+      // Points are always stored under race ID (stage ID for stages, race ID for normal races)
+      const raceTeamData = userRaceTeams[raceIdNum];
       if (raceTeamData && raceTeamData.calculatedPoints) {
         totalPoints += raceTeamData.calculatedPoints;
       }
@@ -261,11 +261,12 @@ export default function TeamDetails({
                   const selectedRiderIds = new Set();
                   currentSpeeldagRaces.forEach(race => {
                     const raceIdNum = typeof race.id === 'string' ? parseInt(race.id) : race.id;
-                    let raceIdToCheck = raceIdNum;
+                    // Selections are stored at tour ID for stages
+                    let raceIdForSelection = raceIdNum;
                     if (race.tourId != null) {
-                      raceIdToCheck = typeof race.tourId === 'string' ? parseInt(race.tourId) : race.tourId;
+                      raceIdForSelection = typeof race.tourId === 'string' ? parseInt(race.tourId) : race.tourId;
                     }
-                    const raceTeamData = userRaceTeams[raceIdToCheck];
+                    const raceTeamData = userRaceTeams[raceIdForSelection];
                     if (raceTeamData && raceTeamData.riderIds) {
                       raceTeamData.riderIds.forEach(riderId => selectedRiderIds.add(riderId));
                     }
@@ -276,11 +277,8 @@ export default function TeamDetails({
                   // Calculate speeldag points (for all riders) using pre-calculated data
                   const riderAllSpeeldagPoints = currentSpeeldagRaces.reduce((sum, race) => {
                     const raceIdNum = typeof race.id === 'string' ? parseInt(race.id) : race.id;
-                    let raceIdToCheck = raceIdNum;
-                    if (race.tourId != null) {
-                      raceIdToCheck = typeof race.tourId === 'string' ? parseInt(race.tourId) : race.tourId;
-                    }
-                    const raceTeamData = userRaceTeams[raceIdToCheck];
+                    // Points are always stored under race ID (stage ID for stages, race ID for normal races)
+                    const raceTeamData = userRaceTeams[raceIdNum];
                     if (raceTeamData && raceTeamData.riderPoints && raceTeamData.riderPoints[rider.id]) {
                       return sum + raceTeamData.riderPoints[rider.id];
                     }

@@ -8,6 +8,7 @@ import { useResults } from '../hooks/useResults';
 import { useRiders } from '../hooks/useRiders';
 import { usePointsByCategory } from '../hooks/usePointsByCategory';
 import { saveRaceParticipants } from '../services/raceService';
+import { recalculateTeamPointsForRace } from '../services/resultsService';
 import '../css/racesTab.css';
 
 export default function RacesTab() {
@@ -485,6 +486,10 @@ export default function RacesTab() {
       console.log('💾 Data to save:', dataToSave);
       
       await addResult(dataToSave);
+      
+      // Recalculate team points for all users for this race
+      await recalculateTeamPointsForRace(raceId, races);
+      console.log('✅ Team punten per stage herberekend voor alle gebruikers');
       
       setShowResultModal(null);
       setResultEntries([]);

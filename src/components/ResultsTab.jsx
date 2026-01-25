@@ -4,6 +4,7 @@ import { useRaces } from '../hooks/useRaces';
 import { useRiders } from '../hooks/useRiders';
 import { usePointsByCategory } from '../hooks/usePointsByCategory';
 import { updateRidersPointsFromResults, removeRidersPointsFromResults } from '../services/riderService';
+import { recalculateTeamPointsForRace } from '../services/resultsService';
 import '../css/resultsTab.css';
 
 export default function ResultsTab() {
@@ -180,10 +181,32 @@ export default function ResultsTab() {
         ...editingResult,
         entries: resultRenners
       });
+      console.log('✅ Resultaat met renners bijgewerkt');
+      
+      // Update riders' points based on their results
+      if (resultRenners && resultRenners.length > 0) {
+        const pointsData = resultRenners
+          .filter(entry => entry.riderId && entry.points !== undefined)
+          .map(entry => ({
+            riderId: entry.riderId,
+            points: Number(entry.points) || 0
+          }));
+        
+        if (pointsData.length > 0) {
+          await updateRidersPointsFromResults(pointsData);
+          console.log('✅ Rijderspunten geupdate vanuit bewerkte resultaten');
+        }
+      }
+      
+      // Recalculate team points for all users for this race
+      if (editingResult.raceId) {
+        await recalculateTeamPointsForRace(editingResult.raceId, races);
+        console.log('✅ Team punten per stage herberekend voor alle gebruikers');
+      }
+      
       setEditingResult(null);
       setResultRenners([]);
       setRiderSearchFilters({});
-      console.log('✅ Resultaat met renners bijgewerkt');
     } catch (error) {
       console.error('Error updating result:', error);
       alert('Fout bij bijwerken resultaat');

@@ -54,7 +54,7 @@ export function useResults() {
       console.log('📝 Editing result:', String(resultId));
       console.log('📝 New data:', resultData);
       
-      await setDoc(doc(db, 'results', String(resultId)), resultData);
+      await setDoc(doc(db, 'results', String(resultId)), resultData, { merge: true });
       console.log('✅ Result saved to Firestore');
       
       // Reload all results to ensure UI is updated

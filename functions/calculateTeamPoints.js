@@ -8,26 +8,39 @@ if (!admin.apps.length) {
 const db = admin.firestore();
 
 /**
- * Cloud Function: Calculate and store team points for all users
+ * Cloud Function: Calculate and store team points for a specific race
  * Triggered when a result document is created, updated, or deleted
+ * Now optimized to only process the changed race
  */
 exports.calculateTeamPointsOnResultChange = functions.region('europe-west1').firestore
   .document('results/{resultId}')
   .onWrite(async (change, context) => {
     try {
-      console.log('📊 Starting team points calculation...');
+      // Get the changed result document
+      const resultDoc = change.after.exists ? change.after.data() : null;
+      if (!resultDoc || !resultDoc.raceId) {
+        console.log('⚠️ No result data or raceId found');
+        return;
+      }
+
+      const raceId = resultDoc.raceId;
+      console.log(`📊 Calculating points for race ${raceId}...`);
       
-      // Get all data needed
-      const [usersSnapshot, racesSnapshot, resultsSnapshot] = await Promise.all([
+      // Get only the necessary data
+      const [usersSnapshot, racesSnapshot] = await Promise.all([
         db.collection('users').get(),
-        db.collection('races').get(),
-        db.collection('results').get()
+        db.collection('races').get()
       ]);
 
       const races = racesSnapshot.docs.map(doc => ({ id: parseInt(doc.id), ...doc.data() }));
-      const results = resultsSnapshot.docs.map(doc => ({ id: parseInt(doc.id), ...doc.data() }));
+      const race = races.find(r => r.id === raceId);
 
-      // Process each user
+      if (!race) {
+        console.warn(`⚠️ Race ${raceId} not found`);
+        return;
+      }
+
+      // Process each user for this specific race
       const users = usersSnapshot.docs;
       let processed = 0;
       let errors = 0;
@@ -35,81 +48,71 @@ exports.calculateTeamPointsOnResultChange = functions.region('europe-west1').fir
       for (const userDoc of users) {
         try {
           const userId = userDoc.id;
-          console.log(`Processing user: ${userId}`);
 
           // Get user's teams (selections)
           const teamsSnapshot = await db.collection(`users/${userId}/teams`).get();
           const userTeams = {};
           teamsSnapshot.docs.forEach(doc => {
-            userTeams[parseInt(doc.id)] = doc.data().riderIds || [];
+            const data = doc.data();
+            userTeams[parseInt(doc.id)] = {
+              riderIds: data.riderIds || [],
+              calculatedPoints: data.calculatedPoints || 0,
+              riderPoints: data.riderPoints || {}
+            };
           });
 
           // Get user's cycling team
           const teamDoc = await db.collection('teams').doc(userId).get();
           if (!teamDoc.exists) {
-            console.log(`No cycling team found for user ${userId}`);
             continue;
           }
 
           const teamData = teamDoc.data();
           const teamRiders = teamData.riders || [];
 
-          // Calculate points for each race
-          for (const race of races) {
-            const raceIdNum = typeof race.id === 'string' ? parseInt(race.id) : race.id;
-            const raceResult = results.find(r => r.raceId === raceIdNum);
+          // Process only the changed race
+          const raceIdNum = typeof race.id === 'string' ? parseInt(race.id) : race.id;
+          const raceResult = resultDoc;
 
-            if (!raceResult || !raceResult.entries) {
-              continue;
-            }
-
-            // Get selected riders for this race
-            // If it's a stage, use the main tour selection
-            let raceIdToCheck = raceIdNum;
-            if (race.tourId != null) {
-              raceIdToCheck = typeof race.tourId === 'string' ? parseInt(race.tourId) : race.tourId;
-            }
-
-            const selectedRiderIds = new Set(userTeams[raceIdToCheck] || []);
-
-            // Calculate total points and per-rider breakdown
-            let totalPoints = 0;
-            const riderPoints = {};
-
-            raceResult.entries.forEach(entry => {
-              const isInTeam = teamRiders.some(r => r.id === entry.riderId);
-              const isSelected = selectedRiderIds.has(entry.riderId);
-              const points = entry.points || 0;
-
-              if (isInTeam && isSelected) {
-                totalPoints += points;
-              }
-
-              // Store per-rider points regardless of selection (for display)
-              riderPoints[entry.riderId] = points;
-            });
-
-            // Save calculated points to user's team document (use stage ID)
-            await db.collection(`users/${userId}/teams`).doc(String(raceIdNum)).update({
-              calculatedPoints: totalPoints,
-              riderPoints: riderPoints,
-              lastCalculated: admin.firestore.Timestamp.now()
-            }).catch(async (err) => {
-              if (err.code === 'not-found') {
-                // Document doesn't exist yet, create it
-                const existingData = userTeams[raceIdNum] ? { riderIds: userTeams[raceIdNum] } : {};
-                await db.collection(`users/${userId}/teams`).doc(String(raceIdNum)).set({
-                  ...existingData,
-                  calculatedPoints: totalPoints,
-                  riderPoints: riderPoints,
-                  lastCalculated: admin.firestore.Timestamp.now()
-                });
-              }
-            });
-
-            console.log(`✅ User ${userId}, Race ${raceIdNum}: ${totalPoints} points`);
+          if (!raceResult.entries) {
+            continue;
           }
 
+          // Get selected riders for this race
+          // If it's a stage, use the main tour selection
+          let raceIdToCheck = raceIdNum;
+          if (race.tourId != null) {
+            raceIdToCheck = typeof race.tourId === 'string' ? parseInt(race.tourId) : race.tourId;
+          }
+
+          const selectedRiderIds = new Set((userTeams[raceIdToCheck] && userTeams[raceIdToCheck].riderIds) || []);
+
+          // Calculate total points and per-rider breakdown
+          let totalPoints = 0;
+          const riderPoints = {};
+
+          raceResult.entries.forEach(entry => {
+            const isInTeam = teamRiders.some(r => r.id === entry.riderId);
+            const isSelected = selectedRiderIds.has(entry.riderId);
+            const points = entry.points || 0;
+
+            if (isInTeam && isSelected) {
+              totalPoints += points;
+            }
+
+            // Store per-rider points regardless of selection (for display)
+            riderPoints[entry.riderId] = points;
+          });
+
+          // Save calculated points to user's team document (use race ID / stage ID)
+          await db.collection(`users/${userId}/teams`).doc(String(raceIdNum)).set({
+            riderIds: userTeams[raceIdToCheck]?.riderIds || [],
+            calculatedPoints: totalPoints,
+            riderPoints: riderPoints,
+            lastCalculated: admin.firestore.Timestamp.now()
+          }, { merge: true });
+
+          console.log(`✅ User ${userId}, Race ${raceIdNum}: ${totalPoints} points`);
           processed++;
         } catch (err) {
           console.error(`Error processing user ${userDoc.id}:`, err);
@@ -155,7 +158,12 @@ exports.calculateTeamPointsScheduled = functions.region('europe-west1').pubsub
           const teamsSnapshot = await db.collection(`users/${userId}/teams`).get();
           const userTeams = {};
           teamsSnapshot.docs.forEach(doc => {
-            userTeams[parseInt(doc.id)] = doc.data().riderIds || [];
+            const data = doc.data();
+            userTeams[parseInt(doc.id)] = {
+              riderIds: data.riderIds || [],
+              calculatedPoints: data.calculatedPoints || 0,
+              riderPoints: data.riderPoints || {}
+            };
           });
 
           const teamDoc = await db.collection('teams').doc(userId).get();
@@ -179,7 +187,7 @@ exports.calculateTeamPointsScheduled = functions.region('europe-west1').pubsub
               raceIdToCheck = typeof race.tourId === 'string' ? parseInt(race.tourId) : race.tourId;
             }
 
-            const selectedRiderIds = new Set(userTeams[raceIdToCheck] || []);
+            const selectedRiderIds = new Set((userTeams[raceIdToCheck] && userTeams[raceIdToCheck].riderIds) || []);
             let totalPoints = 0;
             const riderPoints = {};
 
@@ -195,22 +203,13 @@ exports.calculateTeamPointsScheduled = functions.region('europe-west1').pubsub
               riderPoints[entry.riderId] = points;
             });
 
-            // Save for scheduled function (use stage ID)
-            await db.collection(`users/${userId}/teams`).doc(String(raceIdNum)).update({
+            // Save for scheduled function (use race ID / stage ID with merge)
+            await db.collection(`users/${userId}/teams`).doc(String(raceIdNum)).set({
+              riderIds: userTeams[raceIdToCheck]?.riderIds || [],
               calculatedPoints: totalPoints,
               riderPoints: riderPoints,
               lastCalculated: admin.firestore.Timestamp.now()
-            }).catch(async (err) => {
-              if (err.code === 'not-found') {
-                const existingData = userTeams[raceIdNum] ? { riderIds: userTeams[raceIdNum] } : {};
-                await db.collection(`users/${userId}/teams`).doc(String(raceIdNum)).set({
-                  ...existingData,
-                  calculatedPoints: totalPoints,
-                  riderPoints: riderPoints,
-                  lastCalculated: admin.firestore.Timestamp.now()
-                });
-              }
-            });
+            }, { merge: true });
           }
 
           processed++;
