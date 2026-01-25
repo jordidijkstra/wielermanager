@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback, useMemo } from 'react';
-import { collection, getDocs } from 'firebase/firestore';
+import { collection, getDocs, doc } from 'firebase/firestore';
 import { db } from '../firebase/config';
 import { useRaces } from '../hooks/useRaces';
 import { useResults } from '../hooks/useResults';
@@ -19,13 +19,13 @@ export default function Rankings({ user, resetTrigger }) {
   const { teams } = useCyclingTeams();
   const [allTeams, setAllTeams] = useState([]);
   const [allUsers, setAllUsers] = useState([]);
+  const [allUserRaceTeams, setAllUserRaceTeams] = useState({});
   const [teamDetails, setTeamDetails] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 
   // Reset team details when Rankings menu is clicked (resetTrigger changes)
   useEffect(() => {
-    console.log('Resetting teamDetails due to resetTrigger:', resetTrigger);
     setTeamDetails(null);
   }, [resetTrigger]);
 
@@ -61,8 +61,29 @@ export default function Rankings({ user, resetTrigger }) {
         
         // Load all users
         const usersData = await getAllUsers();
-        console.log('✅ Loaded users:', usersData.length, usersData.map(u => ({id: u.id, name: `${u.firstname} ${u.lastname}`, role: u.role})));
         setAllUsers(usersData);
+        
+        // Load all user race teams for points calculation
+        const userRaceTeamsMap = {};
+        for (const userDoc of usersData) {
+          const userId = userDoc.id;
+          try {
+            const teamsSnapshot = await getDocs(collection(db, `users/${userId}/teams`));
+            const userTeams = {};
+            teamsSnapshot.forEach(doc => {
+              const data = doc.data();
+              userTeams[parseInt(doc.id)] = {
+                riderIds: data.riderIds || [],
+                calculatedPoints: data.calculatedPoints || 0,
+                riderPoints: data.riderPoints || {}
+              };
+            });
+            userRaceTeamsMap[userId] = userTeams;
+          } catch (err) {
+            console.error(`Error loading race teams for user ${userId}:`, err);
+          }
+        }
+        setAllUserRaceTeams(userRaceTeamsMap);
         
         setLoading(false);
       } catch (err) {
@@ -80,7 +101,6 @@ export default function Rankings({ user, resetTrigger }) {
   useEffect(() => {
     const handleKeyPress = (e) => {
       if (e.key === 'Escape' && teamDetails) {
-        console.log('ESC toets ingedrukt, terug naar rankings');
         handleCloseDetails();
       }
     };
@@ -90,24 +110,21 @@ export default function Rankings({ user, resetTrigger }) {
   }, [teamDetails]);
 
   // Calculate total points for a team (memoized)
+  // Using pre-calculated points from Cloud Function
   const calculateTeamPoints = useCallback((team) => {
     let totalPoints = 0;
+    const userId = team.id;
+    const userTeams = allUserRaceTeams[userId] || {};
 
-    // Iterate through all races
-    races.forEach(race => {
-      const raceResult = results.find(r => r.raceId === race.id);
-      if (raceResult && raceResult.entries) {
-        // Check if any rider from the team earned points in this race
-        raceResult.entries.forEach(entry => {
-          if (team.riders && team.riders.some(r => r.id === entry.riderId)) {
-            totalPoints += entry.points || 0;
-          }
-        });
+    // Sum all pre-calculated points from each race
+    Object.values(userTeams).forEach(raceData => {
+      if (raceData && raceData.calculatedPoints) {
+        totalPoints += raceData.calculatedPoints;
       }
     });
 
     return totalPoints;
-  }, [races, results]);
+  }, [allUserRaceTeams]);
 
   // Rankings table view (memoized)
   const rankedTeams = useMemo(() => {
@@ -143,7 +160,6 @@ export default function Rankings({ user, resetTrigger }) {
 
   const getTeamDisplayName = (userId) => {
     const userData = allUsers.find(u => u.id === userId);
-    console.log('👤 getTeamDisplayName for:', userId, '- Found:', !!userData, '- User data:', userData);
     if (userData) {
       // Als teamnaam is ingesteld, toon die; anders toon voornaam en achternaam
       if (userData.teamName && userData.teamName.trim()) {
@@ -174,7 +190,6 @@ export default function Rankings({ user, resetTrigger }) {
   };
 
   const handleCloseDetails = () => {
-    console.log('Terug naar rankings geklikt');
     setTeamDetails(null);
   };
 

@@ -380,6 +380,68 @@
   opacity: 1;
 }
 
+.rider-card-selected-speeldag {
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.2);
+  border: 2px solid #667ee6;
+  background-color: rgba(102, 126, 234, 0.03);
+}
+
+.rider-card-selected-speeldag:hover {
+  box-shadow: 0 6px 16px rgba(102, 126, 234, 0.3);
+  border-color: #764ba2;
+}
+
+.rider-card-not-selected-speeldag {
+  box-shadow: 0 2px 8px rgba(150, 150, 150, 0.1);
+  border: 1px solid #cccccc;
+  opacity: 0.6;
+}
+
+.rider-card-not-selected-speeldag:hover {
+  box-shadow: 0 3px 10px rgba(150, 150, 150, 0.15);
+  opacity: 0.8;
+}
+
+.riders-not-selected {
+  border-radius: 8px;
+  padding: 20px;
+  margin: 20px 0;
+  border: 2px solid #ff6b6b;
+  background-color: rgba(255, 107, 107, 0.05);
+}
+
+.riders-not-selected h3 {
+  color: #ff6b6b;
+  margin-top: 0;
+  font-size: 1.1em;
+}
+
+.riders-not-selected-note {
+  color: #dc3545;
+  font-size: 0.9em;
+  margin: 10px 0 15px 0;
+  padding: 8px;
+  background-color: rgba(220, 53, 69, 0.1);
+  border-left: 3px solid #dc3545;
+  padding-left: 12px;
+}
+
+.rider-card-not-selected {
+  box-shadow: 0 2px 8px rgba(255, 107, 107, 0.15);
+  border: 2px solid #ff6b6b;
+  opacity: 0.7;
+}
+
+.rider-card-not-selected:hover {
+  box-shadow: 0 4px 12px rgba(255, 107, 107, 0.25);
+  opacity: 0.85;
+}
+
+.rider-points-not-counted {
+  color: #ff6b6b !important;
+  font-weight: 700 !important;
+}
+
 .rider-points-breakdown {
   display: flex;
   flex-direction: column;
