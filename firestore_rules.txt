@@ -19,8 +19,9 @@ service cloud.firestore {
     }
 
     // Race Teams per user - subcollection teams
+    // Allow all logged-in users to read (needed for Rankings/TeamDetails display)
     match /users/{userId}/teams/{raceId} {
-      allow read: if isLoggedIn() && (request.auth.uid == userId || isAdmin());
+      allow read: if isLoggedIn();
       allow write: if isLoggedIn() && (request.auth.uid == userId || isAdmin());
       allow create: if isLoggedIn() && (request.auth.uid == userId || isAdmin());
       allow delete: if isLoggedIn() && (request.auth.uid == userId || isAdmin());
