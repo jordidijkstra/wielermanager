@@ -6,6 +6,13 @@ let racesCache = null;
 let racesCacheTimestamp = 0;
 const RACES_CACHE_DURATION = 5 * 60 * 1000; // 5 minutes
 
+// Invalidate cache function
+export const invalidateRacesCache = () => {
+  console.log('🔄 Invalidating races cache');
+  racesCache = null;
+  racesCacheTimestamp = 0;
+};
+
 // Haal alle races op, gesorteerd op startDate (met caching)
 export const getAllRaces = async () => {
   const now = Date.now();
@@ -191,11 +198,4 @@ export const removeRiderFromAllRaceTeams = async (userId, riderId) => {
     console.error(`Error removing rider ${riderId} from all race teams:`, error);
     throw error;
   }
-};
-
-// Cache invalidation functions
-export const invalidateRacesCache = () => {
-  console.log('🔄 Invalidating races cache');
-  racesCache = null;
-  racesCacheTimestamp = 0;
 };

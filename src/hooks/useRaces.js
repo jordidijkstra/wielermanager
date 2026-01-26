@@ -1,5 +1,5 @@
 import { useState, useEffect, useMemo } from 'react';
-import { getAllRaces, getRaceById, getRaceTeam, saveRaceTeam, getUserRaceTeams } from '../services/raceService';
+import { getAllRaces, getRaceById, getRaceTeam, saveRaceTeam, getUserRaceTeams, invalidateRacesCache } from '../services/raceService';
 import { setDoc, deleteDoc, doc } from 'firebase/firestore';
 import { db } from '../firebase/config';
 
@@ -85,6 +85,7 @@ export function useRaces(user) {
         ...raceData
       });
       
+      invalidateRacesCache();
       await loadRaces();
     } catch (err) {
       console.error('Fout bij toevoegen race:', err);
@@ -96,6 +97,7 @@ export function useRaces(user) {
   const editRace = async (raceId, raceData) => {
     try {
       await setDoc(doc(db, 'races', String(raceId)), raceData);
+      invalidateRacesCache();
       await loadRaces();
     } catch (err) {
       console.error('Fout bij bijwerken race:', err);
@@ -107,6 +109,7 @@ export function useRaces(user) {
   const removeRace = async (raceId) => {
     try {
       await deleteDoc(doc(db, 'races', String(raceId)));
+      invalidateRacesCache();
       await loadRaces();
     } catch (err) {
       console.error('Fout bij verwijderen race:', err);
