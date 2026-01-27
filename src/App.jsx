@@ -35,11 +35,11 @@ function App() {
     setCurrentPage('home');
   }
 
-  // When user logs in while login modal is open, go to team page and close modal
+  // When user logs in while login modal is open, go to home page and close modal
   useEffect(() => {
     if (user && showLoginModal) {
       setShowLoginModal(false);
-      setCurrentPage('team');
+      setCurrentPage('home');
     }
   }, [user, showLoginModal]);
 

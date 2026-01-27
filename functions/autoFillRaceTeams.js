@@ -7,6 +7,8 @@ if (!admin.apps.length) {
 
 const db = admin.firestore();
 
+// Fixed: Changed .exists() to .exists property (v7.0)
+
 /**
  * Cloud Function: Auto-fill race teams for users after deadline has passed
  * Triggered via HTTP endpoint or Cloud Scheduler
@@ -65,7 +67,7 @@ exports.autoFillRaceTeams = functions.region('europe-west1').https.onRequest(asy
         let currentTeam = [];
         let isExistingTeam = false;
 
-        if (raceTeamSnap.exists()) {
+        if (raceTeamSnap.exists) {
           // Team already exists - check if it needs to be filled
           currentTeam = raceTeamSnap.data().riderIds || [];
           isExistingTeam = true;
@@ -80,7 +82,7 @@ exports.autoFillRaceTeams = functions.region('europe-west1').https.onRequest(asy
         // Get race participants to filter available riders
         const participantsRef = db.collection('raceParticipants').doc(String(raceId));
         const participantsSnap = await participantsRef.get();
-        const participants = participantsSnap.exists() ? participantsSnap.data().participants || [] : [];
+        const participants = participantsSnap.exists ? participantsSnap.data().participants || [] : [];
 
         // Filter available riders (in user's team AND in race participants AND not already selected)
         const participantRiderIds = new Set(
@@ -151,21 +153,32 @@ exports.autoFillRaceTeams = functions.region('europe-west1').https.onRequest(asy
  * Automatically fills race teams after deadlines pass
  */
 exports.autoFillRaceTeamsScheduled = functions.region('europe-west1').pubsub
-  .schedule('0 10 * * *')
+  .schedule('35 10 * * *')
   .timeZone('UTC')
   .onRun(async (context) => {
     const startTime = new Date();
-    const logs = [];
     
-    const addLog = (message) => {
-      console.log(message);
-      logs.push({
-        timestamp: new Date().toISOString(),
-        message
-      });
-    };
-
+    // ALTIJD logs wegschrijven, zelfs als er iets fout gaat
     try {
+      console.log('[AUTO-FILL] Scheduled task started at ' + startTime.toISOString());
+      
+      // Eerst even logs opslaan dat we zijn gestart
+      await db.collection('system_logs').doc('autoFillScheduled').set({
+        lastRun: startTime.toISOString(),
+        status: 'running',
+        message: 'Task started'
+      }, { merge: true });
+      
+      const logs = [];
+      
+      const addLog = (message) => {
+        console.log('[AUTO-FILL] ' + message);
+        logs.push({
+          timestamp: new Date().toISOString(),
+          message
+        });
+      };
+
       addLog('Running scheduled auto-fill race teams at ' + startTime.toISOString());
       
       const now = new Date();
@@ -230,7 +243,7 @@ exports.autoFillRaceTeamsScheduled = functions.region('europe-west1').pubsub
           let currentTeam = [];
           let isExistingTeam = false;
 
-          if (raceTeamSnap.exists()) {
+          if (raceTeamSnap.exists) {
             // Team already exists - check if it needs to be filled
             currentTeam = raceTeamSnap.data().riderIds || [];
             isExistingTeam = true;
@@ -245,7 +258,7 @@ exports.autoFillRaceTeamsScheduled = functions.region('europe-west1').pubsub
           // Get race participants to filter available riders
           const participantsRef = db.collection('raceParticipants').doc(String(raceId));
           const participantsSnap = await participantsRef.get();
-          const participants = participantsSnap.exists() ? participantsSnap.data().participants || [] : [];
+          const participants = participantsSnap.exists ? participantsSnap.data().participants || [] : [];
 
           // Filter available riders (in user's team AND in race participants AND not already selected)
           const participantRiderIds = new Set(
