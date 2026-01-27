@@ -78,6 +78,12 @@ service cloud.firestore {
       allow read: if isLoggedIn();
       allow write: if isAdmin();
     }
+
+    // System Logs - alleen admins kunnen lezen en schrijven
+    match /system_logs/{document=**} {
+      allow read: if isAdmin();
+      allow write: if isAdmin();
+    }
   }
 }
 

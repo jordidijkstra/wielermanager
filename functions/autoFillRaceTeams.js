@@ -154,8 +154,19 @@ exports.autoFillRaceTeamsScheduled = functions.region('europe-west1').pubsub
   .schedule('0 10 * * *')
   .timeZone('UTC')
   .onRun(async (context) => {
+    const startTime = new Date();
+    const logs = [];
+    
+    const addLog = (message) => {
+      console.log(message);
+      logs.push({
+        timestamp: new Date().toISOString(),
+        message
+      });
+    };
+
     try {
-      console.log('Running scheduled auto-fill race teams at', new Date().toISOString());
+      addLog('Running scheduled auto-fill race teams at ' + startTime.toISOString());
       
       const now = new Date();
       let processedUsers = 0;
@@ -176,10 +187,21 @@ exports.autoFillRaceTeamsScheduled = functions.region('europe-west1').pubsub
         return deadline <= now;
       });
 
-      console.log(`Found ${passedDeadlineRaces.length} races with passed deadlines`);
+      addLog(`Found ${passedDeadlineRaces.length} races with passed deadlines`);
 
       if (passedDeadlineRaces.length === 0) {
-        console.log('No races with passed deadlines');
+        addLog('No races with passed deadlines');
+        
+        // Save logs to Firestore
+        await db.collection('system_logs').doc('autoFillScheduled').set({
+          lastRun: startTime.toISOString(),
+          executionTime: Date.now() - startTime.getTime(),
+          logs,
+          processedUsers: 0,
+          filledTeams: 0,
+          status: 'completed'
+        }, { merge: true });
+        
         return null;
       }
 
@@ -216,7 +238,7 @@ exports.autoFillRaceTeamsScheduled = functions.region('europe-west1').pubsub
 
           // Check if team has less than maxRiders
           if (currentTeam.length >= maxRiders) {
-            console.log(`Team already has ${currentTeam.length} riders (max is ${maxRiders}) - skipping`);
+            addLog(`Team already has ${currentTeam.length} riders (max is ${maxRiders}) - skipping for user ${userId}, race ${raceId}`);
             continue;
           }
 
@@ -248,9 +270,9 @@ exports.autoFillRaceTeamsScheduled = functions.region('europe-west1').pubsub
 
           if (sortedRiders.length === 0) {
             if (isExistingTeam && currentTeam.length > 0) {
-              console.log(`No additional riders available to fill team for user ${userId}, race ${raceId}`);
+              addLog(`No additional riders available to fill team for user ${userId}, race ${raceId}`);
             } else {
-              console.log(`No available riders for user ${userId} in race ${raceId}`);
+              addLog(`No available riders for user ${userId} in race ${raceId}`);
             }
             continue;
           }
@@ -272,14 +294,36 @@ exports.autoFillRaceTeamsScheduled = functions.region('europe-west1').pubsub
           });
 
           filledTeams++;
-          console.log(`${isExistingTeam ? 'Updated' : 'Auto-filled'} race ${raceId} for user ${userId} with ${updatedRiderIds.length} riders`);
+          addLog(`${isExistingTeam ? 'Updated' : 'Auto-filled'} race ${raceId} for user ${userId} with ${updatedRiderIds.length} riders`);
         }
       }
 
-      console.log(`Completed: processed ${processedUsers} users, auto-filled ${filledTeams} race teams`);
+      addLog(`Completed: processed ${processedUsers} users, auto-filled ${filledTeams} race teams`);
+      
+      // Save logs to Firestore
+      await db.collection('system_logs').doc('autoFillScheduled').set({
+        lastRun: startTime.toISOString(),
+        executionTime: Date.now() - startTime.getTime(),
+        logs,
+        processedUsers,
+        filledTeams,
+        status: 'completed'
+      }, { merge: true });
+      
       return null;
     } catch (error) {
       console.error('Error in scheduled autoFillRaceTeams:', error);
+      addLog(`ERROR: ${error.message}`);
+      
+      // Save error logs to Firestore
+      await db.collection('system_logs').doc('autoFillScheduled').set({
+        lastRun: startTime.toISOString(),
+        executionTime: Date.now() - startTime.getTime(),
+        logs,
+        status: 'error',
+        error: error.message
+      }, { merge: true });
+      
       throw error;
     }
   });

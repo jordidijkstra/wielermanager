@@ -156,3 +156,86 @@
     font-size: 11px;
   }
 }
+
+.scheduled-logs {
+  padding: 15px;
+  background: #f9f9f9;
+  border-radius: 6px;
+  border: 1px solid #ddd;
+}
+
+.log-info {
+  background: white;
+  padding: 15px;
+  border-radius: 6px;
+  margin-bottom: 15px;
+  border-left: 4px solid #4CAF50;
+}
+
+.log-info p {
+  margin: 8px 0;
+  color: #333;
+  font-size: 14px;
+}
+
+.log-info strong {
+  color: #14213d;
+  min-width: 150px;
+  display: inline-block;
+}
+
+.log-details {
+  margin-top: 15px;
+}
+
+.log-details h4 {
+  color: #14213d;
+  margin: 0 0 10px 0;
+  font-size: 14px;
+}
+
+.log-list {
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  padding: 10px;
+  max-height: 300px;
+  overflow-y: auto;
+  font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+  font-size: 12px;
+}
+
+.log-entry {
+  padding: 8px 0;
+  border-bottom: 1px solid #eee;
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+}
+
+.log-entry:last-child {
+  border-bottom: none;
+}
+
+.log-time {
+  color: #999;
+  min-width: 90px;
+  flex-shrink: 0;
+  font-weight: 600;
+}
+
+.log-message {
+  color: #333;
+  flex: 1;
+  word-break: break-word;
+}
+
+.log-error {
+  padding: 12px;
+  background: #ffe6e6;
+  border: 1px solid #ffcccc;
+  border-radius: 6px;
+  color: #c00;
+  margin-top: 10px;
+  font-size: 13px;
+}
