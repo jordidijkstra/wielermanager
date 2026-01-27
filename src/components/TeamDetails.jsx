@@ -2,6 +2,7 @@ import PropTypes from 'prop-types';
 import { useState, useMemo, useEffect } from 'react';
 import { collection, getDocs, doc, getDoc } from 'firebase/firestore';
 import { db } from '../firebase/config';
+import { getRiderRacePoints } from '../services/riderService';
 
 export default function TeamDetails({
   teamDetails,
@@ -16,6 +17,8 @@ export default function TeamDetails({
   const [currentSpeeldagIndex, setCurrentSpeeldagIndex] = useState(null);
   const [userRaceTeams, setUserRaceTeams] = useState({});
   const [loading, setLoading] = useState(true);
+  const [selectedRiderResults, setSelectedRiderResults] = useState(null);
+  const [riderResultsLoading, setRiderResultsLoading] = useState(false);
   const teamPoints = calculateTeamPoints(teamDetails);
 
   // Load user's race teams (including pre-calculated points)
@@ -48,6 +51,23 @@ export default function TeamDetails({
 
     loadRaceTeams();
   }, [teamDetails.userId]);
+
+  const viewRiderResults = async (riderId, riderName) => {
+    try {
+      setRiderResultsLoading(true);
+      const results = await getRiderRacePoints(riderId);
+      setSelectedRiderResults({ riderId, riderName, results });
+    } catch (error) {
+      console.error('Error loading rider results:', error);
+      alert('Fout bij laden resultaten');
+    } finally {
+      setRiderResultsLoading(false);
+    }
+  };
+
+  const getRaceName = (raceId) => {
+    return races.find(r => r.id === raceId)?.name || `Race ${raceId}`;
+  };
 
   // Get unique race dates sorted
   const sortedDates = useMemo(() => {
@@ -308,6 +328,9 @@ export default function TeamDetails({
                     <div 
                       key={rider.id} 
                       className={`rider-card ${rider.isSelected ? 'rider-card-selected-speeldag' : 'rider-card-not-selected-speeldag'}`}
+                      onClick={() => viewRiderResults(rider.id, getRiderName(rider))}
+                      style={{ cursor: 'pointer' }}
+                      title="Klik voor race resultaten"
                     >
                       <img
                         src={getCyclingJerseyPath(rider.teamId)}
@@ -332,6 +355,51 @@ export default function TeamDetails({
           )}
         </div>
       </div>
+
+      {selectedRiderResults && (
+        <div className="modal-overlay" onClick={() => setSelectedRiderResults(null)}>
+          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+            <div className="modal-header">
+              <h3>Race Resultaten - {selectedRiderResults.riderName}</h3>
+              <button className="btn-close" onClick={() => setSelectedRiderResults(null)}>✕</button>
+            </div>
+
+            <div className="modal-body">
+              {riderResultsLoading ? (
+                <p>⏳ Resultaten laden...</p>
+              ) : selectedRiderResults.results.length === 0 ? (
+                <p>Geen race resultaten beschikbaar</p>
+              ) : (
+                <table className="results-table">
+                  <thead>
+                    <tr>
+                      <th>Race</th>
+                      <th>Punten</th>
+                      <th>Datum</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {selectedRiderResults.results.map((result) => (
+                      <tr key={result.raceId}>
+                        <td>{getRaceName(result.raceId)}</td>
+                        <td className="points-cell">{result.points}</td>
+                        <td>{new Date(result.timestamp).toLocaleDateString('nl-NL')}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                  <tfoot>
+                    <tr className="total-row">
+                      <td><strong>Totaal</strong></td>
+                      <td className="points-cell"><strong>{selectedRiderResults.results.reduce((sum, r) => sum + (Number(r.points) || 0), 0)}</strong></td>
+                      <td></td>
+                    </tr>
+                  </tfoot>
+                </table>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
