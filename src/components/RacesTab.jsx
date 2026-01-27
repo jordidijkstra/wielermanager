@@ -8,6 +8,7 @@ import { useResults } from '../hooks/useResults';
 import { useRiders } from '../hooks/useRiders';
 import { usePointsByCategory } from '../hooks/usePointsByCategory';
 import { saveRaceParticipants } from '../services/raceService';
+import { updateRidersPointsFromResults } from '../services/riderService';
 import { recalculateTeamPointsForRace } from '../services/resultsService';
 import '../css/racesTab.css';
 
@@ -486,6 +487,21 @@ export default function RacesTab() {
       console.log('💾 Data to save:', dataToSave);
       
       await addResult(dataToSave);
+
+      // Update riders' points directly based on results
+      if (resultEntries && resultEntries.length > 0) {
+        const pointsData = resultEntries
+          .filter(entry => entry.riderId && entry.points !== undefined)
+          .map(entry => ({
+            riderId: entry.riderId,
+            points: Number(entry.points) || 0
+          }));
+        
+        if (pointsData.length > 0) {
+          await updateRidersPointsFromResults(pointsData, raceId);
+          console.log('✅ Rijderspunten direct toegekend met race history');
+        }
+      }
       
       // Recalculate team points for all users for this race
       await recalculateTeamPointsForRace(raceId, races);

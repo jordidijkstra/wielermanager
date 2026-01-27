@@ -1,4 +1,4 @@
-import { collection, getDocs, doc, setDoc } from 'firebase/firestore';
+import { collection, getDocs, doc, setDoc, getDoc } from 'firebase/firestore';
 import { db } from '../firebase/config';
 
 // Cache for riders
@@ -51,8 +51,9 @@ export const updateRider = async ({ id, firstname, lastname, firstnameWithoutSpe
   }, { merge: true });
 };
 
-export const updateRidersPointsFromResults = async (raceResults) => {
+export const updateRidersPointsFromResults = async (raceResults, raceId = null) => {
   // raceResults is an array of { riderId, points }
+  // raceId is optional - if provided, will also save per-race stats
   const updates = {};
   
   for (const result of raceResults) {
@@ -70,24 +71,38 @@ export const updateRidersPointsFromResults = async (raceResults) => {
   for (const [riderId, pointsToAdd] of Object.entries(updates)) {
     try {
       const riderRef = doc(db, 'riders', riderId);
-      const currentRiderDoc = await getDocs(collection(db, 'riders'));
-      const currentRider = currentRiderDoc.docs
-        .map(d => ({ id: d.id, ...d.data() }))
-        .find(r => r.id === riderId);
+      const currentRiderDoc = await getDoc(riderRef);
+      const currentRider = currentRiderDoc.exists() ? currentRiderDoc.data() : null;
       
       const currentPoints = currentRider?.points || 0;
+      const newPoints = currentPoints + pointsToAdd;
+      
       await setDoc(riderRef, {
-        points: currentPoints + pointsToAdd
+        points: newPoints
       }, { merge: true });
       
-      console.log(`✅ Punten geupdate voor rider ${riderId}: +${pointsToAdd}`);
+      console.log(`✅ Punten geupdate voor rider ${riderId}: ${currentPoints} + ${pointsToAdd} = ${newPoints}`);
+
+      // Also save per-race points if raceId is provided
+      if (raceId) {
+        const riderResultRef = doc(db, 'riders', riderId, 'riderResults', String(raceId));
+        await setDoc(riderResultRef, {
+          raceId,
+          points: pointsToAdd,
+          timestamp: new Date().toISOString()
+        }, { merge: true });
+        console.log(`📊 Race punten opgeslagen voor rider ${riderId} in race ${raceId}: ${pointsToAdd}`);
+      }
     } catch (error) {
       console.error(`Error updating points for rider ${riderId}:`, error);
     }
   }
+
+  // Invalidate cache so next load gets fresh data
+  invalidateRidersCache();
 };
 
-export const removeRidersPointsFromResults = async (raceResults) => {
+export const removeRidersPointsFromResults = async (raceResults, raceId = null) => {
   // raceResults is an array of { riderId, points } - verwijder deze punten
   const updates = {};
   
@@ -106,18 +121,28 @@ export const removeRidersPointsFromResults = async (raceResults) => {
   for (const [riderId, pointsToRemove] of Object.entries(updates)) {
     try {
       const riderRef = doc(db, 'riders', riderId);
-      const currentRiderDoc = await getDocs(collection(db, 'riders'));
-      const currentRider = currentRiderDoc.docs
-        .map(d => ({ id: d.id, ...d.data() }))
-        .find(r => r.id === riderId);
+      const currentRiderDoc = await getDoc(riderRef);
+      const currentRider = currentRiderDoc.exists() ? currentRiderDoc.data() : null;
       
       const currentPoints = currentRider?.points || 0;
       const newPoints = Math.max(0, currentPoints - pointsToRemove); // Ensure no negative points
+      
       await setDoc(riderRef, {
         points: newPoints
       }, { merge: true });
       
-      console.log(`✅ Punten verwijderd voor rider ${riderId}: -${pointsToRemove}`);
+      console.log(`✅ Punten verwijderd voor rider ${riderId}: ${currentPoints} - ${pointsToRemove} = ${newPoints}`);
+
+      // Also remove per-race points if raceId is provided
+      if (raceId) {
+        const riderResultRef = doc(db, 'riders', riderId, 'riderResults', String(raceId));
+        await setDoc(riderResultRef, {
+          points: 0,
+          removed: true,
+          timestamp: new Date().toISOString()
+        }, { merge: true });
+        console.log(`📊 Race punten verwijderd voor rider ${riderId} in race ${raceId}`);
+      }
     } catch (error) {
       console.error(`Error removing points for rider ${riderId}:`, error);
     }
@@ -132,4 +157,31 @@ export const invalidateRidersCache = () => {
   console.log('🔄 Invalidating riders cache');
   ridersCache = null;
   ridersCacheTimestamp = 0;
+};
+
+// Get per-race points for a specific rider
+export const getRiderRacePoints = async (riderId) => {
+  try {
+    const riderResultsSnap = await getDocs(collection(db, 'riders', riderId.toString(), 'riderResults'));
+    const racePoints = riderResultsSnap.docs.map(doc => ({
+      raceId: doc.id,
+      ...doc.data()
+    })).filter(r => !r.removed); // Filter out removed entries
+    
+    console.log(`📊 Retrieved ${racePoints.length} race points for rider ${riderId}`);
+    return racePoints;
+  } catch (error) {
+    console.error(`Error fetching race points for rider ${riderId}:`, error);
+    return [];
+  }
+};
+
+// Get total points from race history (for statistics)
+export const getTotalPointsFromRaces = async (riderId) => {
+  const racePoints = await getRiderRacePoints(riderId);
+  const totalFromRaces = racePoints
+    .filter(r => !r.removed)
+    .reduce((sum, r) => sum + (Number(r.points) || 0), 0);
+  
+  return totalFromRaces;
 };

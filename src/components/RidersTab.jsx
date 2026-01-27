@@ -1,10 +1,13 @@
 import { useState, useEffect } from 'react';
 import { useRiders } from '../hooks/useRiders';
 import { useCyclingTeams } from '../hooks/useCyclingTeams';
+import { getRiderRacePoints } from '../services/riderService';
+import { useRaces } from '../hooks/useRaces';
 
 export default function RidersTab() {
   const { riders, loading, reload, editRider, deleteRider: deleteRiderFromHook, addRider } = useRiders();
   const { teams } = useCyclingTeams();
+  const { races } = useRaces();
   const [editingId, setEditingId] = useState(null);
   const [editData, setEditData] = useState({});
   const [searchTerm, setSearchTerm] = useState('');
@@ -12,6 +15,8 @@ export default function RidersTab() {
   const [sortBy, setSortBy] = useState('id-asc');
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedTeamFilter, setSelectedTeamFilter] = useState(null);
+  const [selectedRiderResults, setSelectedRiderResults] = useState(null);
+  const [riderResultsLoading, setRiderResultsLoading] = useState(false);
   const RIDERS_PER_PAGE = 50;
   const [newRider, setNewRider] = useState({
     firstname: '',
@@ -62,6 +67,23 @@ export default function RidersTab() {
       console.error('Error deleting rider:', error);
       alert('Fout bij verwijderen');
     }
+  };
+
+  const viewRiderResults = async (riderId) => {
+    try {
+      setRiderResultsLoading(true);
+      const results = await getRiderRacePoints(riderId);
+      setSelectedRiderResults({ riderId, results });
+    } catch (error) {
+      console.error('Error loading rider results:', error);
+      alert('Fout bij laden resultaten');
+    } finally {
+      setRiderResultsLoading(false);
+    }
+  };
+
+  const getRaceName = (raceId) => {
+    return races.find(r => r.id === raceId)?.name || `Race ${raceId}`;
   };
 
   const addNewRider = async () => {
@@ -161,6 +183,14 @@ export default function RidersTab() {
           onClick={() => setShowAddForm(!showAddForm)}
         >
           {showAddForm ? 'Annuleren' : '+ Voeg renner toe'}
+        </button>
+
+        <button 
+          className="btn-reload"
+          onClick={() => reload()}
+          title="Ververs renners data"
+        >
+          🔄 Verversen
         </button>
       </div>
 
@@ -398,6 +428,13 @@ export default function RidersTab() {
                           Bewerk
                         </button>
                         <button 
+                          className="btn-view"
+                          onClick={() => viewRiderResults(rider.id)}
+                          title="Bekijk race resultaten"
+                        >
+                          📊 Resultaten
+                        </button>
+                        <button 
                           className="btn-delete"
                           onClick={() => deleteRider(rider.id)}
                         >
@@ -438,6 +475,51 @@ export default function RidersTab() {
             )}
         </table>
       </div>
+
+      {selectedRiderResults && (
+        <div className="modal-overlay" onClick={() => setSelectedRiderResults(null)}>
+          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+            <div className="modal-header">
+              <h3>Race Resultaten - {riders.find(r => r.id === selectedRiderResults.riderId)?.firstname} {riders.find(r => r.id === selectedRiderResults.riderId)?.lastname}</h3>
+              <button className="btn-close" onClick={() => setSelectedRiderResults(null)}>✕</button>
+            </div>
+
+            <div className="modal-body">
+              {riderResultsLoading ? (
+                <p>⏳ Resultaten laden...</p>
+              ) : selectedRiderResults.results.length === 0 ? (
+                <p>Geen race resultaten beschikbaar</p>
+              ) : (
+                <table className="results-table">
+                  <thead>
+                    <tr>
+                      <th>Race</th>
+                      <th>Punten</th>
+                      <th>Datum</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {selectedRiderResults.results.map((result) => (
+                      <tr key={result.raceId}>
+                        <td>{getRaceName(result.raceId)}</td>
+                        <td className="points-cell">{result.points}</td>
+                        <td>{new Date(result.timestamp).toLocaleDateString('nl-NL')}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                  <tfoot>
+                    <tr className="total-row">
+                      <td><strong>Totaal</strong></td>
+                      <td className="points-cell"><strong>{selectedRiderResults.results.reduce((sum, r) => sum + (Number(r.points) || 0), 0)}</strong></td>
+                      <td></td>
+                    </tr>
+                  </tfoot>
+                </table>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

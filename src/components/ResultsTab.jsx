@@ -193,8 +193,8 @@ export default function ResultsTab() {
           }));
         
         if (pointsData.length > 0) {
-          await updateRidersPointsFromResults(pointsData);
-          console.log('✅ Rijderspunten geupdate vanuit bewerkte resultaten');
+          await updateRidersPointsFromResults(pointsData, editingResult.raceId);
+          console.log('✅ Rijderspunten geupdate vanuit bewerkte resultaten met race history');
         }
       }
       
@@ -260,8 +260,8 @@ export default function ResultsTab() {
           }));
         
         if (pointsData.length > 0) {
-          await updateRidersPointsFromResults(pointsData);
-          console.log('✅ Rijderspunten geupdate vanuit race resultaten');
+          await updateRidersPointsFromResults(pointsData, approvingResult.raceId);
+          console.log('✅ Rijderspunten geupdate vanuit race resultaten met race history');
         }
       }
       

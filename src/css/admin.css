@@ -129,6 +129,24 @@
   transition: transform 0.3s;
 }
 
+.btn-reload {
+  padding: 10px 20px;
+  background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  transition: all 0.2s;
+  box-shadow: 0 2px 8px rgba(76, 175, 80, 0.2);
+}
+
+.btn-reload:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(76, 175, 80, 0.3);
+}
+
 .add-rider-form {
   background: #f9f9f9;
   border-radius: 8px;
@@ -883,7 +901,8 @@ table input:focus {
 
   .btn-approve,
   .btn-edit,
-  .btn-delete {
+  .btn-delete,
+  .btn-view {
     padding: 6px 8px;
     font-size: 11px;
     width: 100%;
@@ -895,5 +914,149 @@ table input:focus {
 
   .form-actions button {
     width: 100%;
+  }
+}
+
+/* Modal Styles for Rider Results */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+  max-width: 600px;
+  width: 90%;
+  max-height: 80vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px;
+  border-bottom: 2px solid #eee;
+  position: relative;
+}
+
+.modal-header h3 {
+  margin: 0;
+  color: #14213d;
+  font-size: 1.3em;
+  flex: 1;
+}
+
+.btn-close {
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  color: #999;
+  padding: 0;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color 0.2s;
+  position: absolute;
+  right: 15px;
+  top: 15px;
+}
+
+.btn-close:hover {
+  color: #333;
+}
+
+.modal-body {
+  padding: 20px;
+  overflow-y: auto;
+  flex: 1;
+}
+
+.results-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 10px;
+}
+
+.results-table thead {
+  background: #f9f9f9;
+}
+
+.results-table th {
+  padding: 12px;
+  text-align: left;
+  font-weight: 600;
+  color: #14213d;
+  border-bottom: 2px solid #ddd;
+}
+
+.results-table td {
+  padding: 12px;
+  border-bottom: 1px solid #eee;
+}
+
+.results-table tbody tr:hover {
+  background: #f5f5f5;
+}
+
+.results-table .points-cell {
+  text-align: center;
+  font-weight: 600;
+  color: #4CAF50;
+}
+
+.results-table .total-row {
+  background: #f0f0f0;
+  font-weight: 600;
+  border-top: 2px solid #ddd;
+}
+
+.results-table .total-row td {
+  padding: 14px 12px;
+  border-bottom: none;
+}
+
+.btn-view {
+  padding: 8px 12px;
+  background: linear-gradient(135deg, #2196F3 0%, #1976D2 100%);
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 500;
+  transition: all 0.2s;
+  box-shadow: 0 2px 8px rgba(33, 150, 243, 0.2);
+}
+
+.btn-view:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(33, 150, 243, 0.3);
+}
+
+@media (max-width: 768px) {
+  .modal-content {
+    width: 95%;
+    max-height: 90vh;
+  }
+
+  .results-table th,
+  .results-table td {
+    padding: 8px;
+    font-size: 13px;
   }
 }
