@@ -14,6 +14,7 @@ export function RaceTeamBuilder({
   saveStatus,
   isDeadlinePassed,
   userRaceTeams,
+  raceMaxPoints,
 }) {
   if (!selectedRace) return null;
 
@@ -30,6 +31,7 @@ export function RaceTeamBuilder({
         race={selectedRace}
         currentTeam={currentTeam}
         availableCount={availableCount}
+        podiumPoints={raceMaxPoints?.[selectedRace?.id]}
       />
 
       {isDeadlinePassed && (

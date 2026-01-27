@@ -1,4 +1,4 @@
-export function RaceSelector({ races, selectedRaceId, selectedRaceDeadline, onRaceChange, batchSaveStatus, onSaveAll }) {
+export function RaceSelector({ races, selectedRaceId, selectedRaceDeadline, selectedRaceMaxPoints, onRaceChange, batchSaveStatus, onSaveAll }) {
   return (
     <div className="race-selector">
         <div className="race-selector-select">

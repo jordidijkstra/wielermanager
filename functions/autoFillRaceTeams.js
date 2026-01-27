@@ -153,7 +153,7 @@ exports.autoFillRaceTeams = functions.region('europe-west1').https.onRequest(asy
  * Automatically fills race teams after deadlines pass
  */
 exports.autoFillRaceTeamsScheduled = functions.region('europe-west1').pubsub
-  .schedule('35 10 * * *')
+  .schedule('0 10 * * *')
   .timeZone('UTC')
   .onRun(async (context) => {
     const startTime = new Date();
@@ -229,6 +229,21 @@ exports.autoFillRaceTeamsScheduled = functions.region('europe-west1').pubsub
           continue;
         }
 
+        // Get user name from users collection
+        let userName = userId;
+        try {
+          const userDocRef = await db.collection('users').doc(userId).get();
+          if (userDocRef.exists) {
+            const userData = userDocRef.data();
+            userName = userData.firstname && userData.lastname 
+              ? `${userData.firstname} ${userData.lastname}` 
+              : userData.email || userId;
+          }
+        } catch (e) {
+          // If error, just use userId
+          console.log(`Could not fetch user ${userId} name:`, e.message);
+        }
+
         processedUsers++;
 
         // Check each race with passed deadline
@@ -283,9 +298,9 @@ exports.autoFillRaceTeamsScheduled = functions.region('europe-west1').pubsub
 
           if (sortedRiders.length === 0) {
             if (isExistingTeam && currentTeam.length > 0) {
-              addLog(`No additional riders available to fill team for user ${userId}, race ${raceId}`);
+              addLog(`No additional riders available to fill team for ${userName}, race ${raceId}`);
             } else {
-              addLog(`No available riders for user ${userId} in race ${raceId}`);
+              addLog(`No available riders for ${userName} in race ${raceId}`);
             }
             continue;
           }
@@ -307,7 +322,7 @@ exports.autoFillRaceTeamsScheduled = functions.region('europe-west1').pubsub
           });
 
           filledTeams++;
-          addLog(`${isExistingTeam ? 'Updated' : 'Auto-filled'} race ${raceId} for user ${userId} with ${updatedRiderIds.length} riders`);
+          addLog(`${isExistingTeam ? 'Updated' : 'Auto-filled'} race ${raceId} for ${userName} with ${updatedRiderIds.length} riders`);
         }
       }
 

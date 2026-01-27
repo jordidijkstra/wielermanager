@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import { useState, useMemo, useEffect } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { collection, getDocs, doc, getDoc } from 'firebase/firestore';
 import { db } from '../firebase/config';
 import { getRiderRacePoints } from '../services/riderService';
@@ -379,16 +379,26 @@ export default function TeamDetails({
                   </thead>
                   <tbody>
                     {selectedRiderResults.results.map((result) => (
-                      <tr key={result.raceId}>
-                        <td>{getRaceName(result.raceId)}</td>
-                        <td className="points-cell">{result.points}</td>
-                      </tr>
+                      <React.Fragment key={result.raceId}>
+                        {result.points > 0 && (
+                          <tr>
+                            <td>{getRaceName(result.raceId)}</td>
+                            <td className="points-cell">{result.points}</td>
+                          </tr>
+                        )}
+                        {result.raceLeaderPoints && result.raceLeaderPoints > 0 && (
+                          <tr key={`${result.raceId}-leader`} className="race-leader-points-row">
+                            <td className="race-leader-label">Race Leader - {result.raceName}</td>
+                            <td className="points-cell race-leader-points">{result.raceLeaderPoints}</td>
+                          </tr>
+                        )}
+                      </React.Fragment>
                     ))}
                   </tbody>
                   <tfoot>
                     <tr className="total-row">
                       <td><strong>Totaal</strong></td>
-                      <td className="points-cell"><strong>{selectedRiderResults.results.reduce((sum, r) => sum + (Number(r.points) || 0), 0)}</strong></td>
+                      <td className="points-cell"><strong>{selectedRiderResults.results.reduce((sum, r) => sum + (Number(r.points) || 0) + (Number(r.raceLeaderPoints) || 0), 0)}</strong></td>
                     </tr>
                   </tfoot>
                 </table>

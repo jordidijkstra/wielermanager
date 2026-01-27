@@ -3,6 +3,7 @@ import { useRaces } from '../hooks/useRaces';
 import { getRaceParticipants, filterRidersByParticipants } from '../services/raceService';
 import { getCyclingTeams } from '../services/cyclingTeamService';
 import { getUserTeam } from '../services/teamService';
+import { getPointsByCategory } from '../services/pointsByCategoryService';
 import { RaceSelector } from './RaceSelector';
 import { RaceTeamBuilder } from './RaceTeamBuilder';
 import '../css/raceTeamSelector.css';
@@ -17,6 +18,7 @@ export default function RaceTeamSelector({ user, selectedRiders }) {
   const [raceParticipants, setRaceParticipants] = useState(null);
   const [cyclingTeams, setCyclingTeams] = useState([]);
   const [userTeamRiders, setUserTeamRiders] = useState([]);
+  const [raceMaxPoints, setRaceMaxPoints] = useState({}); // Track max points per race
   const autoSavedRaces = useRef(new Set()); // Track which races have been auto-saved
   
   const { races, loading, userRaceTeams, saveTeamForRace, saveStatus } = useRaces(user);
@@ -33,6 +35,28 @@ export default function RaceTeamSelector({ user, selectedRiders }) {
     };
     loadTeams();
   }, []);
+
+  // Load max points only for the selected race
+  useEffect(() => {
+    const loadRaceMaxPoints = async () => {
+      if (!selectedRace) {
+        setRaceMaxPoints({});
+        return;
+      }
+      
+      try {
+        const categoryPoints = await getPointsByCategory(selectedRace.categoryId);
+        if (categoryPoints && categoryPoints.length > 0) {
+          // Get top 3 (podium positions)
+          setRaceMaxPoints({ [selectedRace.id]: categoryPoints.slice(0, 3) });
+        }
+      } catch (err) {
+        console.error('Error loading points for race:', err);
+      }
+    };
+    
+    loadRaceMaxPoints();
+  }, [selectedRace?.id]);
 
   // Load user's team riders (NOT global selectedRiders from TeamBuilder)
   useEffect(() => {
@@ -424,6 +448,7 @@ export default function RaceTeamSelector({ user, selectedRiders }) {
         races={raceOptions}
         selectedRaceId={selectedRace?.id || ''}
         selectedRaceDeadline={selectedRaceDeadline}
+        selectedRaceMaxPoints={raceMaxPoints[selectedRace?.id]}
         onRaceChange={handleRaceChange}
         batchSaveStatus={batchSaveStatus}
         onSaveAll={saveAllRaceTeams}
@@ -442,6 +467,7 @@ export default function RaceTeamSelector({ user, selectedRiders }) {
         saveStatus={saveStatus}
         isDeadlinePassed={isDeadlinePassed(selectedRace)}
         userRaceTeams={userRaceTeams}
+        raceMaxPoints={raceMaxPoints}
       />
     </div>
   );

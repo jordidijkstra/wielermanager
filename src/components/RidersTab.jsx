@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useRiders } from '../hooks/useRiders';
 import { useCyclingTeams } from '../hooks/useCyclingTeams';
 import { getRiderRacePoints } from '../services/riderService';
@@ -17,6 +17,7 @@ export default function RidersTab() {
   const [selectedTeamFilter, setSelectedTeamFilter] = useState(null);
   const [selectedRiderResults, setSelectedRiderResults] = useState(null);
   const [riderResultsLoading, setRiderResultsLoading] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
   const RIDERS_PER_PAGE = 50;
   const [newRider, setNewRider] = useState({
     firstname: '',
@@ -39,6 +40,7 @@ export default function RidersTab() {
 
   const saveEdit = async (riderId) => {
     try {
+      setIsSaving(true);
       await editRider(riderId, {
         firstname: editData.firstname || '',
         lastname: editData.lastname || '',
@@ -54,6 +56,8 @@ export default function RidersTab() {
     } catch (error) {
       console.error('Error updating rider:', error);
       alert('Fout bij opslaan');
+    } finally {
+      setIsSaving(false);
     }
   };
 
@@ -61,18 +65,25 @@ export default function RidersTab() {
     if (!confirm('Zeker weten dat je deze renner wilt verwijderen?')) return;
     
     try {
+      setIsSaving(true);
       await deleteRiderFromHook(riderId);
       console.log('✅ Rider deleted:', riderId);
     } catch (error) {
       console.error('Error deleting rider:', error);
       alert('Fout bij verwijderen');
+    } finally {
+      setIsSaving(false);
     }
   };
 
   const viewRiderResults = async (riderId) => {
     try {
       setRiderResultsLoading(true);
+      const riderName = riders.find(r => r.id === riderId);
+      console.log(`🔍 Loading race results for rider ${riderId} (${riderName?.firstname} ${riderName?.lastname})`);
       const results = await getRiderRacePoints(riderId);
+      console.log(`✅ Fetched ${results.length} race results for rider ${riderId}:`, results);
+      results.forEach(r => console.log(`  - Race ${r.raceId} (${getRaceName(r.raceId)}): ${r.points} points + ${r.raceLeaderPoints || 0} race leader points`));
       setSelectedRiderResults({ riderId, results });
     } catch (error) {
       console.error('Error loading rider results:', error);
@@ -93,6 +104,7 @@ export default function RidersTab() {
     }
 
     try {
+      setIsSaving(true);
       await addRider({
         firstname: newRider.firstname,
         lastname: newRider.lastname,
@@ -117,6 +129,8 @@ export default function RidersTab() {
     } catch (error) {
       console.error('Error adding rider:', error);
       alert('Fout bij toevoegen');
+    } finally {
+      setIsSaving(false);
     }
   };
 
@@ -190,7 +204,7 @@ export default function RidersTab() {
           onClick={() => reload()}
           title="Ververs renners data"
         >
-          🔄 Verversen
+          <i className="fas fa-spin fa-sync-alt"></i>
         </button>
       </div>
 
@@ -285,15 +299,17 @@ export default function RidersTab() {
               <label htmlFor="teamId" id="teamId-label">Team</label>
             </div>
           </div>
-          <button className="btn-riders-save" onClick={addNewRider}>Opslaan</button>
+          <button className="btn-riders-save" onClick={addNewRider} disabled={isSaving}>
+            {isSaving ? '⏳ Opslaan...' : 'Opslaan'}
+          </button>
         </div>
       )}
 
       <div className="admin-stats">
         <p>
           Totaal renners: <strong>{riders.length}</strong>
-          {(searchTerm || selectedTeamFilter) && <> | Gevonden: <strong>{sortedRiders.length}</strong></>}
-          | Per pagina: <strong>{RIDERS_PER_PAGE}</strong>
+          {(searchTerm || selectedTeamFilter) && <> | Gevonden: <strong>{sortedRiders.length} </strong></>}
+          &nbsp;| Per pagina: <strong>{RIDERS_PER_PAGE}</strong>
         </p>
       </div>
 
@@ -409,12 +425,14 @@ export default function RidersTab() {
                         <button 
                           className="btn-edit"
                           onClick={() => saveEdit(rider.id)}
+                          disabled={isSaving}
                         >
-                          Opslaan
+                          {isSaving ? '⏳' : 'Opslaan'}
                         </button>
                         <button 
                           className="btn-delete"
                           onClick={() => setEditingId(null)}
+                          disabled={isSaving}
                         >
                           Annuleren
                         </button>
@@ -424,21 +442,26 @@ export default function RidersTab() {
                         <button 
                           className="btn-edit"
                           onClick={() => startEdit(rider)}
+                          disabled={isSaving}
+                          title="Bewerk renner"
                         >
-                          Bewerk
+                          <i className="fas fa-edit"></i>
                         </button>
                         <button 
                           className="btn-view"
                           onClick={() => viewRiderResults(rider.id)}
+                          disabled={isSaving}
                           title="Bekijk race resultaten"
                         >
-                          📊 Resultaten
+                          <i className="fas fa-chart-bar"></i>
                         </button>
                         <button 
                           className="btn-delete"
                           onClick={() => deleteRider(rider.id)}
+                          disabled={isSaving}
+                          title="Verwijder renner"
                         >
-                          Verwijder
+                          <i className="fas fa-trash"></i>
                         </button>
                       </>
                     )}
@@ -449,7 +472,7 @@ export default function RidersTab() {
             {paginatedRiders.length > 0 && (
               <tfoot>
               <tr>
-                <td colSpan="8">
+                <td colSpan="9">
                   <div className="pagination-riders">
                     {Array.from({ length: totalPages }, (_, i) => i + 1).map(pageNum => (
                       <button
@@ -499,16 +522,26 @@ export default function RidersTab() {
                   </thead>
                   <tbody>
                     {selectedRiderResults.results.map((result) => (
-                      <tr key={result.raceId}>
-                        <td>{getRaceName(result.raceId)}</td>
-                        <td className="points-cell">{result.points}</td>
-                      </tr>
+                      <React.Fragment key={result.raceId}>
+                        {result.points > 0 && (
+                          <tr>
+                            <td>{getRaceName(result.raceId)}</td>
+                            <td className="points-cell">{result.points}</td>
+                          </tr>
+                        )}
+                        {result.raceLeaderPoints && result.raceLeaderPoints > 0 && (
+                          <tr key={`${result.raceId}-leader`} className="race-leader-points-row">
+                            <td className="race-leader-label">Race Leader - {result.raceName}</td>
+                            <td className="points-cell race-leader-points">{result.raceLeaderPoints}</td>
+                          </tr>
+                        )}
+                      </React.Fragment>
                     ))}
                   </tbody>
                   <tfoot>
                     <tr className="total-row">
                       <td><strong>Totaal</strong></td>
-                      <td className="points-cell"><strong>{selectedRiderResults.results.reduce((sum, r) => sum + (Number(r.points) || 0), 0)}</strong></td>
+                      <td className="points-cell"><strong>{selectedRiderResults.results.reduce((sum, r) => sum + (Number(r.points) || 0) + (Number(r.raceLeaderPoints) || 0), 0)}</strong></td>
                     </tr>
                   </tfoot>
                 </table>

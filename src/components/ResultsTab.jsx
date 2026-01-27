@@ -3,8 +3,9 @@ import { useResults } from '../hooks/useResults';
 import { useRaces } from '../hooks/useRaces';
 import { useRiders } from '../hooks/useRiders';
 import { usePointsByCategory } from '../hooks/usePointsByCategory';
-import { updateRidersPointsFromResults, removeRidersPointsFromResults } from '../services/riderService';
+import { updateRidersPointsFromResults, removeRidersPointsFromResults, addRaceLeaderPoints } from '../services/riderService';
 import { recalculateTeamPointsForRace } from '../services/resultsService';
+import { getPointsByCategory } from '../services/pointsByCategoryService';
 import '../css/resultsTab.css';
 
 export default function ResultsTab() {
@@ -25,6 +26,14 @@ export default function ResultsTab() {
   const [approveRiderSearchFilters, setApproveRiderSearchFilters] = useState({});
   const [approveOpenRiderDropdowns, setApproveOpenRiderDropdowns] = useState({});
   const [approveEditingIndex, setApproveEditingIndex] = useState(null);
+  const [editRaceLeaderMode, setEditRaceLeaderMode] = useState(false);
+  const [editRaceLeaderSearch, setEditRaceLeaderSearch] = useState('');
+  const [editRaceLeaderDropdown, setEditRaceLeaderDropdown] = useState(false);
+  const [approveRaceLeaderMode, setApproveRaceLeaderMode] = useState(false);
+  const [approveRaceLeaderSearch, setApproveRaceLeaderSearch] = useState('');
+  const [approveRaceLeaderDropdown, setApproveRaceLeaderDropdown] = useState(false);
+  const [selectedEditRaceLeaderId, setSelectedEditRaceLeaderId] = useState(null);
+  const [selectedApproveRaceLeaderId, setSelectedApproveRaceLeaderId] = useState(null);
   const resultsPerPage = 50;
   const fileInputRef = useRef(null);
 
@@ -139,16 +148,29 @@ export default function ResultsTab() {
     console.log('🔍 openEditResult called with:', result);
     setEditingResult(result);
     
-    // Reset search filters eerst
+    // Reset search filters en race leader states
     const newSearchFilters = {};
+    setEditRaceLeaderMode(false);
+    setEditRaceLeaderSearch('');
+    setEditRaceLeaderDropdown(false);
+    // Set race leader from result.raceLeader field
+    setSelectedEditRaceLeaderId(result.raceLeader || null);
     
     // Parse de renners uit het result object
     if (result.entries && Array.isArray(result.entries)) {
       console.log('✅ Entries gevonden:', result.entries);
-      setResultRenners(result.entries);
+      
+      // Restore race leader flag from result.raceLeader field (for display purposes)
+      const updatedEntries = result.entries.map(entry => ({
+        ...entry,
+        isRaceLeader: result.raceLeader && result.raceLeader === entry.riderId
+      }));
+      console.log('🏆 Restored race leader:', result.raceLeader, 'entries:', updatedEntries);
+      
+      setResultRenners(updatedEntries);
       
       // Vul de search filters met de namen van geselecteerde renners
-      result.entries.forEach((entry, idx) => {
+      updatedEntries.forEach((entry, idx) => {
         if (entry.riderId) {
           const rider = riders.find(r => r.id === entry.riderId);
           if (rider) {
@@ -177,13 +199,52 @@ export default function ResultsTab() {
     console.log('💾 Saving result with entries:', resultRenners);
     
     try {
+      setUploading(true);
+      // Check if this is a stage (has tourId)
+      const race = races.find(r => r.id === editingResult.raceId);
+      const isStage = race && race.tourId != null;
+      console.log('🏁 Race check - isStage:', isStage, 'race:', race);
+      
+      // Get race leader points from GC Leader Jersey category (always ID 29)
+      let raceLeaderPoints = 0;
+      if (isStage) {
+        const gcLeaderCategoryPoints = await getPointsByCategory(29); // GC Leader Jersey category
+        raceLeaderPoints = gcLeaderCategoryPoints?.[0] || 0; // 1st place points
+        console.log('🏆 GC Leader Jersey points (category 29):', raceLeaderPoints);
+      }
+      
+      // Get race leader ID from separate state (can be any rider, not necessarily in entries)
+      const raceLeaderRiderId = selectedEditRaceLeaderId || null;
+      console.log('🏆 Race leader riderId:', raceLeaderRiderId);
+      
+      // IMPORTANT: If this is an edit of an EXISTING result, we need to remove the OLD points first
+      // before adding the NEW points
+      if (editingResult.entries && Array.isArray(editingResult.entries)) {
+        console.log('🔄 Removing OLD points from previous entries...');
+        const oldPointsData = editingResult.entries
+          .filter(entry => entry.riderId && entry.points !== undefined)
+          .map(entry => ({
+            riderId: entry.riderId,
+            points: Number(entry.points) || 0
+          }));
+        
+        if (oldPointsData.length > 0) {
+          await removeRidersPointsFromResults(oldPointsData, editingResult.raceId);
+          console.log('✅ Oude punten verwijderd');
+        }
+      }
+      
+      // Update the result document
+      // Remove isRaceLeader field from entries (UI-only property)
+      const cleanEntries = resultRenners.map(({ isRaceLeader, ...entry }) => entry);
       await editResult(editingResult.id, {
         ...editingResult,
-        entries: resultRenners
+        entries: cleanEntries,
+        raceLeader: raceLeaderRiderId  // Separate field for race leader
       });
-      console.log('✅ Resultaat met renners bijgewerkt');
+      console.log('✅ Resultaat met renners en race leader bijgewerkt');
       
-      // Update riders' points based on their results
+      // NOW add the NEW points
       if (resultRenners && resultRenners.length > 0) {
         const pointsData = resultRenners
           .filter(entry => entry.riderId && entry.points !== undefined)
@@ -194,8 +255,15 @@ export default function ResultsTab() {
         
         if (pointsData.length > 0) {
           await updateRidersPointsFromResults(pointsData, editingResult.raceId);
-          console.log('✅ Rijderspunten geupdate vanuit bewerkte resultaten met race history');
+          console.log('✅ Nieuwe punten toegekend vanuit bewerkte resultaten');
         }
+      }
+      
+      // Award race leader points (only for stages)
+      if (isStage && raceLeaderPoints > 0 && raceLeaderRiderId) {
+        console.log(`🏆 Awarding race leader points - riderId: ${raceLeaderRiderId}, points: ${raceLeaderPoints}, raceId: ${editingResult.raceId}`);
+        await addRaceLeaderPoints(raceLeaderRiderId, raceLeaderPoints, editingResult.raceId, getRaceName(editingResult.raceId));
+        console.log(`✅ Race leader punten toegekend aan renner ${raceLeaderRiderId}`);
       }
       
       // Recalculate team points for all users for this race
@@ -207,9 +275,12 @@ export default function ResultsTab() {
       setEditingResult(null);
       setResultRenners([]);
       setRiderSearchFilters({});
+      setSelectedEditRaceLeaderId(null);
     } catch (error) {
       console.error('Error updating result:', error);
       alert('Fout bij bijwerken resultaat');
+    } finally {
+      setUploading(false);
     }
   };
 
@@ -220,8 +291,15 @@ export default function ResultsTab() {
       
       // Toon de approval modal
       setApprovingResult(result);
+      // Set race leader from result.raceLeader field
+      setSelectedApproveRaceLeaderId(result.raceLeader || null);
       if (result.entries && Array.isArray(result.entries)) {
-        setApproveRenners(result.entries);
+        // Restore race leader from result document
+        const updatedEntries = result.entries.map(entry => ({
+          ...entry,
+          isRaceLeader: result.raceLeader && result.raceLeader === entry.riderId
+        }));
+        setApproveRenners(updatedEntries);
       } else {
         setApproveRenners([]);
       }
@@ -235,12 +313,32 @@ export default function ResultsTab() {
     if (!approvingResult) return;
     
     try {
+      setUploading(true);
       console.log('Goedkeuren resultaat:', approvingResult.id);
       
+      // Check if this is a stage (has tourId)
+      const race = races.find(r => r.id === approvingResult.raceId);
+      const isStage = race && race.tourId != null;
+      
+      // Get race leader points from GC Leader Jersey category (always ID 29)
+      let raceLeaderPoints = 0;
+      if (isStage) {
+        const gcLeaderCategoryPoints = await getPointsByCategory(29); // GC Leader Jersey category
+        raceLeaderPoints = gcLeaderCategoryPoints?.[0] || 0; // 1st place points
+        console.log('🏆 GC Leader Jersey points (category 29):', raceLeaderPoints);
+      }
+      
+      // Get race leader ID from separate state (can be any rider, not necessarily in entries)
+      const raceLeaderRiderId = selectedApproveRaceLeaderId || null;
+      console.log('🏆 Approve - Race leader riderId:', raceLeaderRiderId);
+      
       // Zorg ervoor dat status op 'gecontrolleerd' staat
+      // Remove isRaceLeader field from entries (UI-only property)
+      const cleanEntries = approveRenners.map(({ isRaceLeader, ...entry }) => entry);
       const updatedResult = {
         ...approvingResult,
-        entries: approveRenners,
+        entries: cleanEntries,
+        raceLeader: raceLeaderRiderId,  // Separate field for race leader
         status: 'gecontrolleerd'
       };
       
@@ -265,11 +363,18 @@ export default function ResultsTab() {
         }
       }
       
+      // Award race leader points (only for stages)
+      if (isStage && raceLeaderPoints > 0 && raceLeaderRiderId) {
+        await addRaceLeaderPoints(raceLeaderRiderId, raceLeaderPoints, approvingResult.raceId, getRaceName(approvingResult.raceId));
+        console.log(`✅ Race leader punten toegekend aan renner ${raceLeaderRiderId}`);
+      }
+      
       // Reset alle states
       setApprovingResult(null);
       setApproveRenners([]);
       setApproveRiderSearchFilters({});
       setApproveOpenRiderDropdowns({});
+      setSelectedApproveRaceLeaderId(null);
       setCurrentPage(1);
       
       console.log('✅ Uitslag goedgekeurd en UI gereset');
@@ -277,6 +382,8 @@ export default function ResultsTab() {
     } catch (error) {
       console.error('Error approving result:', error);
       alert('❌ Fout bij goedkeuren resultaat: ' + error.message);
+    } finally {
+      setUploading(false);
     }
   };
 
@@ -335,7 +442,7 @@ export default function ResultsTab() {
         <p>Totaal resultaten: <strong>{results.length}</strong></p>
       </div>
 
-      <div className="riders-table">
+      <div className="results-table">
         <table>
           <thead>
             <tr>
@@ -410,7 +517,7 @@ export default function ResultsTab() {
                           className="btn-edit"
                           onClick={() => openEditResult(result)}
                         >
-                          Bewerk
+                          <i className="fas fa-edit"></i>
                         </button>
                         {result.status === 'ingediend' && (
                           <button 
@@ -425,7 +532,7 @@ export default function ResultsTab() {
                           className="btn-delete"
                           onClick={() => removeResult(result.id)}
                         >
-                          Verwijder
+                          <i className="fas fa-trash"></i>
                         </button>
                       </>
                     )}
@@ -542,6 +649,91 @@ export default function ResultsTab() {
             </table>
           </div>
 
+          {/* Race Leader Selector */}
+          {editingResult && (
+            <div className="result-race-leader-section">
+              {editRaceLeaderMode ? (
+                <div className="race-leader-selector">
+                  <label>🏆 Race Leader selecteren:</label>
+                  <div style={{ position: 'relative', marginTop: '10px' }}>
+                    <input
+                      type="text"
+                      placeholder="Zoek renner..."
+                      value={editRaceLeaderSearch}
+                      onChange={(e) => {
+                        setEditRaceLeaderSearch(e.target.value);
+                        setEditRaceLeaderDropdown(true);
+                      }}
+                      onFocus={() => setEditRaceLeaderDropdown(true)}
+                      className="race-leader-search-input"
+                    />
+                    
+                    {editRaceLeaderDropdown && (
+                      <div className="race-leader-dropdown">
+                        {riders
+                          .filter(rider => {
+                            const normalizedSearch = normalizeText(editRaceLeaderSearch);
+                            const riderFullName = normalizeText(`${rider.firstname} ${rider.lastname}`);
+                            return riderFullName.includes(normalizedSearch);
+                          })
+                          .slice(0, 10)
+                          .map(rider => (
+                            <div
+                              key={rider.id}
+                              className="race-leader-dropdown-item"
+                              onClick={() => {
+                                // Store race leader ID separately (no need to be in entries)
+                                setSelectedEditRaceLeaderId(rider.id);
+                                setEditRaceLeaderMode(false);
+                                setEditRaceLeaderSearch('');
+                                setEditRaceLeaderDropdown(false);
+                              }}
+                            >
+                              {rider.firstname} {rider.lastname}
+                            </div>
+                          ))}
+                      </div>
+                    )}
+                  </div>
+                  <button
+                    className="race-leader-cancel-btn"
+                    onClick={() => {
+                      setEditRaceLeaderMode(false);
+                      setEditRaceLeaderSearch('');
+                      setEditRaceLeaderDropdown(false);
+                    }}
+                    style={{ marginTop: '10px' }}
+                  >
+                    Annuleren
+                  </button>
+                </div>
+              ) : (
+                <button
+                  className="race-leader-btn"
+                  onClick={() => setEditRaceLeaderMode(true)}
+                >
+                  🏆 Selecteer Race Leader
+                </button>
+              )}
+              
+              {/* Display selected race leader */}
+              {selectedEditRaceLeaderId && (
+                <div className="race-leader-selected">
+                  <strong>Race Leader:</strong> {riders.find(r => r.id === selectedEditRaceLeaderId)?.firstname} {riders.find(r => r.id === selectedEditRaceLeaderId)?.lastname}
+                  <button
+                    className="race-leader-remove-btn"
+                    onClick={() => {
+                      setSelectedEditRaceLeaderId(null);
+                    }}
+                    style={{ marginLeft: '10px' }}
+                  >
+                    ✕
+                  </button>
+                </div>
+              )}
+            </div>
+          )}
+
           <div className="result-edit-buttons">
             <button 
               onClick={() => setEditingResult(null)}
@@ -552,8 +744,9 @@ export default function ResultsTab() {
             <button 
               onClick={saveEditResult}
               className="result-edit-save-btn"
+              disabled={uploading}
             >
-              Opslaan
+              {uploading ? '⏳ Opslaan...' : 'Opslaan'}
             </button>
           </div>
         </div>
@@ -688,18 +881,105 @@ export default function ResultsTab() {
             </table>
           </div>
 
+          {/* Race Leader Selector for Approve */}
+          {approvingResult && (
+            <div className="result-race-leader-section">
+              {approveRaceLeaderMode ? (
+                <div className="race-leader-selector">
+                  <label>🏆 Race Leader selecteren:</label>
+                  <div style={{ position: 'relative', marginTop: '10px' }}>
+                    <input
+                      type="text"
+                      placeholder="Zoek renner..."
+                      value={approveRaceLeaderSearch}
+                      onChange={(e) => {
+                        setApproveRaceLeaderSearch(e.target.value);
+                        setApproveRaceLeaderDropdown(true);
+                      }}
+                      onFocus={() => setApproveRaceLeaderDropdown(true)}
+                      className="race-leader-search-input"
+                    />
+                    
+                    {approveRaceLeaderDropdown && (
+                      <div className="race-leader-dropdown">
+                        {riders
+                          .filter(rider => {
+                            const normalizedSearch = normalizeText(approveRaceLeaderSearch);
+                            const riderFullName = normalizeText(`${rider.firstname} ${rider.lastname}`);
+                            return riderFullName.includes(normalizedSearch);
+                          })
+                          .slice(0, 10)
+                          .map(rider => (
+                            <div
+                              key={rider.id}
+                              className="race-leader-dropdown-item"
+                              onClick={() => {
+                                // Store race leader ID separately (no need to be in entries)
+                                setSelectedApproveRaceLeaderId(rider.id);
+                                setApproveRaceLeaderMode(false);
+                                setApproveRaceLeaderSearch('');
+                                setApproveRaceLeaderDropdown(false);
+                              }}
+                            >
+                              {rider.firstname} {rider.lastname}
+                            </div>
+                          ))}
+                      </div>
+                    )}
+                  </div>
+                  <button
+                    className="race-leader-cancel-btn"
+                    onClick={() => {
+                      setApproveRaceLeaderMode(false);
+                      setApproveRaceLeaderSearch('');
+                      setApproveRaceLeaderDropdown(false);
+                    }}
+                    style={{ marginTop: '10px' }}
+                  >
+                    Annuleren
+                  </button>
+                </div>
+              ) : (
+                <button
+                  className="race-leader-btn"
+                  onClick={() => setApproveRaceLeaderMode(true)}
+                >
+                  🏆 Selecteer Race Leader
+                </button>
+              )}
+              
+              {/* Display selected race leader */}
+              {selectedApproveRaceLeaderId && (
+                <div className="race-leader-selected">
+                  <strong>Race Leader:</strong> {riders.find(r => r.id === selectedApproveRaceLeaderId)?.firstname} {riders.find(r => r.id === selectedApproveRaceLeaderId)?.lastname}
+                  <button
+                    className="race-leader-remove-btn"
+                    onClick={() => {
+                      setSelectedApproveRaceLeaderId(null);
+                    }}
+                    style={{ marginLeft: '10px' }}
+                  >
+                    ✕
+                  </button>
+                </div>
+              )}
+            </div>
+          )}
+
           <div className="result-approve-buttons">
             <button 
               onClick={() => setApprovingResult(null)}
               className="result-approve-cancel-btn"
+              disabled={uploading}
             >
               Annuleren
             </button>
             <button 
               onClick={confirmApproveResult}
               className="result-approve-confirm-btn"
+              disabled={uploading}
             >
-              Goedkeuren
+              {uploading ? '⏳ Goedkeuren...' : 'Goedkeuren'}
             </button>
           </div>
         </div>

@@ -483,7 +483,9 @@ export default function RacesTab() {
     }
 
     try {
-      const dataToSave = { raceId, status: 'ingediend', entries: resultEntries };
+      // Remove isRaceLeader field from entries (UI-only property)
+      const cleanEntries = resultEntries.map(({ isRaceLeader, ...entry }) => entry);
+      const dataToSave = { raceId, status: 'ingediend', entries: cleanEntries };
       console.log('💾 Data to save:', dataToSave);
       
       await addResult(dataToSave);
@@ -655,7 +657,7 @@ export default function RacesTab() {
         </div>
       </div>
 
-      <div className="riders-table">
+      <div className="races-table">
         <table>
           <thead>
             <tr>
@@ -764,25 +766,30 @@ export default function RacesTab() {
                       <button 
                         className="btn-edit"
                         onClick={() => startEditRace(race)}
+                        title="Bewerk"
                       >
-                        Bewerk
+                        <i className="fas fa-edit"></i>
                       </button>
-                      {raceParticipants[race.id] ? (
-                        <span className="btn-disabled" title="Startlijst al ingediend">
-                          ✅ Startlijst
-                        </span>
-                      ) : (
-                        <button 
-                          className="btn-edit"
-                          onClick={() => handleParticipantsAction(race.id)}
-                          title="Startlijst importeren"
-                        >
-                          Startlijst
-                        </button>
+                      {!race.tourId && (
+                        <>
+                          {raceParticipants[race.id] ? (
+                            <span className="btn-disabled" title="Startlijst al ingediend">
+                              <i className="fas fa-list"></i>
+                            </span>
+                          ) : (
+                            <button 
+                              className="btn-edit"
+                              onClick={() => handleParticipantsAction(race.id)}
+                              title="Startlijst importeren"
+                            >
+                              <i className="fas fa-list"></i>
+                            </button>
+                          )}
+                        </>
                       )}
-                      {results.find(r => String(r.id) === String(race.id)) ? (
+                      {results.find(r => r.raceId === race.id) ? (
                         <span className="btn-disabled" title="Resultaat al ingediend">
-                          ✅ Resultaat
+                          <i className="fas fa-bar-chart"></i>
                         </span>
                       ) : (
                         <button 
@@ -790,14 +797,15 @@ export default function RacesTab() {
                           onClick={() => handleResultAction(race.id)}
                           title="Resultaat toevoegen"
                         >
-                          Resultaat
+                          <i className="fas fa-bar-chart"></i>
                         </button>
                       )}
                       <button 
                         className="btn-delete"
                         onClick={() => deleteRace(race.id)}
+                        title="Verwijder"
                       >
-                        Verwijder
+                        <i className="fas fa-trash"></i>
                       </button>
                     </>
                   )}

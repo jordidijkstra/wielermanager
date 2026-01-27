@@ -222,3 +222,21 @@
     font-size: 1em;
   }
 }
+
+/* Race Leader punten styling */
+.race-leader-points-row {
+  background-color: #fff8f0;
+  border-left: 4px solid #fca311;
+}
+
+.race-leader-label {
+  padding-left: 25px !important;
+  font-weight: 500;
+  color: #ff9500;
+  font-size: 0.95em;
+}
+
+.race-leader-points {
+  color: #ff9500;
+  font-weight: 600;
+}

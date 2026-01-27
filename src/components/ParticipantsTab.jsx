@@ -219,12 +219,17 @@ export default function ParticipantsTab() {
   const handleApproveParticipants = async (raceId) => {
     try {
       setApprovingRaceId(null);
+      const participant = participants.find(p => p.raceId === raceId);
       const updatedData = {
-        participants: participants.find(p => p.raceId === raceId)?.participants || [],
+        participants: participant?.participants || [],
         status: 'definitief',
-        approvedAt: new Date().toISOString(),
-        submittedAt: participants.find(p => p.raceId === raceId)?.submittedAt
+        approvedAt: new Date().toISOString()
       };
+
+      // Only include submittedAt if it exists
+      if (participant?.submittedAt) {
+        updatedData.submittedAt = participant.submittedAt;
+      }
 
       await setDoc(doc(db, 'raceParticipants', raceId), updatedData);
 
@@ -346,7 +351,7 @@ export default function ParticipantsTab() {
 
   return (
     <div className="tab-content">
-      <h2>📋 Startlijsten</h2>
+      <h2>Startlijsten beheren</h2>
 
       {editingRaceId ? (
         // EDIT MODE
@@ -537,7 +542,7 @@ export default function ParticipantsTab() {
         </div>
       ) : (
         // LIST MODE
-        <table className="admin-table participants-main-table">
+        <table className="startlists-table">
           <thead>
             <tr>
               <th>Race</th>
@@ -549,45 +554,42 @@ export default function ParticipantsTab() {
           <tbody>
             {participants.map(participant => (
               <tr key={participant.raceId}>
-                <td className="race-name">
-                  <strong>{getRaceName(participant.raceId)}</strong>
+                <td className="race-name-startlists">
+                  <p>{getRaceName(participant.raceId)}</p>
                 </td>
                 <td className="center">{participant.participants?.length || 0}</td>
                 <td className="center">
                   <span
-                    className="status-badge"
-                    style={{ backgroundColor: getStatusBadgeColor(participant.status) }}
+                    className={`status-badge status-${participant.status?.toLowerCase().replace(/\s+/g, '-')}`}
                   >
                     {getStatusLabel(participant.status)}
                   </span>
                 </td>
                 <td className="actions-cell">
-                  {participant.status === 'ingediend' ? (
+                  {participant.status === 'ingediend' && (
                     <>
                       <button
                         className="btn-approve"
                         onClick={() => setApprovingRaceId(participant.raceId)}
                         title="Controleren en definitief doorgeven"
                       >
-                        🔍 Controleer
+                        <i className="fas fa-eye"></i>
                       </button>
                     </>
-                  ) : (
-                    <span className="status-label">Goedgekeurd</span>
                   )}
                   <button
                     className="btn-edit"
                     onClick={() => handleStartEdit(participant)}
                     title="Startlijst bewerken"
                   >
-                    ✏️ Bewerk
+                    <i className="fas fa-edit"></i>
                   </button>
                   <button
                     className="btn-delete"
                     onClick={() => handleDeleteParticipants(participant.raceId)}
                     title="Startlijst verwijderen"
                   >
-                    🗑️ Verwijder
+                    <i className="fas fa-trash"></i>
                   </button>
                 </td>
               </tr>

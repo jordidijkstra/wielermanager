@@ -91,6 +91,7 @@ exports.calculateTeamPointsOnResultChange = functions.region('europe-west1').fir
           let totalPoints = 0;
           const riderPoints = {};
 
+          // First, add points from race entries
           raceResult.entries.forEach(entry => {
             const isInTeam = teamRiders.some(r => r.id === entry.riderId);
             const isSelected = selectedRiderIds.has(entry.riderId);
@@ -103,6 +104,24 @@ exports.calculateTeamPointsOnResultChange = functions.region('europe-west1').fir
             // Store per-rider points regardless of selection (for display)
             riderPoints[entry.riderId] = points;
           });
+
+          // Then, add race leader bonus points from each rider's riderResults
+          for (const rider of teamRiders) {
+            const isSelected = selectedRiderIds.has(rider.id);
+            const riderResultRef = await db.doc(`riders/${rider.id}/riderResults/${raceIdNum}`).get();
+            
+            if (riderResultRef.exists) {
+              const riderResultData = riderResultRef.data();
+              const raceLeaderPoints = riderResultData.raceLeaderPoints || 0;
+              
+              if (raceLeaderPoints > 0 && isSelected) {
+                totalPoints += raceLeaderPoints;
+              }
+              
+              // Update per-rider points to include race leader bonus
+              riderPoints[rider.id] = (riderPoints[rider.id] || 0) + raceLeaderPoints;
+            }
+          }
 
           // Save calculated points to user's team document (use race ID / stage ID)
           await db.collection(`users/${userId}/teams`).doc(String(raceIdNum)).set({
@@ -191,6 +210,7 @@ exports.calculateTeamPointsScheduled = functions.region('europe-west1').pubsub
             let totalPoints = 0;
             const riderPoints = {};
 
+            // First, add points from race entries
             raceResult.entries.forEach(entry => {
               const isInTeam = teamRiders.some(r => r.id === entry.riderId);
               const isSelected = selectedRiderIds.has(entry.riderId);
@@ -202,6 +222,24 @@ exports.calculateTeamPointsScheduled = functions.region('europe-west1').pubsub
 
               riderPoints[entry.riderId] = points;
             });
+
+            // Then, add race leader bonus points from each rider's riderResults
+            for (const rider of teamRiders) {
+              const isSelected = selectedRiderIds.has(rider.id);
+              const riderResultRef = await db.doc(`riders/${rider.id}/riderResults/${raceIdNum}`).get();
+              
+              if (riderResultRef.exists) {
+                const riderResultData = riderResultRef.data();
+                const raceLeaderPoints = riderResultData.raceLeaderPoints || 0;
+                
+                if (raceLeaderPoints > 0 && isSelected) {
+                  totalPoints += raceLeaderPoints;
+                }
+                
+                // Update per-rider points to include race leader bonus
+                riderPoints[rider.id] = (riderPoints[rider.id] || 0) + raceLeaderPoints;
+              }
+            }
 
             // Save for scheduled function (use race ID / stage ID with merge)
             await db.collection(`users/${userId}/teams`).doc(String(raceIdNum)).set({

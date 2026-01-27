@@ -154,7 +154,7 @@ export default function PointsTab() {
 
   return (
     <div className="points-tab">
-      <h2>Punten per Categorie</h2>
+      <h2>Punten per categorie beheren</h2>
       
       {saveStatus && <div className={`save-status ${saveStatus.includes('✅') ? 'success' : 'error'}`}>{saveStatus}</div>}
 
@@ -253,8 +253,9 @@ export default function PointsTab() {
                     <button 
                       className="btn-edit"
                       onClick={() => handleEditClick(category.id)}
+                      title="Bewerk punten"
                     >
-                      Bewerk
+                      <i className="fas fa-edit"></i>
                     </button>
                   </td>
                 </tr>

@@ -18,24 +18,26 @@
 }
 
 .tab-button {
-  padding: 12px 20px;
-  background: none;
+  padding: 0.8em 1em;
   border: none;
   cursor: pointer;
   font-size: 16px;
   font-weight: 500;
-  color: #666;
+  color: #ddd;
   border-bottom: 3px solid transparent;
   transition: all 0.3s;
+  border-radius: 4px 4px 0 0;
+  background: #14213d;
+  border: 1px solid #ddd;
 }
 
 .tab-button:hover {
-  color: #14213d;
+  transform: none;
 }
 
 .tab-button.active {
-  color: #fca311;
-  border-bottom-color: #fca311;
+  color: #14213d;
+  background: #ddd;
 }
 
 .tab-content {
@@ -245,7 +247,11 @@
   background-color: #45a049;
 }
 
-.riders-table {
+.riders-table,
+.results-table,
+.races-tables,
+.startlists-table,
+.categories-table {
   width: 100%;
   border-collapse: collapse;
   background-color: #fff;
@@ -412,7 +418,7 @@ table input:focus {
 }
 
 .admin-stats {
-  margin-top: 20px;
+  margin: 1em 0;
   padding: 20px;
   background-color: #f9f9f9;
   border-radius: 8px;
@@ -613,7 +619,7 @@ table input:focus {
   color: #856404;
 }
 
-.status-badge.status-gecontrolleerd {
+.status-badge.status-gecontrolleerd, .status-badge.status-definitief {
   background-color: #d4edda;
   color: #155724;
 }
@@ -621,6 +627,10 @@ table input:focus {
 .status-badge.status-nog-geen-resultaat {
   background-color: #f8d7da;
   color: #721c24;
+}
+
+.admin-container h2{
+  padding-bottom: 0.5em;
 }
 
 /* Mobile Responsive */
@@ -836,7 +846,9 @@ table input:focus {
 }
 
 .btn-edit,
-.btn-delete {
+.btn-delete,
+.btn-disabled,
+.btn-view {
   padding: 6px 12px;
   border: none;
   border-radius: 4px;
@@ -844,24 +856,25 @@ table input:focus {
   font-size: 12px;
   font-weight: 500;
   transition: all 0.3s;
+  margin: 0 0.2em;
 }
 
 .btn-edit {
-  background-color: #fca311;
+  background: #fca311;
   color: white;
 }
 
 .btn-edit:hover {
-  background-color: #e89a0b;
+  background: #e89a0b;
 }
 
 .btn-delete {
-  background-color: #dc3545;
+  background: #dc3545;
   color: white;
 }
 
 .btn-delete:hover {
-  background-color: #c82333;
+  background: #c82333;
 }
 
 .btn-disabled {
@@ -1031,16 +1044,12 @@ table input:focus {
 }
 
 .btn-view {
-  padding: 8px 12px;
   background: linear-gradient(135deg, #2196F3 0%, #1976D2 100%);
   color: white;
   border: none;
   border-radius: 4px;
   cursor: pointer;
-  font-size: 13px;
-  font-weight: 500;
   transition: all 0.2s;
-  box-shadow: 0 2px 8px rgba(33, 150, 243, 0.2);
 }
 
 .btn-view:hover {
