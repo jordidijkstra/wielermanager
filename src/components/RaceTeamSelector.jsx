@@ -300,7 +300,6 @@ export default function RaceTeamSelector({ user, selectedRiders }) {
     return races.filter(race => {
       // Basisfilters
       if (race.tourId != null) return false;
-      if (race.name?.includes('Championship')) return false;
       if (!race.name?.trim()) return false;
       if (race.name.includes('Stage')) return false;
       if (race.startDate?.includes('xx')) return false;

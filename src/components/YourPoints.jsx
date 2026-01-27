@@ -75,7 +75,6 @@ export default function YourPoints({ user }) {
   const groupRacesByDate = () => {
     const grouped = {};
     races.forEach(race => {
-      if (race.name?.includes('Championship')) return; // Skip championships
       // Use endDate for main races (GC), startDate for stages
       const date = race.tourId == null ? (race.endDate || race.startDate) : (race.startDate || 'onbekend');
       if (!grouped[date]) {
