@@ -375,7 +375,6 @@ export default function TeamDetails({
                     <tr>
                       <th>Race</th>
                       <th>Punten</th>
-                      <th>Datum</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -383,7 +382,6 @@ export default function TeamDetails({
                       <tr key={result.raceId}>
                         <td>{getRaceName(result.raceId)}</td>
                         <td className="points-cell">{result.points}</td>
-                        <td>{new Date(result.timestamp).toLocaleDateString('nl-NL')}</td>
                       </tr>
                     ))}
                   </tbody>
@@ -391,7 +389,6 @@ export default function TeamDetails({
                     <tr className="total-row">
                       <td><strong>Totaal</strong></td>
                       <td className="points-cell"><strong>{selectedRiderResults.results.reduce((sum, r) => sum + (Number(r.points) || 0), 0)}</strong></td>
-                      <td></td>
                     </tr>
                   </tfoot>
                 </table>
