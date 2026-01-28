@@ -502,20 +502,9 @@ export default function RacesTab() {
       const newResultId = await addResult(dataToSave);
       console.log('✅ Resultaat toegevoegd met ID:', newResultId);
 
-      // Update riders' points directly based on results
-      if (resultEntries && resultEntries.length > 0) {
-        const pointsData = resultEntries
-          .filter(entry => entry.riderId && entry.points !== undefined)
-          .map(entry => ({
-            riderId: entry.riderId,
-            points: Number(entry.points) || 0
-          }));
-        
-        if (pointsData.length > 0) {
-          await updateRidersPointsFromResults(pointsData, raceId);
-          console.log('✅ Rijderspunten direct toegekend met race history');
-        }
-      }
+      // Don't assign points yet - points are only assigned when result is approved
+      // (in ResultsTab confirmApproveResult)
+      console.log('ℹ️ Resultaat ingediend - punten worden toegekend bij goedkeuring');
       
       // Recalculate team points for all users for this race
       await recalculateTeamPointsForRace(raceId, races);

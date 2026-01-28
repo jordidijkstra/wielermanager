@@ -516,9 +516,10 @@ export default function ResultsTab() {
       const result = await editResult(approvingResult.id, updatedResult);
       console.log('✅ Result opgeslagen in Firestore');
       
-      // Update riders' points based on their results - only add points when approving
+      // Update riders' points based on their results - only add points when approving for the FIRST TIME
       // NOTE: Race leader points are handled separately via setRaceLeaderPoints()
-      if (approveRenners && approveRenners.length > 0) {
+      // Only add points if result was previously NOT approved (status was 'ingediend' or 'nog geen resultaat')
+      if (approvingResult.status !== 'gecontrolleerd' && approveRenners && approveRenners.length > 0) {
         const pointsData = approveRenners
           .filter(entry => entry.riderId && entry.points !== undefined)
           .map(entry => ({
@@ -527,10 +528,12 @@ export default function ResultsTab() {
           }));
         
         if (pointsData.length > 0) {
-          console.log('➕ Adding approval points:', pointsData);
+          console.log('➕ Adding approval points (first approval):', pointsData);
           await updateRidersPointsFromResults(pointsData, approvingResult.raceId);
           console.log('✅ Rijderspunten geupdate vanuit race resultaten met race history');
         }
+      } else if (approvingResult.status === 'gecontrolleerd') {
+        console.log('ℹ️ Result already approved, skipping point addition (points already assigned)');
       }
       
       // Award/remove race leader points (only for stages)

@@ -92,6 +92,19 @@ export default function RaceTeamSelector({ user, selectedRiders }) {
     loadRaceMaxPoints();
   }, [selectedRace?.id]);
 
+  // Load cycling teams for jersey paths
+  useEffect(() => {
+    const loadCyclingTeams = async () => {
+      try {
+        const teams = await getCyclingTeams();
+        setCyclingTeams(teams || []);
+      } catch (err) {
+        console.error('Error loading cycling teams:', err);
+      }
+    };
+    loadCyclingTeams();
+  }, []);
+
   // Load user's team riders (NOT global selectedRiders from TeamBuilder)
   useEffect(() => {
     if (!user) {
