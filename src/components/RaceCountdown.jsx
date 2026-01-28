@@ -47,12 +47,13 @@ const RaceCountdown = memo(function RaceCountdown({ user }) {
     const now = new Date();
     
     // Find the nearest race day (only look for next upcoming race date)
+    // Races are already sorted chronologically from useRaces()
     let nearestDeadlineDate = null;
     
     for (const race of races) {
       if (!race.startDate) continue;
       if (race.status === 'raced') continue;
-      if (race.tourId !== null && race.tourId !== undefined) continue; // Skip stages
+      if (race.tourId !== null && race.tourId !== undefined) continue; // Skip stages - no selections for stages
       
       const startDate = new Date(race.startDate);
       if (startDate <= now) continue;
@@ -60,7 +61,7 @@ const RaceCountdown = memo(function RaceCountdown({ user }) {
       // Found a future race - this day becomes our deadline
       nearestDeadlineDate = new Date(startDate);
       nearestDeadlineDate.setHours(9, 0, 0, 0);
-      break; // Stop at first future race (already sorted in Firestore by startDate)
+      break; // Stop at first future race
     }
 
     if (!nearestDeadlineDate) {
@@ -71,7 +72,7 @@ const RaceCountdown = memo(function RaceCountdown({ user }) {
     const racesOnNearestDay = races.filter(race => {
       if (!race.startDate) return false;
       if (race.status === 'raced') return false;
-      if (race.tourId !== null && race.tourId !== undefined) return false;
+      if (race.tourId !== null && race.tourId !== undefined) return false; // Skip stages
       
       const raceDate = new Date(race.startDate);
       raceDate.setHours(0, 0, 0, 0);

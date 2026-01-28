@@ -47,6 +47,7 @@ export default function Nav({ setCurrentPage, handleRankingsClick, setShowLoginM
                     {user && <li><a href="#" onClick={() => handleNavClick('raceTeams')}>Jouw selecties</a></li>}
                     {user && <li><a href="#" onClick={() => handleNavClick('pointsTables')}>Puntentabellen</a></li>}
                     {user && <li><a href="#" onClick={() => handleRankingsClick()}>Klassement</a></li>}
+                    <li><a href="#" onClick={() => handleNavClick('riderStatistics')}>Statistieken</a></li>
                     
                     {user ? (
                         <li className="profile-menu">
@@ -95,6 +96,7 @@ export default function Nav({ setCurrentPage, handleRankingsClick, setShowLoginM
                     {user && <li><a href="#" onClick={() => handleNavClick('raceTeams')}>Race selecties</a></li>}
                     {user && <li><a href="#" onClick={() => handleNavClick('pointsTables')}>Puntentabellen</a></li>}
                     {user && <li><a href="#" onClick={() => handleRankingsClick()}>Klassement</a></li>}
+                    <li><a href="#" onClick={() => handleNavClick('riderStatistics')}>Statistieken</a></li>
                     
                     {user ? (
                         <>

@@ -1,20 +1,21 @@
-import { useState, useRef } from 'react';
-import { doc, getDoc } from 'firebase/firestore';
+import { useState, useRef, useEffect } from 'react';
+import { doc, getDoc, collection, getDocs } from 'firebase/firestore';
 import { db } from '../firebase/config';
 import { useResults } from '../hooks/useResults';
 import { useRaces } from '../hooks/useRaces';
 import { useRiders } from '../hooks/useRiders';
 import { usePointsByCategory } from '../hooks/usePointsByCategory';
-import { updateRidersPointsFromResults, removeRidersPointsFromResults, setRaceLeaderPoints } from '../services/riderService';
+import { updateRidersPointsFromResults, removeRidersPointsFromResults, setRaceLeaderPoints, getRaceLeaderPointsForCategory } from '../services/riderService';
 import { recalculateTeamPointsForRace } from '../services/resultsService';
 import { getPointsByCategory } from '../services/pointsByCategoryService';
 import '../css/resultsTab.css';
 
 export default function ResultsTab() {
-  const { results, loading: resultsLoading, editResult, deleteResult, addResult } = useResults();
+  const { results, loading: resultsLoading, editResult, deleteResult, addResult, reload: reloadResults } = useResults();
   const { races } = useRaces();
-  const { riders } = useRiders();
+  const { riders, reload: reloadRiders } = useRiders();
   const { loadPointsForCategory } = usePointsByCategory();
+  const reloadResultsRef = useRef(reloadResults);
   const [editingId, setEditingId] = useState(null);
   const [editData, setEditData] = useState({});
   const [uploading, setUploading] = useState(false);
@@ -36,8 +37,35 @@ export default function ResultsTab() {
   const [approveRaceLeaderDropdown, setApproveRaceLeaderDropdown] = useState(false);
   const [selectedEditRaceLeaderId, setSelectedEditRaceLeaderId] = useState(null);
   const [selectedApproveRaceLeaderId, setSelectedApproveRaceLeaderId] = useState(null);
+  const [editRaceLeaderPoints, setEditRaceLeaderPoints] = useState(0);
+  const [approveRaceLeaderPoints, setApproveRaceLeaderPoints] = useState(0);
   const resultsPerPage = 50;
   const fileInputRef = useRef(null);
+
+  // Update ref whenever reloadResults changes
+  useEffect(() => {
+    reloadResultsRef.current = reloadResults;
+  }, [reloadResults]);
+
+  // Auto-reload results when component becomes visible/active
+  useEffect(() => {
+    const reloadResultsData = async () => {
+      try {
+        console.log('🔄 Bezig met herladen van resultaten...');
+        await reloadResultsRef.current();
+        console.log('✅ Resultaten cache opnieuw geladen');
+      } catch (error) {
+        console.error('Error reloading results:', error);
+      }
+    };
+    
+    // Use a small delay to ensure tab is fully switched
+    const timer = setTimeout(() => {
+      reloadResultsData();
+    }, 150);
+    
+    return () => clearTimeout(timer);
+  }, []);
 
   // Helper function to normalize text (remove diacritics and special characters)
   const normalizeText = (text) => {
@@ -96,12 +124,82 @@ export default function ResultsTab() {
     }
   };
 
+  /**
+   * Get race leader points for a given race
+   * Gets the race's category and checks if it has raceLeaderCategorie
+   * Then fetches the points from pointsPerCategory
+   */
+  const getRaceLeaderPointsForRace = async (raceId) => {
+    if (!raceId) {
+      console.warn('⚠️ No race ID provided');
+      return 0;
+    }
+
+    try {
+      // Get the race
+      const race = races.find(r => r.id === raceId);
+      if (!race) {
+        console.warn(`⚠️ Race ${raceId} not found`);
+        return 0;
+      }
+
+      // Get the race's category
+      if (!race.categoryId) {
+        console.log(`ℹ️ Race ${raceId} has no category`);
+        return 0;
+      }
+
+      const raceCategoryRef = doc(db, 'raceCategories', String(race.categoryId));
+      const raceCategoryDoc = await getDoc(raceCategoryRef);
+      
+      if (!raceCategoryDoc.exists()) {
+        console.warn(`⚠️ Race category ${race.categoryId} not found`);
+        return 0;
+      }
+
+      const categoryData = raceCategoryDoc.data();
+      const raceLeaderCategoryId = categoryData.raceleaderCategory;
+      console.log(`🏆 Race category ${race.categoryId} data:`, categoryData, '| raceleaderCategory:', raceLeaderCategoryId);
+
+      if (!raceLeaderCategoryId) {
+        console.log(`ℹ️ Race category ${race.categoryId} has no race leader category`);
+        return 0;
+      }
+
+      // Get the race leader points from pointsPerCategory
+      const pointsCategoryRef = doc(db, 'pointsPerCategory', String(raceLeaderCategoryId));
+      const pointsCategoryDoc = await getDoc(pointsCategoryRef);
+
+      if (!pointsCategoryDoc.exists()) {
+        console.warn(`⚠️ Points category ${raceLeaderCategoryId} not found`);
+        return 0;
+      }
+
+      const pointsCategoryData = pointsCategoryDoc.data();
+      // First position (index 0) contains the race leader points
+      const raceLeaderPoints = pointsCategoryData.points?.[0] || 0;
+
+      console.log(`🏆 Race leader points for race ${raceId}: ${raceLeaderPoints} (category: ${race.categoryId}, pointsCategory: ${raceLeaderCategoryId})`);
+      return raceLeaderPoints;
+    } catch (error) {
+      console.error(`Error getting race leader points for race ${raceId}:`, error);
+      return 0;
+    }
+  };
+
   const saveEdit = async (resultId) => {
     try {
       await editResult(resultId, {
         raceId: editData.raceId,
         status: editData.status
       });
+      
+      // Cache clearing
+      await reloadRiders();
+      console.log('✅ Renners cache gecleared');
+      await reloadResults();
+      console.log('✅ Resultaten cache gecleared');
+      
       setEditingId(null);
       console.log('✅ Resultaat bijgewerkt');
     } catch (error) {
@@ -134,6 +232,12 @@ export default function ResultsTab() {
         // Delete the result
         await deleteResult(resultId);
         console.log('✅ Resultaat verwijderd');
+        
+        // Reload caches to ensure all data is fresh
+        await reloadRiders();
+        console.log('✅ Renners cache gecleared');
+        await reloadResults();
+        console.log('✅ Resultaten cache gecleared');
       } catch (error) {
         console.error('Error deleting result:', error);
         alert('Fout bij verwijderen resultaat');
@@ -155,6 +259,7 @@ export default function ResultsTab() {
     setEditRaceLeaderMode(false);
     setEditRaceLeaderSearch('');
     setEditRaceLeaderDropdown(false);
+    setEditRaceLeaderPoints(0);  // Reset race leader points input
     // Set race leader from result.raceLeader field
     setSelectedEditRaceLeaderId(result.raceLeader || null);
     
@@ -207,107 +312,115 @@ export default function ResultsTab() {
       const isStage = race && race.tourId != null;
       console.log('🏁 Race check - isStage:', isStage, 'race:', race);
       
-      // Get race leader points from GC Leader Jersey category (always ID 29)
+      // Get race leader points dynamically via raceLeaderCategorie
       let raceLeaderPoints = 0;
-      if (isStage) {
-        const gcLeaderCategoryPoints = await getPointsByCategory(29); // GC Leader Jersey category
-        raceLeaderPoints = gcLeaderCategoryPoints?.[0] || 0; // 1st place points
-        console.log('🏆 GC Leader Jersey points (category 29):', raceLeaderPoints);
+      if (isStage && selectedEditRaceLeaderId) {
+        raceLeaderPoints = await getRaceLeaderPointsForRace(editingResult.raceId);
+        console.log('🏆 Race leader points for race:', raceLeaderPoints);
       }
       
       // Get race leader ID from separate state (can be any rider, not necessarily in entries)
       const raceLeaderRiderId = selectedEditRaceLeaderId || null;
       console.log('🏆 Race leader riderId:', raceLeaderRiderId);
       
-      // IMPORTANT: If this is an edit of an EXISTING result, we need to remove the OLD points first
-      // before adding the NEW points
-      if (editingResult.entries && Array.isArray(editingResult.entries)) {
-        console.log('🔄 Removing OLD points from previous entries...');
-        const oldPointsData = editingResult.entries
-          .filter(entry => entry.riderId && entry.points !== undefined)
-          .map(entry => ({
-            riderId: entry.riderId,
-            points: Number(entry.points) || 0
-          }));
-        
-        if (oldPointsData.length > 0) {
-          await removeRidersPointsFromResults(oldPointsData, editingResult.raceId);
-          console.log('✅ Oude punten verwijderd');
+      // Only process entries that have actually changed
+      const oldEntriesMap = new Map((editingResult.entries || []).map(e => [e.riderId?.toString(), e]));
+      const newEntriesMap = new Map(resultRenners.map(e => [e.riderId?.toString(), e]));
+      
+      // Find entries that were removed or changed
+      const pointsToRemove = [];
+      for (const [riderId, oldEntry] of oldEntriesMap) {
+        const newEntry = newEntriesMap.get(riderId);
+        if (!newEntry) {
+          // Entry was removed
+          pointsToRemove.push({ riderId, points: Number(oldEntry.points) || 0 });
+        } else if (Number(newEntry.points) !== Number(oldEntry.points)) {
+          // Points changed - remove old, add new difference
+          const difference = Number(oldEntry.points) || 0;
+          pointsToRemove.push({ riderId, points: difference });
         }
+      }
+      
+      // Find entries that are new or changed
+      const pointsToAdd = [];
+      for (const [riderId, newEntry] of newEntriesMap) {
+        const oldEntry = oldEntriesMap.get(riderId);
+        if (!oldEntry) {
+          // New entry
+          pointsToAdd.push({ riderId, points: Number(newEntry.points) || 0 });
+        } else if (Number(newEntry.points) !== Number(oldEntry.points)) {
+          // Points changed - add only the difference
+          const difference = Number(newEntry.points) - (Number(oldEntry.points) || 0);
+          pointsToAdd.push({ riderId, points: difference });
+        }
+      }
+      
+      // Remove changed/deleted points
+      if (pointsToRemove.length > 0) {
+        console.log('🔄 Removing changed/deleted points:', pointsToRemove);
+        await removeRidersPointsFromResults(pointsToRemove, editingResult.raceId);
+        console.log('✅ Oude punten verwijderd');
       }
       
       // Update the result document
       // Remove isRaceLeader field from entries (UI-only property)
-      const cleanEntries = resultRenners.map(({ isRaceLeader, ...entry }) => entry);
+      // NOTE: Race leader is stored in separate 'raceLeader' field - don't filter from entries
+      const cleanEntries = resultRenners
+        .map(({ isRaceLeader, ...entry }) => entry);
       await editResult(editingResult.id, {
-        ...editingResult,
+        raceId: editingResult.raceId,
+        raceName: editingResult.raceName,
+        date: editingResult.date,
+        status: editingResult.status,
         entries: cleanEntries,
         raceLeader: raceLeaderRiderId  // Separate field for race leader
       });
       console.log('✅ Resultaat met renners en race leader bijgewerkt');
       
-      // NOW add the NEW points
-      if (resultRenners && resultRenners.length > 0) {
-        const pointsData = resultRenners
-          .filter(entry => entry.riderId && entry.points !== undefined)
-          .map(entry => ({
-            riderId: entry.riderId,
-            points: Number(entry.points) || 0
-          }));
-        
-        if (pointsData.length > 0) {
-          await updateRidersPointsFromResults(pointsData, editingResult.raceId);
-          console.log('✅ Nieuwe punten toegekend vanuit bewerkte resultaten');
-        }
+      // Add new/changed points
+      if (pointsToAdd.length > 0) {
+        console.log('➕ Adding new/changed points:', pointsToAdd);
+        await updateRidersPointsFromResults(pointsToAdd, editingResult.raceId);
+        console.log('✅ Nieuwe punten toegekend vanuit bewerkte resultaten');
       }
       
-      // Award/remove race leader points (only for stages)
+      // Award/remove race leader points (only for stages AND only if race leader changed)
       if (isStage && raceLeaderPoints > 0) {
         // Get old race leader data if this result was edited before
-        let oldRaceLeaderRiderId = null;
-        let oldRaceLeaderPoints = 0;
-        if (editingResult.raceLeader) {
-          oldRaceLeaderRiderId = editingResult.raceLeader;
-          const oldRiderResultRef = doc(db, 'riders', oldRaceLeaderRiderId.toString(), 'riderResults', String(editingResult.raceId));
-          const oldRiderResultData = await getDoc(oldRiderResultRef);
-          if (oldRiderResultData.exists()) {
-            oldRaceLeaderPoints = oldRiderResultData.data().raceLeaderPoints || 0;
-          }
-        }
+        let oldRaceLeaderRiderId = editingResult.raceLeader || null;
         
-        // If race leader changed or was removed, remove old points
-        if (oldRaceLeaderRiderId && oldRaceLeaderRiderId !== raceLeaderRiderId) {
-          console.log(`🏆 Removing race leader points from old leader ${oldRaceLeaderRiderId}`);
-          await setRaceLeaderPoints(oldRaceLeaderRiderId, 0, editingResult.raceId, getRaceName(editingResult.raceId), oldRaceLeaderPoints);
-        }
-        
-        // Set new race leader points
-        if (raceLeaderRiderId) {
-          // Get old race leader points for this rider (if any) for this race
-          let newLeaderOldPoints = 0;
-          const newLeaderOldResultRef = doc(db, 'riders', raceLeaderRiderId.toString(), 'riderResults', String(editingResult.raceId));
-          const newLeaderOldResultData = await getDoc(newLeaderOldResultRef);
-          if (newLeaderOldResultData.exists()) {
-            newLeaderOldPoints = newLeaderOldResultData.data().raceLeaderPoints || 0;
+        // Only process if race leader actually changed
+        if (oldRaceLeaderRiderId !== raceLeaderRiderId) {
+          // If race leader changed, remove old points first
+          if (oldRaceLeaderRiderId) {
+            console.log(`🏆 Removing race leader points from old leader ${oldRaceLeaderRiderId}`);
+            await setRaceLeaderPoints(oldRaceLeaderRiderId, 0, editingResult.raceId, getRaceName(editingResult.raceId), 0);
           }
           
-          console.log(`🏆 Setting race leader points - riderId: ${raceLeaderRiderId}, points: ${raceLeaderPoints}, raceId: ${editingResult.raceId}`);
-          await setRaceLeaderPoints(raceLeaderRiderId, raceLeaderPoints, editingResult.raceId, getRaceName(editingResult.raceId), newLeaderOldPoints);
-          console.log(`✅ Race leader punten ingesteld voor renner ${raceLeaderRiderId}`);
-        } else if (oldRaceLeaderRiderId) {
-          // Race leader was removed
-          console.log(`🏆 Removing race leader points from ${oldRaceLeaderRiderId}`);
-          await setRaceLeaderPoints(oldRaceLeaderRiderId, 0, editingResult.raceId, getRaceName(editingResult.raceId), oldRaceLeaderPoints);
+          // Set new race leader points
+          if (raceLeaderRiderId) {
+            console.log(`🏆 Setting race leader points - riderId: ${raceLeaderRiderId}, points: ${raceLeaderPoints}, raceId: ${editingResult.raceId}`);
+            await setRaceLeaderPoints(raceLeaderRiderId, raceLeaderPoints, editingResult.raceId, getRaceName(editingResult.raceId), 0);
+            console.log(`✅ Race leader punten ingesteld voor renner ${raceLeaderRiderId}`);
+          }
+        } else {
+          // Race leader unchanged - no action needed
+          console.log(`ℹ️ Race leader niet gewijzigd (${raceLeaderRiderId}), geen punten aanpassing`);
         }
       } else if (isStage && editingResult.raceLeader && !raceLeaderRiderId) {
         // Race leader was removed (no new race leader)
         const oldRaceLeaderRiderId = editingResult.raceLeader;
-        const oldRiderResultRef = doc(db, 'riders', oldRaceLeaderRiderId.toString(), 'riderResults', String(editingResult.raceId));
-        const oldRiderResultData = await getDoc(oldRiderResultRef);
-        if (oldRiderResultData.exists()) {
-          const oldRaceLeaderPoints = oldRiderResultData.data().raceLeaderPoints || 0;
-          console.log(`🏆 Removing race leader points from ${oldRaceLeaderRiderId}`);
+        
+        // Get the old race leader's current race leader points
+        try {
+          const oldRiderResultRef = doc(db, 'riders', oldRaceLeaderRiderId.toString(), 'riderResults', String(editingResult.raceId));
+          const oldResultDoc = await getDoc(oldRiderResultRef);
+          const oldRaceLeaderPoints = oldResultDoc.exists() ? (oldResultDoc.data().raceLeaderPoints || 0) : 0;
+          
+          console.log(`🏆 Removing race leader points from ${oldRaceLeaderRiderId} (was: ${oldRaceLeaderPoints})`);
           await setRaceLeaderPoints(oldRaceLeaderRiderId, 0, editingResult.raceId, getRaceName(editingResult.raceId), oldRaceLeaderPoints);
+        } catch (error) {
+          console.error(`❌ Error removing race leader points from ${oldRaceLeaderRiderId}:`, error);
         }
       }
       
@@ -316,6 +429,12 @@ export default function ResultsTab() {
         await recalculateTeamPointsForRace(editingResult.raceId, races);
         console.log('✅ Team punten per stage herberekend voor alle gebruikers');
       }
+      
+      // Reload caches to ensure all data is fresh
+      await reloadRiders();
+      console.log('✅ Renners cache gecleared');
+      await reloadResults();
+      console.log('✅ Resultaten cache gecleared');
       
       setEditingResult(null);
       setResultRenners([]);
@@ -336,6 +455,7 @@ export default function ResultsTab() {
       
       // Toon de approval modal
       setApprovingResult(result);
+      setApproveRaceLeaderPoints(0);  // Reset race leader points input
       // Set race leader from result.raceLeader field
       setSelectedApproveRaceLeaderId(result.raceLeader || null);
       if (result.entries && Array.isArray(result.entries)) {
@@ -365,12 +485,11 @@ export default function ResultsTab() {
       const race = races.find(r => r.id === approvingResult.raceId);
       const isStage = race && race.tourId != null;
       
-      // Get race leader points from GC Leader Jersey category (always ID 29)
+      // Get race leader points dynamically via raceLeaderCategorie
       let raceLeaderPoints = 0;
-      if (isStage) {
-        const gcLeaderCategoryPoints = await getPointsByCategory(29); // GC Leader Jersey category
-        raceLeaderPoints = gcLeaderCategoryPoints?.[0] || 0; // 1st place points
-        console.log('🏆 GC Leader Jersey points (category 29):', raceLeaderPoints);
+      if (isStage && selectedApproveRaceLeaderId) {
+        raceLeaderPoints = await getRaceLeaderPointsForRace(approvingResult.raceId);
+        console.log('🏆 Race leader points for race:', raceLeaderPoints);
       }
       
       // Get race leader ID from separate state (can be any rider, not necessarily in entries)
@@ -379,9 +498,13 @@ export default function ResultsTab() {
       
       // Zorg ervoor dat status op 'gecontrolleerd' staat
       // Remove isRaceLeader field from entries (UI-only property)
-      const cleanEntries = approveRenners.map(({ isRaceLeader, ...entry }) => entry);
+      // NOTE: Race leader is stored in separate 'raceLeader' field - don't filter from entries
+      const cleanEntries = approveRenners
+        .map(({ isRaceLeader, ...entry }) => entry);
       const updatedResult = {
-        ...approvingResult,
+        raceId: approvingResult.raceId,
+        raceName: approvingResult.raceName,
+        date: approvingResult.date,
         entries: cleanEntries,
         raceLeader: raceLeaderRiderId,  // Separate field for race leader
         status: 'gecontrolleerd'
@@ -393,7 +516,8 @@ export default function ResultsTab() {
       const result = await editResult(approvingResult.id, updatedResult);
       console.log('✅ Result opgeslagen in Firestore');
       
-      // Update riders' points based on their results
+      // Update riders' points based on their results - only add points when approving
+      // NOTE: Race leader points are handled separately via setRaceLeaderPoints()
       if (approveRenners && approveRenners.length > 0) {
         const pointsData = approveRenners
           .filter(entry => entry.riderId && entry.points !== undefined)
@@ -403,6 +527,7 @@ export default function ResultsTab() {
           }));
         
         if (pointsData.length > 0) {
+          console.log('➕ Adding approval points:', pointsData);
           await updateRidersPointsFromResults(pointsData, approvingResult.raceId);
           console.log('✅ Rijderspunten geupdate vanuit race resultaten met race history');
         }
@@ -412,51 +537,38 @@ export default function ResultsTab() {
       if (isStage && raceLeaderPoints > 0) {
         // Get old race leader data if this result was edited before
         let oldRaceLeaderRiderId = null;
-        let oldRaceLeaderPoints = 0;
         if (approvingResult.raceLeader) {
           oldRaceLeaderRiderId = approvingResult.raceLeader;
-          const oldRiderResultRef = doc(db, 'riders', oldRaceLeaderRiderId.toString(), 'riderResults', String(approvingResult.raceId));
-          const oldRiderResultData = await getDoc(oldRiderResultRef);
-          if (oldRiderResultData.exists()) {
-            oldRaceLeaderPoints = oldRiderResultData.data().raceLeaderPoints || 0;
-          }
         }
         
-        // If race leader changed or was removed, remove old points
+        // If race leader changed, remove old points first
         if (oldRaceLeaderRiderId && oldRaceLeaderRiderId !== raceLeaderRiderId) {
           console.log(`🏆 Removing race leader points from old leader ${oldRaceLeaderRiderId}`);
-          await setRaceLeaderPoints(oldRaceLeaderRiderId, 0, approvingResult.raceId, getRaceName(approvingResult.raceId), oldRaceLeaderPoints);
+          await setRaceLeaderPoints(oldRaceLeaderRiderId, 0, approvingResult.raceId, getRaceName(approvingResult.raceId), 0);
         }
         
         // Set new race leader points
         if (raceLeaderRiderId) {
-          // Get old race leader points for this rider (if any) for this race
-          let newLeaderOldPoints = 0;
-          const newLeaderOldResultRef = doc(db, 'riders', raceLeaderRiderId.toString(), 'riderResults', String(approvingResult.raceId));
-          const newLeaderOldResultData = await getDoc(newLeaderOldResultRef);
-          if (newLeaderOldResultData.exists()) {
-            newLeaderOldPoints = newLeaderOldResultData.data().raceLeaderPoints || 0;
-          }
-          
           console.log(`🏆 Setting race leader points - riderId: ${raceLeaderRiderId}, points: ${raceLeaderPoints}, raceId: ${approvingResult.raceId}`);
-          await setRaceLeaderPoints(raceLeaderRiderId, raceLeaderPoints, approvingResult.raceId, getRaceName(approvingResult.raceId), newLeaderOldPoints);
+          await setRaceLeaderPoints(raceLeaderRiderId, raceLeaderPoints, approvingResult.raceId, getRaceName(approvingResult.raceId), 0);
           console.log(`✅ Race leader punten ingesteld voor renner ${raceLeaderRiderId}`);
         } else if (oldRaceLeaderRiderId) {
           // Race leader was removed
           console.log(`🏆 Removing race leader points from ${oldRaceLeaderRiderId}`);
-          await setRaceLeaderPoints(oldRaceLeaderRiderId, 0, approvingResult.raceId, getRaceName(approvingResult.raceId), oldRaceLeaderPoints);
+          await setRaceLeaderPoints(oldRaceLeaderRiderId, 0, approvingResult.raceId, getRaceName(approvingResult.raceId), 0);
         }
       } else if (isStage && approvingResult.raceLeader && !raceLeaderRiderId) {
         // Race leader was removed (no new race leader)
         const oldRaceLeaderRiderId = approvingResult.raceLeader;
-        const oldRiderResultRef = doc(db, 'riders', oldRaceLeaderRiderId.toString(), 'riderResults', String(approvingResult.raceId));
-        const oldRiderResultData = await getDoc(oldRiderResultRef);
-        if (oldRiderResultData.exists()) {
-          const oldRaceLeaderPoints = oldRiderResultData.data().raceLeaderPoints || 0;
-          console.log(`🏆 Removing race leader points from ${oldRaceLeaderRiderId}`);
-          await setRaceLeaderPoints(oldRaceLeaderRiderId, 0, approvingResult.raceId, getRaceName(approvingResult.raceId), oldRaceLeaderPoints);
-        }
+        console.log(`🏆 Removing race leader points from ${oldRaceLeaderRiderId}`);
+        await setRaceLeaderPoints(oldRaceLeaderRiderId, 0, approvingResult.raceId, getRaceName(approvingResult.raceId), 0);
       }
+      
+      // Reload caches to ensure all data is fresh
+      await reloadRiders();
+      console.log('✅ Renners cache gecleared');
+      await reloadResults();
+      console.log('✅ Resultaten cache gecleared');
       
       // Reset alle states
       setApprovingResult(null);
@@ -504,8 +616,6 @@ export default function ResultsTab() {
     return new Date(dateA) - new Date(dateB);
   });
 
-  console.log('📊 Results loaded:', results);
-
   // Pagination logic
   const totalPages = Math.ceil(sortedResults.length / resultsPerPage);
   const paginatedResults = sortedResults.slice(
@@ -526,6 +636,20 @@ export default function ResultsTab() {
   return (
     <div className="tab-content">
       <h2>Resultaten beheren</h2>
+
+      <div className="admin-controls" style={{ marginBottom: '20px' }}>
+        <button 
+          className="btn-reload"
+          onClick={() => {
+            console.log('🔄 Manual refresh triggered');
+            reloadResultsRef.current();
+          }}
+          disabled={uploading}
+          title="Ververs resultaten"
+        >
+          <i className="fas fa-sync-alt"></i> Ververs
+        </button>
+      </div>
 
       <div className="admin-stats">
         <p>Totaal resultaten: <strong>{results.length}</strong></p>
@@ -813,6 +937,7 @@ export default function ResultsTab() {
                     className="race-leader-remove-btn"
                     onClick={() => {
                       setSelectedEditRaceLeaderId(null);
+                      setEditRaceLeaderPoints(0);
                     }}
                     style={{ marginLeft: '10px' }}
                   >
@@ -1045,6 +1170,7 @@ export default function ResultsTab() {
                     className="race-leader-remove-btn"
                     onClick={() => {
                       setSelectedApproveRaceLeaderId(null);
+                      setApproveRaceLeaderPoints(0);
                     }}
                     style={{ marginLeft: '10px' }}
                   >

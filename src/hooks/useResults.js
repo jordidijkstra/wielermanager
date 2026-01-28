@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { getAllResults } from '../services/resultsService';
-import { setDoc, deleteDoc, doc } from 'firebase/firestore';
+import { setDoc, deleteDoc, doc, collection, onSnapshot } from 'firebase/firestore';
 import { db } from '../firebase/config';
 
 export function useResults() {
@@ -20,7 +20,28 @@ export function useResults() {
   };
 
   useEffect(() => {
-    loadResults();
+    // Set up real-time listener
+    setLoading(true);
+    try {
+      const resultsRef = collection(db, 'results');
+      const unsubscribe = onSnapshot(resultsRef, (snapshot) => {
+        const data = snapshot.docs.map(doc => ({
+          id: doc.id,
+          ...doc.data()
+        }));
+        setResults(data);
+        setLoading(false);
+        console.log('🔄 Real-time results update:', data.length, 'results');
+      }, (error) => {
+        console.error('Error in real-time listener:', error);
+        setLoading(false);
+      });
+      
+      return () => unsubscribe();
+    } catch (err) {
+      console.error('Fout bij setup real-time listener:', err);
+      setLoading(false);
+    }
   }, []);
 
   // Add result
@@ -52,9 +73,36 @@ export function useResults() {
   const editResult = async (resultId, resultData) => {
     try {
       console.log('📝 Editing result:', String(resultId));
-      console.log('📝 New data:', resultData);
+      console.log('📝 New data before cleaning:', resultData);
       
-      await setDoc(doc(db, 'results', String(resultId)), resultData, { merge: true });
+      // Remove any UI-only or unwanted fields before saving
+      const cleanData = { ...resultData };
+      delete cleanData.removed;
+      delete cleanData.deleted;
+      delete cleanData.isRaceLeader;
+      delete cleanData.key;
+      
+      // Clean entries array - remove UI-only fields
+      if (cleanData.entries && Array.isArray(cleanData.entries)) {
+        cleanData.entries = cleanData.entries.map(entry => {
+          const clean = { ...entry };
+          delete clean.removed;
+          delete clean.deleted;
+          delete clean.isRaceLeader;
+          delete clean.key;
+          return clean;
+        });
+      }
+      
+      // Remove undefined values (Firestore doesn't allow undefined)
+      Object.keys(cleanData).forEach(key => {
+        if (cleanData[key] === undefined) {
+          delete cleanData[key];
+        }
+      });
+      
+      console.log('📝 Clean data to save:', cleanData);
+      await setDoc(doc(db, 'results', String(resultId)), cleanData, { merge: true });
       console.log('✅ Result saved to Firestore');
       
       // Reload all results to ensure UI is updated

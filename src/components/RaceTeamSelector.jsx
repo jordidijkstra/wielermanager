@@ -51,8 +51,7 @@ export default function RaceTeamSelector({ user, selectedRiders }) {
 
     const now = new Date();
     const raceDeadline = new Date(selectedRace.startDate);
-    raceDeadline.setHours(9, 0, 0, 0);
-    raceDeadline.setDate(raceDeadline.getDate() - 1);
+    raceDeadline.setHours(9, 0, 0, 0); // Deadline is 09:00 on race day
 
     const userCreated = fullUser?.createdAt ? 
       (fullUser.createdAt.toDate ? fullUser.createdAt.toDate() : new Date(fullUser.createdAt)) 
@@ -147,11 +146,12 @@ export default function RaceTeamSelector({ user, selectedRiders }) {
     if (!selectedRace && races && races.length > 0) {
       const now = new Date();
       
+      // Races are already sorted chronologically from useRaces()
       // Find first upcoming race (same logic as RaceCountdown)
       for (const race of races) {
         if (!race.startDate) continue;
         if (race.status === 'raced') continue;
-        if (race.tourId !== null && race.tourId !== undefined) continue; // Skip stages
+        if (race.tourId !== null && race.tourId !== undefined) continue; // Skip stages - no selections for stages
         
         const startDate = new Date(race.startDate);
         if (startDate <= now) continue;
@@ -351,8 +351,7 @@ export default function RaceTeamSelector({ user, selectedRiders }) {
     
     const now = new Date();
     const raceDeadline = new Date(race.startDate);
-    raceDeadline.setHours(9, 0, 0, 0);
-    raceDeadline.setDate(raceDeadline.getDate() - 1); // Deadline is 1 day before race start
+    raceDeadline.setHours(9, 0, 0, 0); // Deadline is 09:00 on race day
     
     // Check if user registered after this race's standard deadline
     const userCreated = fullUser?.createdAt ? 
@@ -478,7 +477,12 @@ export default function RaceTeamSelector({ user, selectedRiders }) {
 
   if (loading) return <div>Races laden...</div>;
 
-  const sortedRaces = getFilteredRaces();
+  const filteredRaces = getFilteredRaces();
+  // Sort races by startDate chronologically
+  const sortedRaces = [...filteredRaces].sort((a, b) => {
+    if (!a.startDate || !b.startDate) return 0;
+    return new Date(a.startDate) - new Date(b.startDate);
+  });
   const currentTeam = selectedRace ? raceTeams[selectedRace.id] || [] : [];
 
   // Prepare race options for selector

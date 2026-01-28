@@ -15,8 +15,8 @@ import '../css/racesTab.css';
 export default function RacesTab() {
   const { races, loading: racesLoading, reload: reloadRaces, addRace, editRace, removeRace } = useRaces();
   const { categories, loading: categoriesLoading } = useRacesCategories();
-  const { results, addResult } = useResults();
-  const { riders } = useRiders();
+  const { results, addResult, reload: reloadResults } = useResults();
+  const { riders, reload: reloadRiders } = useRiders();
   const { loadPointsForCategory } = usePointsByCategory();
   const [showAddRaceForm, setShowAddRaceForm] = useState(false);
   const [editingRaceId, setEditingRaceId] = useState(null);
@@ -198,6 +198,9 @@ export default function RacesTab() {
         status: computedStatus
       });
 
+      await reloadRaces();
+      console.log('✅ Races cache gecleared');
+
       setNewRace({ name: '', startDate: '', endDate: '', categoryId: null, maxRiders: 8, tourId: null });
       setShowAddRaceForm(false);
       console.log('✅ Nieuwe race toegevoegd');
@@ -222,6 +225,10 @@ export default function RacesTab() {
       };
       
       await editRace(raceId, updatedRaceData);
+      
+      await reloadRaces();
+      console.log('✅ Races cache gecleared');
+      
       setEditingRaceId(null);
       console.log('✅ Race bijgewerkt');
     } catch (error) {
@@ -234,6 +241,10 @@ export default function RacesTab() {
     if (confirm('Weet je zeker dat je deze race wilt verwijderen?')) {
       try {
         await removeRace(raceId);
+        
+        await reloadRaces();
+        console.log('✅ Races cache gecleared');
+        
         console.log('✅ Race verwijderd');
       } catch (error) {
         console.error('Error deleting race:', error);
@@ -488,7 +499,8 @@ export default function RacesTab() {
       const dataToSave = { raceId, status: 'ingediend', entries: cleanEntries };
       console.log('💾 Data to save:', dataToSave);
       
-      await addResult(dataToSave);
+      const newResultId = await addResult(dataToSave);
+      console.log('✅ Resultaat toegevoegd met ID:', newResultId);
 
       // Update riders' points directly based on results
       if (resultEntries && resultEntries.length > 0) {
@@ -509,10 +521,26 @@ export default function RacesTab() {
       await recalculateTeamPointsForRace(raceId, races);
       console.log('✅ Team punten per stage herberekend voor alle gebruikers');
       
+      // Reload caches to ensure all data is fresh
+      try {
+        await reloadRiders();
+        console.log('✅ Renners cache gecleared');
+      } catch (err) {
+        console.error('Error reloading riders:', err);
+      }
+      
+      try {
+        await reloadResults();
+        console.log('✅ Resultaten cache gecleared');
+      } catch (err) {
+        console.error('Error reloading results:', err);
+      }
+      
       setShowResultModal(null);
       setResultEntries([]);
       setRiderSearchFilters({});
       console.log('✅ Resultaten ingevoerd voor race:', raceId);
+      alert('✅ Resultaten succesvol opgeslagen!');
     } catch (error) {
       console.error('Error submitting results:', error);
       alert('Fout bij opslaan resultaten');

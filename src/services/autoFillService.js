@@ -41,19 +41,28 @@ export const autoFillRaceTeamsLocal = async () => {
     }));
     console.log(`Loaded ${races.length} races`);
 
-    // Filter races where deadline has passed
+    // Filter races where autofill window is still open (1 day before deadline until end of race day)
+    // Also exclude stages since they share the same selection as the general classification
     const passedDeadlineRaces = races.filter(race => {
       if (!race.startDate) return false;
+      if (race.name && race.name.includes('Stage')) return false; // Exclude stages
       const deadline = new Date(race.startDate);
       deadline.setHours(9, 0, 0, 0);
-      return deadline <= now;
+      const deadlineMinusOneDay = new Date(deadline);
+      deadlineMinusOneDay.setDate(deadlineMinusOneDay.getDate() - 1);
+      deadlineMinusOneDay.setHours(0, 0, 0, 0); // Start from 00:00 on the day before
+      const endOfRaceDay = new Date(deadline);
+      endOfRaceDay.setDate(endOfRaceDay.getDate() + 1);
+      endOfRaceDay.setHours(0, 0, 0, 0); // End at 00:00 on the day after (i.e., end of race day)
+      const isInWindow = now >= deadlineMinusOneDay && now < endOfRaceDay;
+      return isInWindow; // Autofill works from (deadline - 1 day at 00:00) until end of race day
     });
 
-    console.log(`Found ${passedDeadlineRaces.length} races with passed deadlines`);
-    results.push(`Found ${passedDeadlineRaces.length} races with passed deadlines`);
+    console.log(`Found ${passedDeadlineRaces.length} races with upcoming deadlines`);
+    results.push(`Found ${passedDeadlineRaces.length} races with upcoming deadlines`);
 
     if (passedDeadlineRaces.length === 0) {
-      results.push('No races with passed deadlines');
+      results.push('No races with upcoming deadlines');
       return { success: true, processedUsers, filledTeams, results };
     }
 

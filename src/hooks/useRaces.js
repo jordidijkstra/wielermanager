@@ -1,6 +1,6 @@
 import { useState, useEffect, useMemo } from 'react';
 import { getAllRaces, getRaceById, getRaceTeam, saveRaceTeam, getUserRaceTeams, invalidateRacesCache } from '../services/raceService';
-import { setDoc, deleteDoc, doc } from 'firebase/firestore';
+import { setDoc, deleteDoc, doc, collection, onSnapshot } from 'firebase/firestore';
 import { db } from '../firebase/config';
 
 export function useRaces(user) {
@@ -25,11 +25,59 @@ export function useRaces(user) {
   };
 
   useEffect(() => {
-    loadRaces();
+    // Set up real-time listener
+    setLoading(true);
+    try {
+      const racesRef = collection(db, 'races');
+      const unsubscribe = onSnapshot(racesRef, (snapshot) => {
+        const data = snapshot.docs.map(doc => ({
+          id: doc.id,
+          ...doc.data()
+        }));
+        setRaces(data);
+        setLoading(false);
+        console.log('🔄 Real-time races update:', data.length, 'races');
+      }, (error) => {
+        console.error('Error in real-time listener:', error);
+        setLoading(false);
+      });
+      
+      return () => unsubscribe();
+    } catch (err) {
+      console.error('Fout bij setup real-time listener:', err);
+      setLoading(false);
+    }
   }, []);
 
   // Memoize races array om onnodig re-renders te voorkomen
-  const memoizedRaces = useMemo(() => races, [races]);
+  // Sort races: main races first (by endDate), then stages (by startDate)
+  // This ensures:
+  // 1. RaceCountdown finds main races first chronologically
+  // 2. TeamDetails correctly groups speeldagen by endDate/startDate
+  const memoizedRaces = useMemo(() => {
+    return [...races].sort((a, b) => {
+      // Separate main races and stages
+      const aIsStage = a.tourId != null && a.tourId !== undefined;
+      const bIsStage = b.tourId != null && b.tourId !== undefined;
+      
+      // Main races come before stages
+      if (!aIsStage && bIsStage) return -1;
+      if (aIsStage && !bIsStage) return 1;
+      
+      // Within same category, sort by relevant date
+      if (!aIsStage && !bIsStage) {
+        // Both main races: sort by endDate
+        const dateA = a.endDate || a.startDate || '';
+        const dateB = b.endDate || b.startDate || '';
+        return new Date(dateA) - new Date(dateB);
+      }
+      
+      // Both stages: sort by startDate
+      const dateA = a.startDate || '';
+      const dateB = b.startDate || '';
+      return new Date(dateA) - new Date(dateB);
+    });
+  }, [races]);
 
   // Laad user's race teams wanneer user verandert
   useEffect(() => {

@@ -28,18 +28,28 @@ exports.autoFillRaceTeams = functions.region('europe-west1').https.onRequest(asy
       ...doc.data()
     }));
 
-    // Filter races where deadline has passed
-    const passedDeadlineRaces = races.filter(race => {
+    // Filter races where autofill window is still open (1 day before deadline until end of race day)
+    // Also exclude stages since they share the same selection as the general classification
+    const upcomingDeadlineRaces = races.filter(race => {
       if (!race.startDate) return false;
+      if (race.name && race.name.includes('Stage')) return false; // Exclude stages
       const deadline = new Date(race.startDate);
       deadline.setHours(9, 0, 0, 0);
-      return deadline <= now;
+      const deadlineMinusOneDay = new Date(deadline);
+      deadlineMinusOneDay.setDate(deadlineMinusOneDay.getDate() - 1);
+      deadlineMinusOneDay.setHours(0, 0, 0, 0); // Start from 00:00 on the day before
+      const endOfRaceDay = new Date(deadline);
+      endOfRaceDay.setDate(endOfRaceDay.getDate() + 1);
+      endOfRaceDay.setHours(0, 0, 0, 0); // End at 00:00 on the day after (i.e., end of race day)
+      const isInWindow = now >= deadlineMinusOneDay && now < endOfRaceDay;
+      console.log(`Race ${race.id}: deadline=${deadline.toISOString()}, now=${now.toISOString()}, inWindow=${isInWindow}`);
+      return isInWindow; // Autofill works from (deadline - 1 day at 00:00) until end of race day
     });
 
-    console.log(`Found ${passedDeadlineRaces.length} races with passed deadlines`);
+    console.log(`Found ${upcomingDeadlineRaces.length} races with upcoming deadlines`);
 
-    if (passedDeadlineRaces.length === 0) {
-      return res.json({ success: true, message: 'No races with passed deadlines' });
+    if (upcomingDeadlineRaces.length === 0) {
+      return res.json({ success: true, message: 'No races with upcoming deadlines' });
     }
 
     // Get all users with saved teams
@@ -55,8 +65,8 @@ exports.autoFillRaceTeams = functions.region('europe-west1').https.onRequest(asy
 
       processedUsers++;
 
-      // Check each race with passed deadline
-      for (const race of passedDeadlineRaces) {
+      // Check each race with upcoming deadline
+      for (const race of upcomingDeadlineRaces) {
         const raceId = race.id;
         const maxRiders = race.maxRiders || 7;
 
@@ -192,18 +202,28 @@ exports.autoFillRaceTeamsScheduled = functions.region('europe-west1').pubsub
         ...doc.data()
       }));
 
-      // Filter races where deadline has passed
-      const passedDeadlineRaces = races.filter(race => {
+      // Filter races where autofill window is still open (1 day before deadline until end of race day)
+      // Also exclude stages since they share the same selection as the general classification
+      const upcomingDeadlineRaces = races.filter(race => {
         if (!race.startDate) return false;
+        if (race.name && race.name.includes('Stage')) return false; // Exclude stages
         const deadline = new Date(race.startDate);
         deadline.setHours(9, 0, 0, 0);
-        return deadline <= now;
+        const deadlineMinusOneDay = new Date(deadline);
+        deadlineMinusOneDay.setDate(deadlineMinusOneDay.getDate() - 1);
+        deadlineMinusOneDay.setHours(0, 0, 0, 0); // Start from 00:00 on the day before
+        const endOfRaceDay = new Date(deadline);
+        endOfRaceDay.setDate(endOfRaceDay.getDate() + 1);
+        endOfRaceDay.setHours(0, 0, 0, 0); // End at 00:00 on the day after (i.e., end of race day)
+        const isInWindow = now >= deadlineMinusOneDay && now < endOfRaceDay;
+        addLog(`Race ${race.id}: deadline=${deadline.toISOString()}, now=${now.toISOString()}, inWindow=${isInWindow}`);
+        return isInWindow; // Autofill works from (deadline - 1 day at 00:00) until end of race day
       });
 
-      addLog(`Found ${passedDeadlineRaces.length} races with passed deadlines`);
+      addLog(`Found ${upcomingDeadlineRaces.length} races with upcoming deadlines`);
 
-      if (passedDeadlineRaces.length === 0) {
-        addLog('No races with passed deadlines');
+      if (upcomingDeadlineRaces.length === 0) {
+        addLog('No races with upcoming deadlines');
         
         // Save logs to Firestore
         await db.collection('system_logs').doc('autoFillScheduled').set({
@@ -246,8 +266,8 @@ exports.autoFillRaceTeamsScheduled = functions.region('europe-west1').pubsub
 
         processedUsers++;
 
-        // Check each race with passed deadline
-        for (const race of passedDeadlineRaces) {
+        // Check each race with upcoming deadline
+        for (const race of upcomingDeadlineRaces) {
           const raceId = race.id;
           const maxRiders = race.maxRiders || 7;
 

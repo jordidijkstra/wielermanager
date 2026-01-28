@@ -12,6 +12,7 @@ import Rankings from './components/Rankings';
 import Settings from './components/Settings';
 import YourPoints from './components/YourPoints';
 import RaceCountdown from './components/RaceCountdown';
+import RiderStatistics from './components/RiderStatistics';
 import Footer from './components/Footer';
 import '@fortawesome/fontawesome-free/css/all.min.css';
 
@@ -71,6 +72,8 @@ function App() {
         return <PointsTables />;
       case 'rankings':
         return <Rankings user={user} resetTrigger={rankingsResetTrigger} />;
+      case 'riderStatistics':
+        return <RiderStatistics />;
       case 'settings':
         return user ? <Settings user={user} /> : <Home user={user} setCurrentPage={setCurrentPage} setShowLoginModal={setShowLoginModal} />;
       default:

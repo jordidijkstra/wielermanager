@@ -28,12 +28,13 @@ service cloud.firestore {
     }
 
     // Teams (user's complete team/budget team) - read allowed for all logged in users
+    // bestteam document is special - Cloud Functions can write it, users can only read
     match /teams/{userId} {
       allow read: if isLoggedIn();
-      allow write: if isLoggedIn() 
-        && (request.auth.uid == userId || isAdmin());
-      allow create: if isLoggedIn() 
-        && (request.auth.uid == userId || isAdmin());
+      allow write: if (userId == 'bestteam' && request.auth == null) 
+        || (isLoggedIn() && (request.auth.uid == userId || isAdmin()));
+      allow create: if (userId == 'bestteam' && request.auth == null)
+        || (isLoggedIn() && (request.auth.uid == userId || isAdmin()));
       allow delete: if isLoggedIn() && (request.auth.uid == userId || isAdmin());
     }
 

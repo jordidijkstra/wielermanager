@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback, useMemo } from 'react';
-import { collection, getDocs, doc } from 'firebase/firestore';
+import { collection, getDocs, doc, getDoc, onSnapshot } from 'firebase/firestore';
 import { db } from '../firebase/config';
 import { useRaces } from '../hooks/useRaces';
 import { useResults } from '../hooks/useResults';
@@ -23,6 +23,8 @@ export default function Rankings({ user, resetTrigger }) {
   const [teamDetails, setTeamDetails] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [allRiders, setAllRiders] = useState([]);
+  const [bestTeamData, setBestTeamData] = useState(null);
 
   // Reset team details when Rankings menu is clicked (resetTrigger changes)
   useEffect(() => {
@@ -31,10 +33,40 @@ export default function Rankings({ user, resetTrigger }) {
 
   // Load all teams and users from Firestore (cached)
   useEffect(() => {
+    // Set up real-time listener for best team data
+    try {
+      const bestTeamRef = doc(db, 'teams', 'bestteam');
+      const unsubscribe = onSnapshot(bestTeamRef, (docSnapshot) => {
+        if (docSnapshot.exists()) {
+          setBestTeamData(docSnapshot.data());
+          console.log('🔄 Best team data updated:', docSnapshot.data());
+        }
+      }, (error) => {
+        console.error('Error listening to best team:', error);
+      });
+      
+      return () => unsubscribe();
+    } catch (err) {
+      console.error('Fout bij setup best team listener:', err);
+    }
+  }, []);
+
+  // Load other data (riders, teams, users)
+  useEffect(() => {
     const loadData = async () => {
       try {
         setLoading(true);
         setError('');
+        
+        // Load riders
+        const ridersSnapshot = await getDocs(collection(db, 'riders'));
+        const ridersData = ridersSnapshot.docs
+          .map(doc => ({
+            id: doc.id,
+            ...doc.data()
+          }))
+          .filter(rider => rider.id !== '911' && rider.id !== 911);
+        setAllRiders(ridersData);
         
         // Check if cache is still valid
         const now = Date.now();
@@ -48,6 +80,9 @@ export default function Rankings({ user, resetTrigger }) {
           const teams = [];
           
           teamsSnapshot.forEach(doc => {
+            // Skip bestteam - it's loaded separately via real-time listener
+            if (doc.id === 'bestteam') return;
+            
             teams.push({
               id: doc.id,
               ...doc.data()
@@ -110,8 +145,19 @@ export default function Rankings({ user, resetTrigger }) {
   }, [teamDetails]);
 
   // Calculate total points for a team (memoized)
-  // Using pre-calculated points from Cloud Function
+  // Using pre-calculated points from Cloud Function for normal teams
+  // For virtual teams, sum points from all riders
   const calculateTeamPoints = useCallback((team) => {
+    // Special handling for virtual teams (bestteam)
+    if (team.isVirtual || team.id === 'bestteam') {
+      if (!team.riders || team.riders.length === 0) return 0;
+      // Sum all points from all riders in the virtual team
+      return team.riders.reduce((total, rider) => {
+        return total + (rider.totalPoints || 0);
+      }, 0);
+    }
+    
+    // For normal teams, use pre-calculated points from Cloud Function
     let totalPoints = 0;
     const userId = team.id;
     const userTeams = allUserRaceTeams[userId] || {};
@@ -128,13 +174,41 @@ export default function Rankings({ user, resetTrigger }) {
 
   // Rankings table view (memoized)
   const rankedTeams = useMemo(() => {
-    return allTeams
+    // Filter out bestteam from allTeams - we'll add it separately with correct data
+    const otherTeams = allTeams
+      .filter(team => team.id !== 'bestteam')
       .map(team => ({
         ...team,
         totalPoints: calculateTeamPoints(team)
-      }))
-      .sort((a, b) => b.totalPoints - a.totalPoints);
-  }, [allTeams, calculateTeamPoints]);
+      }));
+    
+    // Add bestteam with data from bestTeamData (real-time listener)
+    if (bestTeamData && bestTeamData.riders && bestTeamData.riders.length > 0) {
+      otherTeams.push({
+        ...bestTeamData,
+        isVirtual: true,
+        totalPoints: bestTeamData.totalPoints || 0
+      });
+    }
+    
+    return otherTeams.sort((a, b) => b.totalPoints - a.totalPoints);
+  }, [allTeams, bestTeamData, calculateTeamPoints]);
+
+  // Get best team from stored metadata (calculated by Cloud Function)
+  const getBestTeam = useCallback(() => {
+    if (bestTeamData) {
+      return bestTeamData;
+    }
+    // Fallback if not yet calculated
+    return {
+      id: 'bestteam',
+      isVirtual: true,
+      totalPoints: 0,
+      riderCount: 0,
+      totalBudget: 0,
+      riders: []
+    };
+  }, [bestTeamData]);
 
   const getRiderName = (rider) => {
     return `${rider.firstname} ${rider.lastname}`;
@@ -148,6 +222,11 @@ export default function Rankings({ user, resetTrigger }) {
   };
 
   const getUserName = (userId) => {
+    // Handle virtual teams
+    if (userId === 'bestteam') {
+      return 'Virtual Manager';
+    }
+    
     const userData = allUsers.find(u => u.id === userId);
     if (userData) {
       return userData.firstname && userData.lastname 
@@ -159,6 +238,11 @@ export default function Rankings({ user, resetTrigger }) {
   };
 
   const getTeamDisplayName = (userId) => {
+    // Handle virtual teams
+    if (userId === 'bestteam') {
+      return 'Ultimate Team';
+    }
+    
     const userData = allUsers.find(u => u.id === userId);
     if (userData) {
       // Als teamnaam is ingesteld, toon die; anders toon voornaam en achternaam
@@ -241,9 +325,7 @@ export default function Rankings({ user, resetTrigger }) {
     <div className="rankings">
       <h1>Rankings</h1>
 
-      {!isTeamCreationDeadlinePassed() ? (
-        <p className="no-teams-message">Rankings zijn zichtbaar nadat teams ingediend zijn</p>
-      ) : rankedTeams.length === 0 ? (
+      {rankedTeams.length === 0 ? (
         <p className="no-teams-message">Geen teams gevonden</p>
       ) : (
         <div className="rankings-table-container">
@@ -257,6 +339,7 @@ export default function Rankings({ user, resetTrigger }) {
               </tr>
             </thead>
             <tbody>
+              {/* User teams */}
               {rankedTeams.map((team, index) => (
                 <tr key={team.id} className="team-row">
                   <td className="rank">{index + 1}</td>

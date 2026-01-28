@@ -138,7 +138,7 @@ export const removeRidersPointsFromResults = async (raceResults, raceId = null) 
         const riderResultRef = doc(db, 'riders', riderId, 'riderResults', String(raceId));
         await setDoc(riderResultRef, {
           points: 0,
-          removed: true,
+          raceLeaderPoints: 0,
           timestamp: new Date().toISOString()
         }, { merge: true });
         console.log(`📊 Race punten verwijderd voor rider ${riderId} in race ${raceId}`);
@@ -194,6 +194,57 @@ export const getTotalPointsFromRaces = async (riderId) => {
 
 // Add race leader (GC) points to a rider
 // Used for multi-day races (stages) to award points to the race leader
+
+/**
+ * Get race leader points for a specific race category
+ * Looks up the raceLeaderCategorie in the raceCategory document
+ * Then fetches the points from pointsPerCategory
+ */
+export const getRaceLeaderPointsForCategory = async (raceCategoryId) => {
+  if (!raceCategoryId) {
+    console.warn('⚠️ No race category ID provided');
+    return 0;
+  }
+
+  try {
+    // Get the race category
+    const raceCategoryRef = doc(db, 'raceCategories', String(raceCategoryId));
+    const raceCategoryDoc = await getDoc(raceCategoryRef);
+    
+    if (!raceCategoryDoc.exists()) {
+      console.warn(`⚠️ Race category ${raceCategoryId} not found`);
+      return 0;
+    }
+
+    const raceCategoryData = raceCategoryDoc.data();
+    const raceLeaderCategoryId = raceCategoryData.raceLeaderCategorie;
+
+    if (!raceLeaderCategoryId) {
+      console.log(`ℹ️ Race category ${raceCategoryId} has no race leader category`);
+      return 0;
+    }
+
+    // Get the race leader points from pointsPerCategory
+    const pointsCategoryRef = doc(db, 'pointsPerCategory', String(raceLeaderCategoryId));
+    const pointsCategoryDoc = await getDoc(pointsCategoryRef);
+
+    if (!pointsCategoryDoc.exists()) {
+      console.warn(`⚠️ Points category ${raceLeaderCategoryId} not found`);
+      return 0;
+    }
+
+    const pointsCategoryData = pointsCategoryDoc.data();
+    // Assume first position (index 0) contains the race leader points
+    const raceLeaderPoints = pointsCategoryData.points?.[0] || 0;
+
+    console.log(`🏆 Race leader points for category ${raceCategoryId}: ${raceLeaderPoints} (from pointsPerCategory: ${raceLeaderCategoryId})`);
+    return raceLeaderPoints;
+  } catch (error) {
+    console.error(`Error getting race leader points for category ${raceCategoryId}:`, error);
+    return 0;
+  }
+};
+
 /**
  * Sets race leader points for a rider in a specific race
  * Replaces existing race leader points (does not add to them)

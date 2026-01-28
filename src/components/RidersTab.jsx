@@ -3,16 +3,19 @@ import { useRiders } from '../hooks/useRiders';
 import { useCyclingTeams } from '../hooks/useCyclingTeams';
 import { getRiderRacePoints } from '../services/riderService';
 import { useRaces } from '../hooks/useRaces';
+import { useResults } from '../hooks/useResults';
 
 export default function RidersTab() {
   const { riders, loading, reload, editRider, deleteRider: deleteRiderFromHook, addRider } = useRiders();
   const { teams } = useCyclingTeams();
-  const { races } = useRaces();
+  const { races, reload: reloadRaces } = useRaces();
+  const { reload: reloadResults } = useResults();
   const [editingId, setEditingId] = useState(null);
   const [editData, setEditData] = useState({});
   const [searchTerm, setSearchTerm] = useState('');
   const [showAddForm, setShowAddForm] = useState(false);
-  const [sortBy, setSortBy] = useState('id-asc');
+  const [sortField, setSortField] = useState('id');
+  const [sortDirection, setSortDirection] = useState('asc');
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedTeamFilter, setSelectedTeamFilter] = useState(null);
   const [selectedRiderResults, setSelectedRiderResults] = useState(null);
@@ -29,8 +32,13 @@ export default function RidersTab() {
     points: 0
   });
 
-  const toggleSort = () => {
-    setSortBy(sortBy === 'id-asc' ? 'id-desc' : 'id-asc');
+  const toggleSortDirection = () => {
+    setSortDirection(sortDirection === 'asc' ? 'desc' : 'asc');
+  };
+
+  const setSortFieldAndReset = (field) => {
+    setSortField(field);
+    setSortDirection('asc');
   };
 
   const startEdit = (rider) => {
@@ -51,6 +59,12 @@ export default function RidersTab() {
         points: editData.points ? parseInt(editData.points) : 0
       });
       
+      // Cache clearing - renner-wijzigingen kunnen resultaten en races beïnvloeden
+      await reloadResults();
+      console.log('✅ Resultaten cache gecleared');
+      await reloadRaces();
+      console.log('✅ Races cache gecleared');
+      
       setEditingId(null);
       console.log('✅ Rider updated:', riderId);
     } catch (error) {
@@ -67,6 +81,13 @@ export default function RidersTab() {
     try {
       setIsSaving(true);
       await deleteRiderFromHook(riderId);
+      
+      // Cache clearing - renner-verwijdering kan resultaten en races beïnvloeden
+      await reloadResults();
+      console.log('✅ Resultaten cache gecleared');
+      await reloadRaces();
+      console.log('✅ Races cache gecleared');
+      
       console.log('✅ Rider deleted:', riderId);
     } catch (error) {
       console.error('Error deleting rider:', error);
@@ -115,6 +136,12 @@ export default function RidersTab() {
         points: parseInt(newRider.points) || 0
       });
 
+      // Cache clearing - nieuwe renner kan races beïnvloeden
+      await reloadResults();
+      console.log('✅ Resultaten cache gecleared');
+      await reloadRaces();
+      console.log('✅ Races cache gecleared');
+
       setNewRider({
         firstname: '',
         lastname: '',
@@ -142,13 +169,19 @@ export default function RidersTab() {
   });
 
   const sortedRiders = [...filteredRiders].sort((a, b) => {
-    const idA = parseInt(a.id) || 0;
-    const idB = parseInt(b.id) || 0;
-    if (sortBy === 'id-asc') {
-      return idA - idB;
-    } else {
-      return idB - idA;
+    let compareResult = 0;
+    
+    if (sortField === 'id') {
+      const idA = parseInt(a.id) || 0;
+      const idB = parseInt(b.id) || 0;
+      compareResult = idA - idB;
+    } else if (sortField === 'points') {
+      const pointsA = a.points || 0;
+      const pointsB = b.points || 0;
+      compareResult = pointsA - pointsB;
     }
+    
+    return sortDirection === 'asc' ? compareResult : -compareResult;
   });
 
   const totalPages = Math.ceil(sortedRiders.length / RIDERS_PER_PAGE);
@@ -317,18 +350,35 @@ export default function RidersTab() {
         <table>
             <thead>
               <tr>
-                <th onClick={toggleSort} style={{cursor: 'pointer'}}>
-                  ID {sortBy === 'id-asc' ? '↑' : '↓'}
+                <th onClick={() => setSortFieldAndReset('id')} style={{cursor: 'pointer', backgroundColor: sortField === 'id' ? '#f0f0f0' : 'transparent'}}>
+                  ID {sortField === 'id' && (sortDirection === 'asc' ? '↑' : '↓')}
                 </th>
                 <th>Voornaam</th>
                 <th>Achternaam</th>
                 <th>Voornaam (zonder speciale tekens)</th>
                 <th>Achternaam (zonder speciale tekens)</th>
                 <th>Prijs (€)</th>
-                <th>Punten</th>
+                <th onClick={() => setSortFieldAndReset('points')} style={{cursor: 'pointer', backgroundColor: sortField === 'points' ? '#f0f0f0' : 'transparent'}}>
+                  Punten {sortField === 'points' && (sortDirection === 'asc' ? '↑' : '↓')}
+                </th>
                 <th>Team ID</th>
                 <th>Acties</th>
               </tr>
+              {sortField && (
+                <tr style={{backgroundColor: '#fafafa', borderTop: '2px solid #ddd'}}>
+                  <td colSpan="9" style={{textAlign: 'center', padding: '8px', fontSize: '12px', color: '#666'}}>
+                    Sorteren op: <strong>{sortField === 'id' ? 'ID' : 'Punten'}</strong> ({sortDirection === 'asc' ? 'oplopend' : 'aflopend'})
+                    {sortField && (
+                      <button 
+                        onClick={toggleSortDirection}
+                        style={{marginLeft: '10px', padding: '4px 8px', fontSize: '11px', cursor: 'pointer', backgroundColor: '#fff', border: '1px solid #ccc', borderRadius: '3px'}}
+                      >
+                        Richting omdraaien
+                      </button>
+                    )}
+                  </td>
+                </tr>
+              )}
             </thead>
             <tbody>
               {paginatedRiders.map((rider, index) => (
@@ -521,22 +571,26 @@ export default function RidersTab() {
                     </tr>
                   </thead>
                   <tbody>
-                    {selectedRiderResults.results.map((result) => (
-                      <React.Fragment key={result.raceId}>
-                        {result.points > 0 && (
-                          <tr>
-                            <td>{getRaceName(result.raceId)}</td>
+                    {selectedRiderResults.results.flatMap((result) => {
+                      const rows = [];
+                      if (result.points > 0) {
+                        rows.push(
+                          <tr key={`${result.raceId}-points`}>
+                            <td>{result.raceName || getRaceName(result.raceId)}</td>
                             <td className="points-cell">{result.points}</td>
                           </tr>
-                        )}
-                        {result.raceLeaderPoints && result.raceLeaderPoints > 0 && (
+                        );
+                      }
+                      if (result.raceLeaderPoints && result.raceLeaderPoints > 0) {
+                        rows.push(
                           <tr key={`${result.raceId}-leader`} className="race-leader-points-row">
-                            <td className="race-leader-label">Race Leader - {result.raceName}</td>
+                            <td className="race-leader-label">Race Leader - {result.raceName || getRaceName(result.raceId)}</td>
                             <td className="points-cell race-leader-points">{result.raceLeaderPoints}</td>
                           </tr>
-                        )}
-                      </React.Fragment>
-                    ))}
+                        );
+                      }
+                      return rows;
+                    })}
                   </tbody>
                   <tfoot>
                     <tr className="total-row">

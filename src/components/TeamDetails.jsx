@@ -19,7 +19,61 @@ export default function TeamDetails({
   const [loading, setLoading] = useState(true);
   const [selectedRiderResults, setSelectedRiderResults] = useState(null);
   const [riderResultsLoading, setRiderResultsLoading] = useState(false);
-  const teamPoints = calculateTeamPoints(teamDetails);
+  const [riderRaceLeaderPoints, setRiderRaceLeaderPoints] = useState({});
+  
+  // Load race leader points for all team riders
+  useEffect(() => {
+    const loadRaceLeaderPoints = async () => {
+      if (!teamDetails.riders || teamDetails.riders.length === 0) return;
+      
+      const leaderPoints = {};
+      
+      for (const rider of teamDetails.riders) {
+        try {
+          const riderResultsSnap = await getDocs(collection(db, 'riders', rider.id.toString(), 'riderResults'));
+          riderResultsSnap.docs.forEach(doc => {
+            const data = doc.data();
+            const raceId = doc.id;
+            if (data.raceLeaderPoints && data.raceLeaderPoints > 0) {
+              leaderPoints[`${rider.id}-${raceId}`] = data.raceLeaderPoints;
+            }
+          });
+        } catch (err) {
+          console.error(`Error loading race leader points for rider ${rider.id}:`, err);
+        }
+      }
+      
+      console.log('✅ Loaded race leader points:', leaderPoints);
+      setRiderRaceLeaderPoints(leaderPoints);
+    };
+    
+    loadRaceLeaderPoints();
+  }, [teamDetails.riders, teamDetails.isVirtual]);
+  
+  // Calculate team points - handle virtual teams specially
+  const teamPoints = useMemo(() => {
+    if (teamDetails.isVirtual && teamDetails.riders) {
+      // For virtual teams, sum all points from all riders across all races
+      // Include both regular points and race leader points
+      return teamDetails.riders.reduce((total, rider) => {
+        const riderTotalPoints = results.reduce((sum, raceResult) => {
+          if (raceResult.entries) {
+            const entry = raceResult.entries.find(e => e.riderId === rider.id);
+            const entryPoints = entry?.points || 0;
+            // Get race leader points from the loaded data using race ID as string
+            const raceIdStr = String(raceResult.raceId);
+            const raceLeaderBonus = riderRaceLeaderPoints[`${rider.id}-${raceIdStr}`] || 0;
+            return sum + entryPoints + raceLeaderBonus;
+          }
+          return sum;
+        }, 0);
+        return total + riderTotalPoints;
+      }, 0);
+    }
+    
+    // For normal teams, use the provided calculateTeamPoints function
+    return calculateTeamPoints(teamDetails);
+  }, [teamDetails, calculateTeamPoints, results, riderRaceLeaderPoints]);
 
   // Load user's race teams (including pre-calculated points)
   useEffect(() => {
@@ -71,10 +125,23 @@ export default function TeamDetails({
 
   // Get unique race dates sorted
   const sortedDates = useMemo(() => {
-    const uniqueDates = [...new Set(races.map(r => {
-      // For main races (no tourId), use endDate; for stages, use startDate
-      return r.tourId == null ? (r.endDate || r.startDate) : (r.startDate || '');
-    }))].filter(d => d);
+    const dateMap = new Map();
+    
+    // Include all races (even past ones with results)
+    races.forEach(r => {
+      // For normal races (no tourId), use startDate
+      // For tour races (stages with tourId), use endDate
+      let raceDate = r.tourId == null ? (r.startDate || '') : (r.endDate || r.startDate || '');
+      
+      // If no date found, skip this race
+      if (!raceDate) return;
+      
+      if (!dateMap.has(raceDate)) {
+        dateMap.set(raceDate, raceDate);
+      }
+    });
+    
+    const uniqueDates = Array.from(dateMap.keys());
     return uniqueDates.sort((a, b) => new Date(a) - new Date(b));
   }, [races]);
 
@@ -106,15 +173,40 @@ export default function TeamDetails({
     if (currentSpeeldagIndex === null || sortedDates.length === 0) return [];
     const currentDate = sortedDates[currentSpeeldagIndex];
     return races.filter(r => {
-      // For main races, match on endDate; for stages, match on startDate
-      const raceDate = r.tourId == null ? (r.endDate || r.startDate) : (r.startDate || '');
+      // For normal races, match on startDate
+      // For tour races (stages), match on endDate
+      const raceDate = r.tourId == null ? (r.startDate || '') : (r.endDate || r.startDate || '');
       return raceDate === currentDate;
     });
   }, [races, currentSpeeldagIndex, sortedDates]);
 
   // Calculate points for current speeldag (only from selected riders)
   // Using pre-calculated points from Cloud Function
+  // For virtual teams, sum points from the riders directly
   const speeldagPoints = useMemo(() => {
+    // If this is a virtual team (best possible team), calculate from rider points directly
+    if (teamDetails.isVirtual && teamDetails.riders) {
+      return currentSpeeldagRaces.reduce((totalPoints, race) => {
+        const raceIdNum = typeof race.id === 'string' ? parseInt(race.id) : race.id;
+        const raceIdStr = String(raceIdNum);
+        const raceResult = results.find(r => r.raceId === raceIdNum);
+        
+        if (raceResult && raceResult.entries) {
+          // Sum points from all riders in the team for this race
+          teamDetails.riders.forEach(rider => {
+            const entry = raceResult.entries.find(e => e.riderId === rider.id);
+            if (entry) {
+              const entryPoints = entry.points || 0;
+              const raceLeaderBonus = riderRaceLeaderPoints[`${rider.id}-${raceIdStr}`] || 0;
+              totalPoints += entryPoints + raceLeaderBonus;
+            }
+          });
+        }
+        return totalPoints;
+      }, 0);
+    }
+
+    // For normal teams, use pre-calculated points from stored selections
     let totalPoints = 0;
     currentSpeeldagRaces.forEach(race => {
       const raceIdNum = typeof race.id === 'string' ? parseInt(race.id) : race.id;
@@ -126,12 +218,30 @@ export default function TeamDetails({
       }
     });
     return totalPoints;
-  }, [currentSpeeldagRaces, userRaceTeams]);
+  }, [currentSpeeldagRaces, userRaceTeams, teamDetails.isVirtual, teamDetails.riders, results, riderRaceLeaderPoints]);
 
   // Get riders not selected but with points on current speeldag
   const ridersNotSelectedButWithPoints = useMemo(() => {
     if (!teamDetails.riders || teamDetails.riders.length === 0) return [];
     if (currentSpeeldagRaces.length === 0) return [];
+    
+    // For virtual teams, show all riders with their points (no "not selected" concept)
+    if (teamDetails.isVirtual) {
+      return teamDetails.riders
+        .map(rider => {
+          const riderSpeeldagPoints = currentSpeeldagRaces.reduce((sum, race) => {
+            const raceIdNum = typeof race.id === 'string' ? parseInt(race.id) : race.id;
+            const raceResult = results.find(r => r.raceId === raceIdNum);
+            if (raceResult && raceResult.entries) {
+              const entry = raceResult.entries.find(e => e.riderId === rider.id);
+              return sum + (entry?.points || 0);
+            }
+            return sum;
+          }, 0);
+          return { ...rider, points: riderSpeeldagPoints };
+        })
+        .sort((a, b) => b.points - a.points);
+    }
     
     // Collect all rider IDs selected for this speeldag
     const selectedRiderIds = new Set();
@@ -164,12 +274,35 @@ export default function TeamDetails({
       })
       .filter(rider => rider.points > 0)
       .sort((a, b) => b.points - a.points);
-  }, [teamDetails.riders, currentSpeeldagRaces, results, userRaceTeams]);
+  }, [teamDetails.riders, teamDetails.isVirtual, currentSpeeldagRaces, results, userRaceTeams]);
 
   // Get riders that are selected for current speeldag (with or without points)
   const ridersSelectedForSpeeldag = useMemo(() => {
     if (!teamDetails.riders || teamDetails.riders.length === 0) return [];
     if (currentSpeeldagRaces.length === 0) return [];
+    
+    // For virtual teams, all riders are "selected"
+    if (teamDetails.isVirtual) {
+      return teamDetails.riders
+        .map(rider => {
+          const riderSpeeldagPoints = currentSpeeldagRaces.reduce((sum, race) => {
+            const raceIdNum = typeof race.id === 'string' ? parseInt(race.id) : race.id;
+            const raceIdStr = String(raceIdNum);
+            const raceResult = results.find(r => r.raceId === raceIdNum);
+            if (raceResult && raceResult.entries) {
+              const entry = raceResult.entries.find(e => e.riderId === rider.id);
+              if (entry) {
+                const entryPoints = entry.points || 0;
+                const raceLeaderBonus = riderRaceLeaderPoints[`${rider.id}-${raceIdStr}`] || 0;
+                return sum + entryPoints + raceLeaderBonus;
+              }
+            }
+            return sum;
+          }, 0);
+          return { ...rider, points: riderSpeeldagPoints };
+        })
+        .sort((a, b) => b.points - a.points);
+    }
     
     // Collect all rider IDs selected for this speeldag
     // For stages, use the main tour selection; for main races, use their own selection
@@ -195,10 +328,13 @@ export default function TeamDetails({
       .map(rider => {
         const riderSpeeldagPoints = currentSpeeldagRaces.reduce((sum, race) => {
           const raceIdNum = typeof race.id === 'string' ? parseInt(race.id) : race.id;
+          const raceIdStr = String(raceIdNum);
           const raceResult = results.find(r => r.raceId === raceIdNum);
           if (raceResult && raceResult.entries) {
             const entry = raceResult.entries.find(e => e.riderId === rider.id);
-            return sum + (entry?.points || 0);
+            const entryPoints = entry?.points || 0;
+            const raceLeaderBonus = riderRaceLeaderPoints[`${rider.id}-${raceIdStr}`] || 0;
+            return sum + entryPoints + raceLeaderBonus;
           }
           return sum;
         }, 0);
@@ -212,7 +348,7 @@ export default function TeamDetails({
         }
         return b.price - a.price;
       });
-  }, [teamDetails.riders, currentSpeeldagRaces, results, userRaceTeams]);
+  }, [teamDetails.riders, currentSpeeldagRaces, results, userRaceTeams, riderRaceLeaderPoints]);
 
   if (loading) {
     return (
@@ -294,21 +430,41 @@ export default function TeamDetails({
                   
                   const isSelectedForThisSpeeldag = selectedRiderIds.has(rider.id);
                   
-                  // Calculate speeldag points (for all riders) using pre-calculated data
-                  const riderAllSpeeldagPoints = currentSpeeldagRaces.reduce((sum, race) => {
-                    const raceIdNum = typeof race.id === 'string' ? parseInt(race.id) : race.id;
-                    // Points are always stored under race ID (stage ID for stages, race ID for normal races)
-                    const raceTeamData = userRaceTeams[raceIdNum];
-                    if (raceTeamData && raceTeamData.riderPoints && raceTeamData.riderPoints[rider.id]) {
-                      return sum + raceTeamData.riderPoints[rider.id];
-                    }
-                    return sum;
-                  }, 0);
+                  // Calculate speeldag points
+                  let riderAllSpeeldagPoints = 0;
+                  
+                  if (teamDetails.isVirtual) {
+                    // For virtual teams, get points from race results directly
+                    riderAllSpeeldagPoints = currentSpeeldagRaces.reduce((sum, race) => {
+                      const raceIdNum = typeof race.id === 'string' ? parseInt(race.id) : race.id;
+                      const raceIdStr = String(raceIdNum);
+                      const raceResult = results.find(r => r.raceId === raceIdNum);
+                      if (raceResult && raceResult.entries) {
+                        const entry = raceResult.entries.find(e => e.riderId === rider.id);
+                        if (entry) {
+                          const entryPoints = entry.points || 0;
+                          const raceLeaderBonus = riderRaceLeaderPoints[`${rider.id}-${raceIdStr}`] || 0;
+                          return sum + entryPoints + raceLeaderBonus;
+                        }
+                      }
+                      return sum;
+                    }, 0);
+                  } else {
+                    // For normal teams, get pre-calculated points
+                    riderAllSpeeldagPoints = currentSpeeldagRaces.reduce((sum, race) => {
+                      const raceIdNum = typeof race.id === 'string' ? parseInt(race.id) : race.id;
+                      const raceTeamData = userRaceTeams[raceIdNum];
+                      if (raceTeamData && raceTeamData.riderPoints && raceTeamData.riderPoints[rider.id]) {
+                        return sum + raceTeamData.riderPoints[rider.id];
+                      }
+                      return sum;
+                    }, 0);
+                  }
 
                   return {
                     ...rider,
                     speeldagPoints: riderAllSpeeldagPoints,
-                    isSelected: isSelectedForThisSpeeldag
+                    isSelected: isSelectedForThisSpeeldag || teamDetails.isVirtual // For virtual teams, all riders are "selected"
                   };
                 })
                 .sort((a, b) => {

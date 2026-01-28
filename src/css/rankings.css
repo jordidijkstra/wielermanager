@@ -136,6 +136,32 @@
   transform: translateY(-2px);
 }
 
+/* Best Team Row */
+.best-team-row {
+  background: linear-gradient(135deg, #fff9e6 0%, #fff3cc 100%) !important;
+  border-left: 4px solid #fca311;
+  font-weight: 600;
+}
+
+.best-team-row:hover {
+  background: linear-gradient(135deg, #fff3cc 0%, #ffed99 100%) !important;
+  box-shadow: 0 2px 8px rgba(252, 163, 17, 0.2) inset;
+}
+
+.best-team-badge {
+  background: linear-gradient(135deg, #fca311 0%, #f79e1b 100%);
+  color: white;
+}
+
+.btn-view-bestteam {
+  background: #fca311;
+}
+
+.btn-view-bestteam:hover {
+  background: #f79e1b;
+  transform: translateY(-2px);
+}
+
 /* Team Details */
 .team-details-header {
   margin: 10dvh auto 1em auto;

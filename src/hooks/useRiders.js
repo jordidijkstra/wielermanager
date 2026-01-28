@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { getAllRiders, updateRider } from '../services/riderService';
-import { setDoc, deleteDoc, doc, collection } from 'firebase/firestore';
+import { setDoc, deleteDoc, doc, collection, onSnapshot } from 'firebase/firestore';
 import { db } from '../firebase/config';
 
 export function useRiders() {
@@ -20,7 +20,28 @@ export function useRiders() {
   };
 
   useEffect(() => {
-    loadRiders();
+    // Set up real-time listener
+    setLoading(true);
+    try {
+      const ridersRef = collection(db, 'riders');
+      const unsubscribe = onSnapshot(ridersRef, (snapshot) => {
+        const data = snapshot.docs.map(doc => ({
+          id: doc.id,
+          ...doc.data()
+        }));
+        setRiders(data);
+        setLoading(false);
+        console.log('🔄 Real-time riders update:', data.length, 'riders');
+      }, (error) => {
+        console.error('Error in real-time listener:', error);
+        setLoading(false);
+      });
+      
+      return () => unsubscribe();
+    } catch (err) {
+      console.error('Fout bij setup real-time listener:', err);
+      setLoading(false);
+    }
   }, []);
 
   // Edit/update rider
