@@ -1,17 +1,22 @@
 import { getTeamJerseyPath } from '../services/cyclingTeamService';
 import { formatPrice, getFullName } from '../utils/formatters';
 
-export default function SelectedTeam({ selectedRiders, onRemoveRider, onSaveTeam, saveStatus }) {
+export default function SelectedTeam({ selectedRiders, onRemoveRider, onSaveTeam, saveStatus, deadlinePassed }) {
   return (
     <div className="selected-team">
       <div className="section-header">
         <h2>Jouw Team</h2>
+        {deadlinePassed && (
+          <div className="deadline-warning">
+            ⏱️ Deadline verstreken - Team kan niet meer aangepast worden
+          </div>
+        )}
         {selectedRiders.length > 0 && (
           <button
             className="btn-save-teambuilder"
             onClick={onSaveTeam}
-            disabled={selectedRiders.length < 14}
-            title={selectedRiders.length < 14 ? "Je team moet minimaal 14 renners bevatten" : ""}
+            disabled={selectedRiders.length < 14 || deadlinePassed}
+            title={selectedRiders.length < 14 ? "Je team moet minimaal 14 renners bevatten" : deadlinePassed ? "Deadline verstreken - team kan niet meer aangepast worden" : ""}
           >
             Opslaan <i className="fas fa-save"></i>
           </button>
@@ -46,6 +51,7 @@ export default function SelectedTeam({ selectedRiders, onRemoveRider, onSaveTeam
                 <button 
                   className="btn-remove"
                   onClick={() => onRemoveRider(rider.id)}
+                  disabled={deadlinePassed}
                 >
                   <i className="fas fa-times"></i>
                 </button>

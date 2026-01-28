@@ -1,9 +1,11 @@
 import { useState, useRef } from 'react';
+import { doc, getDoc } from 'firebase/firestore';
+import { db } from '../firebase/config';
 import { useResults } from '../hooks/useResults';
 import { useRaces } from '../hooks/useRaces';
 import { useRiders } from '../hooks/useRiders';
 import { usePointsByCategory } from '../hooks/usePointsByCategory';
-import { updateRidersPointsFromResults, removeRidersPointsFromResults, addRaceLeaderPoints } from '../services/riderService';
+import { updateRidersPointsFromResults, removeRidersPointsFromResults, setRaceLeaderPoints } from '../services/riderService';
 import { recalculateTeamPointsForRace } from '../services/resultsService';
 import { getPointsByCategory } from '../services/pointsByCategoryService';
 import '../css/resultsTab.css';
@@ -259,11 +261,54 @@ export default function ResultsTab() {
         }
       }
       
-      // Award race leader points (only for stages)
-      if (isStage && raceLeaderPoints > 0 && raceLeaderRiderId) {
-        console.log(`🏆 Awarding race leader points - riderId: ${raceLeaderRiderId}, points: ${raceLeaderPoints}, raceId: ${editingResult.raceId}`);
-        await addRaceLeaderPoints(raceLeaderRiderId, raceLeaderPoints, editingResult.raceId, getRaceName(editingResult.raceId));
-        console.log(`✅ Race leader punten toegekend aan renner ${raceLeaderRiderId}`);
+      // Award/remove race leader points (only for stages)
+      if (isStage && raceLeaderPoints > 0) {
+        // Get old race leader data if this result was edited before
+        let oldRaceLeaderRiderId = null;
+        let oldRaceLeaderPoints = 0;
+        if (editingResult.raceLeader) {
+          oldRaceLeaderRiderId = editingResult.raceLeader;
+          const oldRiderResultRef = doc(db, 'riders', oldRaceLeaderRiderId.toString(), 'riderResults', String(editingResult.raceId));
+          const oldRiderResultData = await getDoc(oldRiderResultRef);
+          if (oldRiderResultData.exists()) {
+            oldRaceLeaderPoints = oldRiderResultData.data().raceLeaderPoints || 0;
+          }
+        }
+        
+        // If race leader changed or was removed, remove old points
+        if (oldRaceLeaderRiderId && oldRaceLeaderRiderId !== raceLeaderRiderId) {
+          console.log(`🏆 Removing race leader points from old leader ${oldRaceLeaderRiderId}`);
+          await setRaceLeaderPoints(oldRaceLeaderRiderId, 0, editingResult.raceId, getRaceName(editingResult.raceId), oldRaceLeaderPoints);
+        }
+        
+        // Set new race leader points
+        if (raceLeaderRiderId) {
+          // Get old race leader points for this rider (if any) for this race
+          let newLeaderOldPoints = 0;
+          const newLeaderOldResultRef = doc(db, 'riders', raceLeaderRiderId.toString(), 'riderResults', String(editingResult.raceId));
+          const newLeaderOldResultData = await getDoc(newLeaderOldResultRef);
+          if (newLeaderOldResultData.exists()) {
+            newLeaderOldPoints = newLeaderOldResultData.data().raceLeaderPoints || 0;
+          }
+          
+          console.log(`🏆 Setting race leader points - riderId: ${raceLeaderRiderId}, points: ${raceLeaderPoints}, raceId: ${editingResult.raceId}`);
+          await setRaceLeaderPoints(raceLeaderRiderId, raceLeaderPoints, editingResult.raceId, getRaceName(editingResult.raceId), newLeaderOldPoints);
+          console.log(`✅ Race leader punten ingesteld voor renner ${raceLeaderRiderId}`);
+        } else if (oldRaceLeaderRiderId) {
+          // Race leader was removed
+          console.log(`🏆 Removing race leader points from ${oldRaceLeaderRiderId}`);
+          await setRaceLeaderPoints(oldRaceLeaderRiderId, 0, editingResult.raceId, getRaceName(editingResult.raceId), oldRaceLeaderPoints);
+        }
+      } else if (isStage && editingResult.raceLeader && !raceLeaderRiderId) {
+        // Race leader was removed (no new race leader)
+        const oldRaceLeaderRiderId = editingResult.raceLeader;
+        const oldRiderResultRef = doc(db, 'riders', oldRaceLeaderRiderId.toString(), 'riderResults', String(editingResult.raceId));
+        const oldRiderResultData = await getDoc(oldRiderResultRef);
+        if (oldRiderResultData.exists()) {
+          const oldRaceLeaderPoints = oldRiderResultData.data().raceLeaderPoints || 0;
+          console.log(`🏆 Removing race leader points from ${oldRaceLeaderRiderId}`);
+          await setRaceLeaderPoints(oldRaceLeaderRiderId, 0, editingResult.raceId, getRaceName(editingResult.raceId), oldRaceLeaderPoints);
+        }
       }
       
       // Recalculate team points for all users for this race
@@ -363,10 +408,54 @@ export default function ResultsTab() {
         }
       }
       
-      // Award race leader points (only for stages)
-      if (isStage && raceLeaderPoints > 0 && raceLeaderRiderId) {
-        await addRaceLeaderPoints(raceLeaderRiderId, raceLeaderPoints, approvingResult.raceId, getRaceName(approvingResult.raceId));
-        console.log(`✅ Race leader punten toegekend aan renner ${raceLeaderRiderId}`);
+      // Award/remove race leader points (only for stages)
+      if (isStage && raceLeaderPoints > 0) {
+        // Get old race leader data if this result was edited before
+        let oldRaceLeaderRiderId = null;
+        let oldRaceLeaderPoints = 0;
+        if (approvingResult.raceLeader) {
+          oldRaceLeaderRiderId = approvingResult.raceLeader;
+          const oldRiderResultRef = doc(db, 'riders', oldRaceLeaderRiderId.toString(), 'riderResults', String(approvingResult.raceId));
+          const oldRiderResultData = await getDoc(oldRiderResultRef);
+          if (oldRiderResultData.exists()) {
+            oldRaceLeaderPoints = oldRiderResultData.data().raceLeaderPoints || 0;
+          }
+        }
+        
+        // If race leader changed or was removed, remove old points
+        if (oldRaceLeaderRiderId && oldRaceLeaderRiderId !== raceLeaderRiderId) {
+          console.log(`🏆 Removing race leader points from old leader ${oldRaceLeaderRiderId}`);
+          await setRaceLeaderPoints(oldRaceLeaderRiderId, 0, approvingResult.raceId, getRaceName(approvingResult.raceId), oldRaceLeaderPoints);
+        }
+        
+        // Set new race leader points
+        if (raceLeaderRiderId) {
+          // Get old race leader points for this rider (if any) for this race
+          let newLeaderOldPoints = 0;
+          const newLeaderOldResultRef = doc(db, 'riders', raceLeaderRiderId.toString(), 'riderResults', String(approvingResult.raceId));
+          const newLeaderOldResultData = await getDoc(newLeaderOldResultRef);
+          if (newLeaderOldResultData.exists()) {
+            newLeaderOldPoints = newLeaderOldResultData.data().raceLeaderPoints || 0;
+          }
+          
+          console.log(`🏆 Setting race leader points - riderId: ${raceLeaderRiderId}, points: ${raceLeaderPoints}, raceId: ${approvingResult.raceId}`);
+          await setRaceLeaderPoints(raceLeaderRiderId, raceLeaderPoints, approvingResult.raceId, getRaceName(approvingResult.raceId), newLeaderOldPoints);
+          console.log(`✅ Race leader punten ingesteld voor renner ${raceLeaderRiderId}`);
+        } else if (oldRaceLeaderRiderId) {
+          // Race leader was removed
+          console.log(`🏆 Removing race leader points from ${oldRaceLeaderRiderId}`);
+          await setRaceLeaderPoints(oldRaceLeaderRiderId, 0, approvingResult.raceId, getRaceName(approvingResult.raceId), oldRaceLeaderPoints);
+        }
+      } else if (isStage && approvingResult.raceLeader && !raceLeaderRiderId) {
+        // Race leader was removed (no new race leader)
+        const oldRaceLeaderRiderId = approvingResult.raceLeader;
+        const oldRiderResultRef = doc(db, 'riders', oldRaceLeaderRiderId.toString(), 'riderResults', String(approvingResult.raceId));
+        const oldRiderResultData = await getDoc(oldRiderResultRef);
+        if (oldRiderResultData.exists()) {
+          const oldRaceLeaderPoints = oldRiderResultData.data().raceLeaderPoints || 0;
+          console.log(`🏆 Removing race leader points from ${oldRaceLeaderRiderId}`);
+          await setRaceLeaderPoints(oldRaceLeaderRiderId, 0, approvingResult.raceId, getRaceName(approvingResult.raceId), oldRaceLeaderPoints);
+        }
       }
       
       // Reset alle states

@@ -73,3 +73,45 @@ export const invalidateUsersCache = () => {
   usersCache = null;
   usersCacheTimestamp = 0;
 };
+
+/**
+ * Calculate team building deadline for a user based on their registration date
+ * and the next upcoming race
+ * @param {Object} user - User object from Firestore with createdAt timestamp
+ * @param {Array} races - Array of race objects, should be sorted by startDate
+ * @returns {Date|null} The deadline date (startDate of next race after user creation - 1 day at 9:00 AM)
+ */
+export const getUserTeamBuildingDeadline = (user, races) => {
+  if (!user || !user.createdAt || !races || races.length === 0) {
+    return null;
+  }
+
+  // Convert Firestore timestamp to Date
+  const userCreatedTime = user.createdAt.toDate ? user.createdAt.toDate() : new Date(user.createdAt);
+
+  // Find the first race that starts AFTER the user was created
+  // (or use first race overall if all races are before user creation)
+  let targetRace = races.find((race) => {
+    if (!race.startDate) return false;
+    const raceDate = new Date(race.startDate);
+    return raceDate > userCreatedTime;
+  });
+
+  // If no future race found, use the first race overall
+  if (!targetRace) {
+    targetRace = races.find((race) => race.startDate);
+  }
+
+  if (!targetRace || !targetRace.startDate) {
+    return null;
+  }
+
+  // Calculate deadline: one day before race start at 9:00 AM
+  const deadline = new Date(targetRace.startDate);
+  deadline.setHours(9, 0, 0, 0);
+  
+  // Subtract one day
+  deadline.setDate(deadline.getDate() - 1);
+
+  return deadline;
+};

@@ -62,7 +62,7 @@ function App() {
       case 'admin':
         return isAdmin ? <Admin /> : <Home user={user} setCurrentPage={setCurrentPage} setShowLoginModal={setShowLoginModal} />;
       case 'team':
-        return <TeamBuilder user={user}/>;
+        return <TeamBuilder user={user} setCurrentPage={setCurrentPage}/>;
       case 'points':
         return user ? <YourPoints user={user} /> : <Home user={user} setCurrentPage={setCurrentPage} setShowLoginModal={setShowLoginModal} />;
       case 'raceTeams':

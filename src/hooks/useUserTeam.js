@@ -1,19 +1,24 @@
 import { useState, useEffect } from 'react';
-import { getUserTeam, saveUserTeam } from '../services/teamService';
+import { getUserTeam, saveUserTeam, isTeamEditingDeadlinePassed } from '../services/teamService';
 import { removeRiderFromAllRaceTeams } from '../services/raceService';
+import { useRaces } from './useRaces';
 
 export function useUserTeam(user, budget) {
   const [selectedRiders, setSelectedRiders] = useState([]);
   const [saveStatus, setSaveStatus] = useState('');
+  const [teamData, setTeamData] = useState(null);
+  const { races } = useRaces(user);
+  const [deadlinePassed, setDeadlinePassed] = useState(false);
 
   useEffect(() => {
     if (!user) return;
     
     const loadTeam = async () => {
       try {
-        const teamData = await getUserTeam(user.uid);
-        if (teamData && teamData.riders) {
-          setSelectedRiders(teamData.riders);
+        const team = await getUserTeam(user.uid);
+        setTeamData(team);
+        if (team && team.riders) {
+          setSelectedRiders(team.riders);
         }
       } catch (err) {
         console.error('Fout bij laden team:', err);
@@ -21,6 +26,19 @@ export function useUserTeam(user, budget) {
     };
     loadTeam();
   }, [user]);
+
+  // Check if deadline has passed
+  useEffect(() => {
+    if (teamData && races.length > 0) {
+      const isPassed = isTeamEditingDeadlinePassed(teamData, races);
+      setDeadlinePassed(isPassed);
+      if (isPassed) {
+        console.log('⏱️ Team editing deadline has passed - team cannot be modified');
+      } else {
+        console.log('✅ Team can still be edited');
+      }
+    }
+  }, [teamData, races]);
 
   const getTotalSpent = () => selectedRiders.reduce((sum, r) => sum + r.price, 0);
 
@@ -87,5 +105,5 @@ export function useUserTeam(user, budget) {
     }
   };
 
-  return { selectedRiders, addRider, removeRider, saveTeam, saveStatus, getTotalSpent };
+  return { selectedRiders, addRider, removeRider, saveTeam, saveStatus, getTotalSpent, deadlinePassed };
 }

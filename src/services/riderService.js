@@ -194,49 +194,56 @@ export const getTotalPointsFromRaces = async (riderId) => {
 
 // Add race leader (GC) points to a rider
 // Used for multi-day races (stages) to award points to the race leader
-export const addRaceLeaderPoints = async (riderId, raceLeaderPoints, raceId = null, raceName = null) => {
-  if (!riderId || !raceLeaderPoints || raceLeaderPoints <= 0) {
+/**
+ * Sets race leader points for a rider in a specific race
+ * Replaces existing race leader points (does not add to them)
+ * Can set to 0 to remove race leader points
+ */
+export const setRaceLeaderPoints = async (riderId, raceLeaderPoints, raceId = null, raceName = null, oldRaceLeaderPoints = 0) => {
+  if (!riderId || raceId === null) {
     console.warn('⚠️ Invalid race leader points data');
     return;
   }
 
   try {
     const riderId_str = riderId.toString();
-    const riderRef = doc(db, 'riders', riderId_str);
-    const currentRiderDoc = await getDoc(riderRef);
-    const currentRider = currentRiderDoc.exists() ? currentRiderDoc.data() : null;
+    const pointsDifference = (raceLeaderPoints || 0) - (oldRaceLeaderPoints || 0);
     
-    const currentPoints = currentRider?.points || 0;
-    const newPoints = currentPoints + raceLeaderPoints;
-    
-    await setDoc(riderRef, {
-      points: newPoints
-    }, { merge: true });
-    
-    console.log(`✅ Race leader punten geupdate voor rider ${riderId}: ${currentPoints} + ${raceLeaderPoints} = ${newPoints}`);
-
-    // Also save per-race race leader points if raceId is provided
-    if (raceId) {
-      const riderResultRef = doc(db, 'riders', riderId_str, 'riderResults', String(raceId));
-      const existingData = await getDoc(riderResultRef);
-      const existingPoints = existingData.exists() ? (existingData.data().points || 0) : 0;
-      const existingRaceLeader = existingData.exists() ? (existingData.data().raceLeaderPoints || 0) : 0;
-      const existingRaceName = existingData.exists() ? existingData.data().raceName : raceName;
+    // Update rider's total points if there's a difference
+    if (pointsDifference !== 0) {
+      const riderRef = doc(db, 'riders', riderId_str);
+      const currentRiderDoc = await getDoc(riderRef);
+      const currentRider = currentRiderDoc.exists() ? currentRiderDoc.data() : null;
       
-      // Update with race leader points (don't overwrite existing points)
-      await setDoc(riderResultRef, {
-        raceId: String(raceId),
-        raceName: existingRaceName || raceName,
-        points: existingPoints,
-        raceLeaderPoints: existingRaceLeader + raceLeaderPoints,
-        timestamp: new Date().toISOString()
+      const currentPoints = currentRider?.points || 0;
+      const newPoints = currentPoints + pointsDifference;
+      
+      await setDoc(riderRef, {
+        points: newPoints
       }, { merge: true });
-      console.log(`🏆 Race leader punten opgeslagen voor rider ${riderId} in race ${raceId} (${existingRaceName || raceName}): ${raceLeaderPoints}`);
+      
+      console.log(`✅ Race leader punten geupdate voor rider ${riderId}: ${currentPoints} + ${pointsDifference} = ${newPoints}`);
     }
+
+    // Update per-race race leader points
+    const riderResultRef = doc(db, 'riders', riderId_str, 'riderResults', String(raceId));
+    const existingData = await getDoc(riderResultRef);
+    const existingPoints = existingData.exists() ? (existingData.data().points || 0) : 0;
+    const existingRaceName = existingData.exists() ? existingData.data().raceName : raceName;
+    
+    // Set (replace) race leader points
+    await setDoc(riderResultRef, {
+      raceId: String(raceId),
+      raceName: existingRaceName || raceName,
+      points: existingPoints,
+      raceLeaderPoints: raceLeaderPoints || 0,
+      timestamp: new Date().toISOString()
+    }, { merge: true });
+    console.log(`🏆 Race leader punten ingesteld voor rider ${riderId} in race ${raceId} (${existingRaceName || raceName}): ${raceLeaderPoints || 0}`);
     
     // Invalidate cache
     invalidateRidersCache();
   } catch (error) {
-    console.error(`Error adding race leader points for rider ${riderId}:`, error);
+    console.error(`Error setting race leader points for rider ${riderId}:`, error);
   }
 };

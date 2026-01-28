@@ -173,15 +173,23 @@ export default function Rankings({ user, resetTrigger }) {
   };
 
   const isTeamCreationDeadlinePassed = () => {
-    // Check if first race has passed (deadline is day before race start at 09:00)
+    // Check if all races deadlines have passed
+    // For each race, check if both the standard deadline AND any user-specific deadlines have passed
     if (races.length === 0) return false;
     
+    // For now, use a simple check: show message if current time is before first race
+    // In a production system, you might want to check if ANY user can still submit
+    const now = new Date();
     const firstRace = races[0];
-    if (!firstRace.startDate) return false;
     
-    const deadline = new Date(2026, 0, 19);
+    if (!firstRace || !firstRace.startDate) return false;
+    
+    // Deadline is 1 day before first race at 09:00
+    const deadline = new Date(firstRace.startDate);
     deadline.setHours(9, 0, 0, 0);
-    return new Date() > deadline;
+    deadline.setDate(deadline.getDate() - 1);
+    
+    return now > deadline;
   };
 
   const handleTeamClick = (team) => {

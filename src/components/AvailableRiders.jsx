@@ -7,7 +7,8 @@ export default function AvailableRiders({
   teams, 
   selectedRiders, 
   remainingBudget,
-  onAddRider 
+  onAddRider,
+  deadlinePassed
 }) {
   const [searchTerm, setSearchTerm] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
@@ -99,6 +100,7 @@ export default function AvailableRiders({
               selectedRiders={selectedRiders}
               remainingBudget={remainingBudget}
               onAdd={onAddRider}
+              isDisabled={deadlinePassed}
             />
           ))
         )}

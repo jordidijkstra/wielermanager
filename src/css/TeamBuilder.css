@@ -73,11 +73,23 @@
   justify-content: space-between;
   align-items: center;
   margin-bottom: 20px;
+  flex-wrap: wrap;
+  gap: 15px;
 }
 
 .section-header h2 {
   margin: 0;
   color: #333;
+}
+
+.deadline-warning {
+  padding: 10px 15px;
+  background: #fff3cd;
+  color: #856404;
+  border: 1px solid #ffeaa7;
+  border-radius: 6px;
+  font-weight: 600;
+  font-size: 14px;
 }
 
 .btn-save-teambuilder {
@@ -207,7 +219,12 @@
   padding: 15px;
   border: 2px solid #e0e0e0;
   border-radius: 8px;
-  transition: border-color 0.2s, box-shadow 0.2s;
+  transition: border-color 0.2s, box-shadow 0.2s, opacity 0.2s;
+}
+
+.rider-card-teambuilder.disabled {
+  opacity: 0.5;
+  pointer-events: none;
 }
 
 .rider-info-teambuilder {

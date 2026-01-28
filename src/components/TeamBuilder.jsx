@@ -1,17 +1,28 @@
+import { useEffect } from 'react';
 import { useRiders } from '../hooks/useRiders';
 import { useUserTeam } from '../hooks/useUserTeam';
 import { useCyclingTeams } from '../hooks/useCyclingTeams';
 import { useUserBudget } from '../hooks/useUserBudget';
+import { useTeamDeadline } from '../hooks/useTeamDeadline';
 import SelectedTeam from './SelectedTeam';
 import AvailableRiders from './AvailableRiders';
 import { formatPrice } from '../utils/formatters';
 import '../css/TeamBuilder.css';
 
-function TeamBuilder({ user }) {
+function TeamBuilder({ user, setCurrentPage }) {
   const { budget, loading: budgetLoading } = useUserBudget(user);
   const { riders, loading } = useRiders();
-  const { selectedRiders, addRider, removeRider, saveTeam, saveStatus, getTotalSpent } = useUserTeam(user, budget);
+  const { selectedRiders, addRider, removeRider, saveTeam, saveStatus, getTotalSpent, deadlinePassed } = useUserTeam(user, budget);
   const { teams } = useCyclingTeams();
+  const { deadlinePassed: checkDeadline } = useTeamDeadline(user);
+
+  // Redirect if deadline has passed
+  useEffect(() => {
+    if (checkDeadline) {
+      console.log('⏱️ Deadline passed - redirecting to home');
+      setCurrentPage('home');
+    }
+  }, [checkDeadline, setCurrentPage]);
 
   const getRemainingBudget = () => budget - getTotalSpent();
 
@@ -51,6 +62,7 @@ function TeamBuilder({ user }) {
           onRemoveRider={removeRider}
           onSaveTeam={saveTeam}
           saveStatus={saveStatus}
+          deadlinePassed={deadlinePassed}
         />
         <AvailableRiders
           riders={riders}
@@ -58,6 +70,7 @@ function TeamBuilder({ user }) {
           selectedRiders={selectedRiders}
           remainingBudget={getRemainingBudget()}
           onAddRider={addRider}
+          deadlinePassed={deadlinePassed}
         />
       </div>
     </div>

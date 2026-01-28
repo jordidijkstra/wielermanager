@@ -2,18 +2,14 @@ import '../css/nav.css';
 import { useState } from 'react';
 import { useAuth } from '../hooks/useAuth';
 import { useLogout } from '../hooks/useLogout';
+import { useTeamDeadline } from '../hooks/useTeamDeadline';
 
 export default function Nav({ setCurrentPage, handleRankingsClick, setShowLoginModal}) {
     const { user, isAdmin } = useAuth();
     const logout = useLogout();
+    const { deadlinePassed } = useTeamDeadline(user);
     const [showProfileMenu, setShowProfileMenu] = useState(false);
     const [showMobileMenu, setShowMobileMenu] = useState(false);
-
-    // Check if team building deadline has passed (20 jan 9:00)
-    const isDeadlinePassed = () => {
-        const deadline = new Date('2026-01-20T09:00:00');
-        return new Date() > deadline;
-    };
 
     const handleProfileClick = (page) => {
         setCurrentPage(page);
@@ -46,7 +42,7 @@ export default function Nav({ setCurrentPage, handleRankingsClick, setShowLoginM
             {!showMobileMenu && (
                 <ul className="nav-menu desktop">
                     <li><a href="#" onClick={() => handleNavClick('home')}>Home</a></li>
-                    {user && !isDeadlinePassed() && <li><a href="#" onClick={() => handleNavClick('team')}>Jouw team</a></li>}
+                    {user && !deadlinePassed && <li><a href="#" onClick={() => handleNavClick('team')}>Jouw team</a></li>}
                     {user && <li><a href="#" onClick={() => handleNavClick('points')}>Jouw punten</a></li>}
                     {user && <li><a href="#" onClick={() => handleNavClick('raceTeams')}>Jouw selecties</a></li>}
                     {user && <li><a href="#" onClick={() => handleNavClick('pointsTables')}>Puntentabellen</a></li>}
@@ -94,7 +90,7 @@ export default function Nav({ setCurrentPage, handleRankingsClick, setShowLoginM
             {showMobileMenu && (
                 <ul className="nav-menu mobile">
                     <li><a href="#" onClick={() => handleNavClick('home')}>Home</a></li>
-                    {user && !isDeadlinePassed() && <li><a href="#" onClick={() => handleNavClick('team')}>Jouw team</a></li>}
+                    {user && !deadlinePassed && <li><a href="#" onClick={() => handleNavClick('team')}>Jouw team</a></li>}
                     {user && <li><a href="#" onClick={() => handleNavClick('points')}>Jouw punten</a></li>}
                     {user && <li><a href="#" onClick={() => handleNavClick('raceTeams')}>Race selecties</a></li>}
                     {user && <li><a href="#" onClick={() => handleNavClick('pointsTables')}>Puntentabellen</a></li>}

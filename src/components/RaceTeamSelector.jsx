@@ -1,4 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
+import { doc, getDoc } from 'firebase/firestore';
+import { db } from '../firebase/config';
 import { useRaces } from '../hooks/useRaces';
 import { getRaceParticipants, filterRidersByParticipants } from '../services/raceService';
 import { getCyclingTeams } from '../services/cyclingTeamService';
@@ -19,22 +21,55 @@ export default function RaceTeamSelector({ user, selectedRiders }) {
   const [cyclingTeams, setCyclingTeams] = useState([]);
   const [userTeamRiders, setUserTeamRiders] = useState([]);
   const [raceMaxPoints, setRaceMaxPoints] = useState({}); // Track max points per race
+  const [fullUser, setFullUser] = useState(null); // Store full user data with createdAt
   const autoSavedRaces = useRef(new Set()); // Track which races have been auto-saved
   
   const { races, loading, userRaceTeams, saveTeamForRace, saveStatus } = useRaces(user);
 
-  // Load cycling teams for jersey images
+  // Load full user data with createdAt
   useEffect(() => {
-    const loadTeams = async () => {
+    if (!user?.uid) return;
+    
+    const loadFullUserData = async () => {
       try {
-        const teams = await getCyclingTeams();
-        setCyclingTeams(teams);
+        const userRef = doc(db, 'users', user.uid);
+        const userSnap = await getDoc(userRef);
+        if (userSnap.exists()) {
+          setFullUser({ uid: user.uid, ...userSnap.data() });
+        }
       } catch (err) {
-        console.error('Error loading cycling teams:', err);
+        console.error('Fout bij laden user data:', err);
       }
     };
-    loadTeams();
-  }, []);
+    
+    loadFullUserData();
+  }, [user?.uid]);
+
+  // Log deadline info when race is selected
+  useEffect(() => {
+    if (!selectedRace || !fullUser || races.length === 0) return;
+
+    const now = new Date();
+    const raceDeadline = new Date(selectedRace.startDate);
+    raceDeadline.setHours(9, 0, 0, 0);
+    raceDeadline.setDate(raceDeadline.getDate() - 1);
+
+    const userCreated = fullUser?.createdAt ? 
+      (fullUser.createdAt.toDate ? fullUser.createdAt.toDate() : new Date(fullUser.createdAt)) 
+      : null;
+
+    const isPassed = userCreated && userCreated > raceDeadline ? 
+      now > new Date(selectedRace.startDate) : 
+      now > raceDeadline;
+
+    console.log(`🏁 Race "${selectedRace.name}" Selected:`, {
+      'Race start': new Date(selectedRace.startDate).toLocaleString('nl-NL'),
+      'Standard deadline': raceDeadline.toLocaleString('nl-NL'),
+      'User created': userCreated?.toLocaleString('nl-NL'),
+      'Current time': now.toLocaleString('nl-NL'),
+      'Deadline passed?': isPassed
+    });
+  }, [selectedRace?.id, fullUser, races]);
 
   // Load max points only for the selected race
   useEffect(() => {
@@ -313,14 +348,25 @@ export default function RaceTeamSelector({ user, selectedRiders }) {
 
   const isDeadlinePassed = (race) => {
     if (!race?.startDate) return false;
-    const deadline = new Date(race.startDate);
-    deadline.setHours(9, 0, 0, 0); // Deadline is 09:00 on startDate
+    
     const now = new Date();
-    return deadline <= now;
+    const raceDeadline = new Date(race.startDate);
+    raceDeadline.setHours(9, 0, 0, 0);
+    raceDeadline.setDate(raceDeadline.getDate() - 1); // Deadline is 1 day before race start
+    
+    // Check if user registered after this race's standard deadline
+    const userCreated = fullUser?.createdAt ? 
+      (fullUser.createdAt.toDate ? fullUser.createdAt.toDate() : new Date(fullUser.createdAt)) 
+      : null;
+    
+    return userCreated && userCreated > raceDeadline ? 
+      now > new Date(race.startDate) : 
+      now > raceDeadline;
   };
 
   const getFilteredRaces = () => {
     const now = new Date();
+    
     return races.filter(race => {
       // Basisfilters
       if (race.tourId != null) return false;
@@ -328,11 +374,27 @@ export default function RaceTeamSelector({ user, selectedRiders }) {
       if (race.name.includes('Stage')) return false;
       if (race.startDate?.includes('xx')) return false;
       
-      // Check deadline: exclude races where deadline has passed (09:00 on startDate)
+      // Check deadline for this specific race
       if (race.startDate) {
-        const deadline = new Date(race.startDate);
-        deadline.setHours(9, 0, 0, 0);
-        if (deadline <= now) return false;
+        const raceDeadline = new Date(race.startDate);
+        raceDeadline.setHours(9, 0, 0, 0);
+        raceDeadline.setDate(raceDeadline.getDate() - 1); // Deadline is 1 day before race start
+        
+        // Standard deadline: can build if before race deadline
+        // NEW users get extended deadline: they can build until race start time
+        const userCreated = fullUser?.createdAt ? 
+          (fullUser.createdAt.toDate ? fullUser.createdAt.toDate() : new Date(fullUser.createdAt)) 
+          : null;
+        
+        if (userCreated && userCreated > raceDeadline) {
+          // User registered AFTER this race's standard deadline
+          // They get extended deadline until the actual race start time
+          const raceStartTime = new Date(race.startDate);
+          if (now > raceStartTime) return false; // Can't build if race already started
+        } else {
+          // User registered before deadline, use standard deadline
+          if (now > raceDeadline) return false;
+        }
       }
       
       return true;
