@@ -22,6 +22,47 @@ export default function Nav({ setCurrentPage, handleRankingsClick, setShowLoginM
         setShowMobileMenu(false);
     };
 
+    // Render main nav items (shared between desktop and mobile)
+    const renderMainNavItems = () => (
+        <>
+            <li><a href="#" onClick={() => handleNavClick('home')}>Home</a></li>
+            {user && !deadlinePassed && <li><a href="#" onClick={() => handleNavClick('team')}>Jouw team</a></li>}
+            {user && <li><a href="#" onClick={() => handleNavClick('pointsTables')}>Puntentabellen</a></li>}
+            {user && <li><a href="#" onClick={() => handleRankingsClick()}>Klassement</a></li>}
+            {user && <li><a href="#" onClick={() => handleNavClick('riderStatistics')}>Statistieken</a></li>}
+        </>
+    );
+
+    // Render profile dropdown items (shared between desktop and mobile)
+    const renderProfileItems = () => (
+        <>
+            <a href="#" onClick={() => handleProfileClick('points')}>
+                📊 Jouw punten
+            </a>
+            <a href="#" onClick={() => handleProfileClick('raceTeams')}>
+                🏆 Jouw selecties
+            </a>
+            {isAdmin && (
+                <a href="#" onClick={() => handleProfileClick('admin')}>
+                    ⚙️ Admin
+                </a>
+            )}
+            <a href="#" onClick={() => handleProfileClick('settings')}>
+                🔧 Instellingen
+            </a>
+            <button 
+                className={showMobileMenu ? "btn-logout-submenu" : "btn-logout-dropdown"}
+                onClick={() => {
+                    setShowProfileMenu(false);
+                    setShowMobileMenu(false);
+                    logout();
+                }}
+            >
+                🚪 Uitloggen
+            </button>
+        </>
+    );
+
     return (
         <nav>
             <div className="logo-container">
@@ -41,11 +82,7 @@ export default function Nav({ setCurrentPage, handleRankingsClick, setShowLoginM
             {/* Desktop Menu */}
             {!showMobileMenu && (
                 <ul className="nav-menu desktop">
-                    <li><a href="#" onClick={() => handleNavClick('home')}>Home</a></li>
-                    {user && !deadlinePassed && <li><a href="#" onClick={() => handleNavClick('team')}>Jouw team</a></li>}
-                    {user && <li><a href="#" onClick={() => handleNavClick('pointsTables')}>Puntentabellen</a></li>}
-                    {user && <li><a href="#" onClick={() => handleRankingsClick()}>Klassement</a></li>}
-                    {user && <li><a href="#" onClick={() => handleNavClick('riderStatistics')}>Statistieken</a></li>}
+                    {renderMainNavItems()}
                     
                     {user ? (
                         <li className="profile-menu">
@@ -57,29 +94,7 @@ export default function Nav({ setCurrentPage, handleRankingsClick, setShowLoginM
                             </button>
                             {showProfileMenu && (
                                 <div className="profile-dropdown">
-                                    <a href="#" onClick={() => handleProfileClick('points')}>
-                                        📊 Jouw punten
-                                    </a>
-                                    <a href="#" onClick={() => handleProfileClick('raceTeams')}>
-                                        🏆 Jouw selecties
-                                    </a>
-                                    {isAdmin && (
-                                        <a href="#" onClick={() => handleProfileClick('admin')}>
-                                            ⚙️ Admin
-                                        </a>
-                                    )}
-                                    <a href="#" onClick={() => handleProfileClick('settings')}>
-                                        🔧 Instellingen
-                                    </a>
-                                    <button 
-                                        className="btn-logout-dropdown"
-                                        onClick={() => {
-                                            setShowProfileMenu(false);
-                                            logout();
-                                        }}
-                                    >
-                                        🚪 Uitloggen
-                                    </button>
+                                    {renderProfileItems()}
                                 </div>
                             )}
                         </li>
@@ -94,11 +109,7 @@ export default function Nav({ setCurrentPage, handleRankingsClick, setShowLoginM
             {/* Mobile Menu */}
             {showMobileMenu && (
                 <ul className="nav-menu mobile">
-                    <li><a href="#" onClick={() => handleNavClick('home')}>Home</a></li>
-                    {user && !deadlinePassed && <li><a href="#" onClick={() => handleNavClick('team')}>Jouw team</a></li>}
-                    {user && <li><a href="#" onClick={() => handleNavClick('pointsTables')}>Puntentabellen</a></li>}
-                    {user && <li><a href="#" onClick={() => handleRankingsClick()}>Klassement</a></li>}
-                    {user && <li><a href="#" onClick={() => handleNavClick('riderStatistics')}>Statistieken</a></li>}
+                    {renderMainNavItems()}
                     
                     {user ? (
                         <>

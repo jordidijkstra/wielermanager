@@ -160,11 +160,19 @@
     padding: 0 1.5em 2em;
 }
 
-/* Mobile Responsive */
+/* Tablet Responsive */
 @media (max-width: 768px) {
   .intro {
-    margin-top: 10dvh;
-    background-size: 40%;
+    height: 100dvh;
+    margin-top: 0;
+  }
+
+  .intro-overlay {
+    padding: 2em 1.5em;
+  }
+
+  .bg-video {
+    object-fit: cover;
   }
 
   .intro h1 {
@@ -194,10 +202,11 @@
     padding: 1.5em 0 2em;
   }
 
-  .step-number {
+  .step-number span {
     width: 40px;
     height: 40px;
-    font-size: 1.4em;
+    font-size: 1em;
+    transform: translateY(-22px);
   }
 
   .step-image {
@@ -210,56 +219,89 @@
   }
 }
 
+/* Mobile Responsive */
 @media (max-width: 480px) {
+  nav {
+    height: 50px;
+  }
+
   .intro {
-    margin-top: 50px;
-    height: auto;
-    min-height: 100dvh;
-    padding: 20px;
-    background: url(/assets/manager.png) no-repeat -20% bottom /50%;
+    height: 100dvh;
+    margin-top: 0;
+    overflow: hidden;
+  }
+
+  .intro-overlay {
+    padding: 2em 1em;
+    height: 100dvh;
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(6px);
+  }
+
+  .bg-video {
+    object-fit: cover;
   }
 
   .intro h1 {
-    font-size: 3em;
+    font-size: 1.8em;
+    padding-bottom: 0.5em;
   }
 
   .intro p {
-    font-size: 2em;
+    font-size: 0.95em;
     width: 90%;
+    line-height: 1.4em;
   }
 
-  .intro button{
-    font-size: 2em;
+  .intro button {
+    padding: 10px 20px;
+    font-size: 0.95em;
+    margin: 1.5em 0;
   }
 
   .how-to-play {
     height: auto;
-    padding: 30px 15px;
+    min-height: 100dvh;
+    padding: 2em 1.5em;
     top: 50px;
   }
 
-  .step-container {
-    flex-direction: column;
-    width: 100%;
+  .how-to-play h2 {
+    font-size: 1.3em;
+    margin-bottom: 1.5em;
   }
 
-  .step-container img {
-    width: 100%;
-    height: auto;
-    object-fit: cover;
-    border-radius: 10px 10px 0 0;
+  .steps {
+    grid-template-columns: 1fr;
+    gap: 1.5em;
+    width: 95%;
+    margin: 0 auto 2em;
   }
 
-  .step {
-    padding: 15px;
-    border-radius: 0 0 10px 10px;
+  .step-card {
+    padding: 1.5em 0 2em;
+    border-radius: 10px;
   }
 
-  .step h2 {
-    font-size: 1.95em;
+  .step-number span {
+    width: 35px;
+    height: 35px;
+    font-size: 0.9em;
+    transform: translateY(-20px);
   }
 
-  .step p {
-    font-size: 1.4em;
+  .step-image {
+    width: 70px;
+    height: 70px;
+  }
+
+  .step-content h3 {
+    font-size: 1em;
+    padding: 1em 0 1.5em;
+  }
+
+  .step-content p {
+    font-size: 0.9em;
+    padding: 0 1em 1.5em;
   }
 }

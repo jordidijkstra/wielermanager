@@ -178,8 +178,8 @@ nav ul li a:hover {
   gap: 0;
   padding: 0;
   display: flex;
-  max-height: 500px;
-  overflow: auto;
+  max-height: calc(100vh - 60px);
+  overflow-y: auto;
   box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
   z-index: 100;
 }
@@ -187,10 +187,25 @@ nav ul li a:hover {
 .nav-menu.mobile li {
   border-bottom: 1px solid #eee;
   width: 100%;
+  padding: 0;
 }
 
-.nav-menu.mobile li:last-child {
-  border-bottom: none;
+.nav-menu.mobile li a {
+  display: block;
+  padding: 15px 20px;
+  text-align: left;
+  color: #14213d;
+  text-decoration: none;
+  border: none;
+  background: none;
+  cursor: pointer;
+  font-family: inherit;
+  transition: background-color 0.2s;
+}
+
+.nav-menu.mobile li a:hover {
+  background-color: #f0f0f0;
+  color: #fca311;
 }
 
 
