@@ -3,7 +3,31 @@
   padding: 0;
   box-sizing: border-box;
 }
+/* Scrollbar Styling - Webkit (Chrome, Safari, Edge) */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
 
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(135deg, #667ee6, #764ba2);
+  border-radius: 10px;
+  border: 2px solid #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(135deg, #764ba2, #667ee6);
+}
+
+/* Scrollbar Styling - Firefox */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #667ee6 #f1f1f1;
+}
 body {
   font-family: "Oswald", sans-serif;
   background: linear-gradient(180deg, #14213d 0%, #1a2b4f 50%, #14213d 100%);
@@ -14,17 +38,10 @@ body {
 }
 
 button {
-  border-radius: 8px;
-  border: 1px solid transparent;
   padding: 0.6em 1.2em;
-  font-size: 1em;
-  font-weight: 500;
-  font-family: inherit;
-  background: linear-gradient(135deg, #fca311 0%, #ff9500 100%);
+  font-family: "Oswald", sans-serif;
   cursor: pointer;
   transition: all 0.3s;
-  color: #000000;
-  font-weight: 600;
 }
 
 button:hover {

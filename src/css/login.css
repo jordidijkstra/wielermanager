@@ -11,17 +11,49 @@
   z-index: 1000;
   backdrop-filter: blur(10px);
   background-color: rgba(0, 0, 0, 0.5);
+  overflow: hidden;
 }
 
 .login-card {
   background: white;
-  padding: 40px;
   border-radius: 12px;
   box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
   width: 100%;
-  max-width: 400px;
+  max-width: 50%;
+  max-height: 90vh;
   z-index: 1001;
   position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.login-card-content {
+  overflow-y: auto;
+  padding: 1.5em 2em;
+  scrollbar-width: thin;
+  scrollbar-color: #14213d #f5f5f5;
+}
+
+/* Chrome/Safari scrollbar styling */
+.login-card-content::-webkit-scrollbar {
+  width: 8px;
+}
+
+.login-card-content::-webkit-scrollbar-button {
+  height: 0;
+  width: 0;
+}
+
+.login-card-content::-webkit-scrollbar-track {
+  background: #f5f5f5;
+  border-radius: 10px;
+  margin: 0;
+}
+
+.login-card-content::-webkit-scrollbar-thumb {
+  background: #14213d;
+  border-radius: 4px;
 }
 
 .btn-close {
@@ -111,19 +143,24 @@
   padding: 0 15px;
 }
 
-.form-group {
-  margin-bottom: 20px;
+.form-group-login {
+  margin-bottom: 1.3em;
+  position: relative;
 }
 
-.form-group label {
-  display: block;
-  margin-bottom: 8px;
+.form-group-login label {
+  position: absolute;
+  top: -0.8em;
+  left: 0.5em;
+  background: white;
   color: #555;
   font-weight: 500;
-  font-size: 14px;
+  font-size: 0.8em;
+  padding: 0 4px;
+  transition: all 0.3s;
 }
 
-.form-group input {
+.form-group-login input {
   width: 100%;
   padding: 12px;
   border: 2px solid #e0e0e0;
@@ -133,9 +170,19 @@
   box-sizing: border-box;
 }
 
-.form-group input:focus {
+.form-group-login input:focus {
   outline: none;
   border-color: #667eea;
+}
+
+.container-name-fields {
+  display: flex;
+  gap: 10px;
+  width: 100%;
+}
+
+.container-name-fields .form-group-login {
+  flex: 1;
 }
 
 .error-message {
@@ -151,7 +198,7 @@
 .btn-primary {
   width: 100%;
   padding: 14px;
-  background: linear-gradient(135deg, #3d5a80 0%, #14213d 100%);
+  background: linear-gradient(135deg, #667ee6, #764ba2);
   color: white;
   border: none;
   border-radius: 6px;
@@ -171,7 +218,6 @@
 }
 
 .toggle-auth {
-  margin-top: 25px;
   text-align: center;
   color: #666;
   font-size: 14px;
@@ -209,11 +255,11 @@
     font-size: 0.9em;
   }
 
-  .form-group {
+  .form-group-login {
     margin-bottom: 15px;
   }
 
-  .form-group input {
+  .form-group-login input {
     padding: 10px;
     font-size: 1em;
   }
@@ -257,15 +303,15 @@
     font-size: 0.85em;
   }
 
-  .form-group {
+  .form-group-login {
     margin-bottom: 12px;
   }
 
-  .form-group label {
-    font-size: 0.9em;
+  .form-group-login label {
+    font-size: 0.8em;
   }
 
-  .form-group input {
+  .form-group-login input {
     padding: 8px;
     font-size: 16px;
   }

@@ -59,6 +59,12 @@ exports.autoFillRaceTeams = functions.region('europe-west1').https.onRequest(asy
       const userId = userDoc.id;
       const userTeam = userDoc.data();
 
+      // Skip virtual teams (like bestteam)
+      if (userTeam.isVirtual) {
+        console.log(`Skipping virtual team: ${userId}`);
+        continue;
+      }
+
       if (!userTeam || !userTeam.riders || userTeam.riders.length === 0) {
         continue;
       }
@@ -159,11 +165,11 @@ exports.autoFillRaceTeams = functions.region('europe-west1').https.onRequest(asy
 });
 
 /**
- * Cloud Function: Scheduled trigger (runs daily at 10:00 UTC)
+ * Cloud Function: Scheduled trigger (runs daily at 09:00 UTC)
  * Automatically fills race teams after deadlines pass
  */
 exports.autoFillRaceTeamsScheduled = functions.region('europe-west1').pubsub
-  .schedule('0 10 * * *')
+  .schedule('0 9 * * *')
   .timeZone('UTC')
   .onRun(async (context) => {
     const startTime = new Date();
@@ -209,15 +215,25 @@ exports.autoFillRaceTeamsScheduled = functions.region('europe-west1').pubsub
         if (race.name && race.name.includes('Stage')) return false; // Exclude stages
         const deadline = new Date(race.startDate);
         deadline.setHours(9, 0, 0, 0);
+        
+        // CRITICAL: Only run autofill if deadline has NOT yet passed far in the past
+        // Deadline must be within last 1 day (recent) OR future (upcoming)
         const deadlineMinusOneDay = new Date(deadline);
         deadlineMinusOneDay.setDate(deadlineMinusOneDay.getDate() - 1);
-        deadlineMinusOneDay.setHours(0, 0, 0, 0); // Start from 00:00 on the day before
+        deadlineMinusOneDay.setHours(0, 0, 0, 0);
+        
         const endOfRaceDay = new Date(deadline);
         endOfRaceDay.setDate(endOfRaceDay.getDate() + 1);
-        endOfRaceDay.setHours(0, 0, 0, 0); // End at 00:00 on the day after (i.e., end of race day)
+        endOfRaceDay.setHours(0, 0, 0, 0);
+        
+        // Only process if we're in the window OR deadline is in future
+        // This prevents processing very old races
         const isInWindow = now >= deadlineMinusOneDay && now < endOfRaceDay;
-        addLog(`Race ${race.id}: deadline=${deadline.toISOString()}, now=${now.toISOString()}, inWindow=${isInWindow}`);
-        return isInWindow; // Autofill works from (deadline - 1 day at 00:00) until end of race day
+        const isUpcoming = now < deadline; // Deadline not yet reached
+        const shouldProcess = isInWindow || isUpcoming;
+        
+        addLog(`Race ${race.id}: deadline=${deadline.toISOString()}, inWindow=${isInWindow}, isUpcoming=${isUpcoming}, shouldProcess=${shouldProcess}`);
+        return shouldProcess;
       });
 
       addLog(`Found ${upcomingDeadlineRaces.length} races with upcoming deadlines`);
@@ -238,12 +254,18 @@ exports.autoFillRaceTeamsScheduled = functions.region('europe-west1').pubsub
         return null;
       }
 
-      // Get all users with saved teams
+      // Get all users with saved teams (exclude virtual teams like bestteam)
       const usersSnapshot = await db.collection('teams').get();
 
       for (const userDoc of usersSnapshot.docs) {
         const userId = userDoc.id;
         const userTeam = userDoc.data();
+
+        // Skip virtual teams (like bestteam)
+        if (userTeam.isVirtual) {
+          addLog(`Skipping virtual team: ${userId}`);
+          continue;
+        }
 
         if (!userTeam || !userTeam.riders || userTeam.riders.length === 0) {
           continue;

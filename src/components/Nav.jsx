@@ -43,11 +43,9 @@ export default function Nav({ setCurrentPage, handleRankingsClick, setShowLoginM
                 <ul className="nav-menu desktop">
                     <li><a href="#" onClick={() => handleNavClick('home')}>Home</a></li>
                     {user && !deadlinePassed && <li><a href="#" onClick={() => handleNavClick('team')}>Jouw team</a></li>}
-                    {user && <li><a href="#" onClick={() => handleNavClick('points')}>Jouw punten</a></li>}
-                    {user && <li><a href="#" onClick={() => handleNavClick('raceTeams')}>Jouw selecties</a></li>}
                     {user && <li><a href="#" onClick={() => handleNavClick('pointsTables')}>Puntentabellen</a></li>}
                     {user && <li><a href="#" onClick={() => handleRankingsClick()}>Klassement</a></li>}
-                    <li><a href="#" onClick={() => handleNavClick('riderStatistics')}>Statistieken</a></li>
+                    {user && <li><a href="#" onClick={() => handleNavClick('riderStatistics')}>Statistieken</a></li>}
                     
                     {user ? (
                         <li className="profile-menu">
@@ -55,10 +53,16 @@ export default function Nav({ setCurrentPage, handleRankingsClick, setShowLoginM
                                 className="btn-profile"
                                 onClick={() => setShowProfileMenu(!showProfileMenu)}
                             >
-                                👤 Profiel
+                                <i className="fa-solid fa-user"></i> Profiel
                             </button>
                             {showProfileMenu && (
                                 <div className="profile-dropdown">
+                                    <a href="#" onClick={() => handleProfileClick('points')}>
+                                        📊 Jouw punten
+                                    </a>
+                                    <a href="#" onClick={() => handleProfileClick('raceTeams')}>
+                                        🏆 Jouw selecties
+                                    </a>
                                     {isAdmin && (
                                         <a href="#" onClick={() => handleProfileClick('admin')}>
                                             ⚙️ Admin
@@ -92,14 +96,22 @@ export default function Nav({ setCurrentPage, handleRankingsClick, setShowLoginM
                 <ul className="nav-menu mobile">
                     <li><a href="#" onClick={() => handleNavClick('home')}>Home</a></li>
                     {user && !deadlinePassed && <li><a href="#" onClick={() => handleNavClick('team')}>Jouw team</a></li>}
-                    {user && <li><a href="#" onClick={() => handleNavClick('points')}>Jouw punten</a></li>}
-                    {user && <li><a href="#" onClick={() => handleNavClick('raceTeams')}>Race selecties</a></li>}
                     {user && <li><a href="#" onClick={() => handleNavClick('pointsTables')}>Puntentabellen</a></li>}
                     {user && <li><a href="#" onClick={() => handleRankingsClick()}>Klassement</a></li>}
-                    <li><a href="#" onClick={() => handleNavClick('riderStatistics')}>Statistieken</a></li>
+                    {user && <li><a href="#" onClick={() => handleNavClick('riderStatistics')}>Statistieken</a></li>}
                     
                     {user ? (
                         <>
+                            <li className="profile-submenu">
+                                <a href="#" onClick={() => handleProfileClick('points')}>
+                                    📊 Jouw punten
+                                </a>
+                            </li>
+                            <li className="profile-submenu">
+                                <a href="#" onClick={() => handleProfileClick('raceTeams')}>
+                                    🏆 Jouw selecties
+                                </a>
+                            </li>
                             {isAdmin && (
                                 <li className="profile-submenu">
                                     <a href="#" onClick={() => handleProfileClick('admin')}>

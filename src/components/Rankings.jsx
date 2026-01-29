@@ -173,25 +173,27 @@ export default function Rankings({ user, resetTrigger }) {
   }, [allUserRaceTeams]);
 
   // Rankings table view (memoized)
+  // Only user teams sorted by points, bestteam added at end without ranking
   const rankedTeams = useMemo(() => {
-    // Filter out bestteam from allTeams - we'll add it separately with correct data
-    const otherTeams = allTeams
+    const userTeams = allTeams
       .filter(team => team.id !== 'bestteam')
       .map(team => ({
         ...team,
         totalPoints: calculateTeamPoints(team)
-      }));
+      }))
+      .sort((a, b) => b.totalPoints - a.totalPoints);
     
-    // Add bestteam with data from bestTeamData (real-time listener)
+    // Add bestteam at the end with data from bestTeamData (real-time listener)
     if (bestTeamData && bestTeamData.riders && bestTeamData.riders.length > 0) {
-      otherTeams.push({
+      userTeams.push({
         ...bestTeamData,
+        id: 'bestteam',
         isVirtual: true,
         totalPoints: bestTeamData.totalPoints || 0
       });
     }
     
-    return otherTeams.sort((a, b) => b.totalPoints - a.totalPoints);
+    return userTeams;
   }, [allTeams, bestTeamData, calculateTeamPoints]);
 
   // Get best team from stored metadata (calculated by Cloud Function)
@@ -223,7 +225,7 @@ export default function Rankings({ user, resetTrigger }) {
 
   const getUserName = (userId) => {
     // Handle virtual teams
-    if (userId === 'bestteam') {
+    if (userId === 'best-team') {
       return 'Virtual Manager';
     }
     
@@ -239,7 +241,7 @@ export default function Rankings({ user, resetTrigger }) {
 
   const getTeamDisplayName = (userId) => {
     // Handle virtual teams
-    if (userId === 'bestteam') {
+    if (userId === 'best-team') {
       return 'Ultimate Team';
     }
     
@@ -339,14 +341,23 @@ export default function Rankings({ user, resetTrigger }) {
               </tr>
             </thead>
             <tbody>
-              {/* User teams */}
+              {/* User teams and best team */}
               {rankedTeams.map((team, index) => (
-                <tr key={team.id} className="team-row">
-                  <td className="rank">{index + 1}</td>
+                <tr 
+                  key={team.id} 
+                  className={`team-row ${team.id === 'bestteam' ? 'best-team-row' : ''}`}
+                >
+                  <td className="rank">
+                    {team.id === 'bestteam' ? '🏆' : index + 1}
+                  </td>
                   <td className="team-name">
                     <div className="team-info-cell">
-                      <div className="team-name-display">{getTeamDisplayName(team.id)}</div>
-                      <div className="manager-name-display">{getUserName(team.id)}</div>
+                      <div className="team-name-display">
+                        {team.id === 'bestteam' ? '🏆 Ultimate Team' : getTeamDisplayName(team.id)}
+                      </div>
+                      {team.id !== 'bestteam' && (
+                        <div className="manager-name-display">{getUserName(team.id)}</div>
+                      )}
                     </div>
                   </td>
                   <td className="points">
@@ -355,7 +366,7 @@ export default function Rankings({ user, resetTrigger }) {
                   <td className="action">
                     <button 
                       className="btn-view-team"
-                      onClick={() => handleTeamClick(team)}
+                      onClick={() => handleTeamClick({...team, userId: team.id})}
                     >
                       Bekijk ploeg
                     </button>

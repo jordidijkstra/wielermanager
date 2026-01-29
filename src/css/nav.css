@@ -1,5 +1,5 @@
 nav{
-    background-color: #e5e5e5;
+    background-color: #f1f1f1;
     display: flex;
     align-items: center;
     position: fixed;
@@ -13,9 +13,12 @@ nav{
 .logo-container {
   font-family: "BBH Bartle", sans-serif;
   font-weight: 900;
-  color: #14213d;
+  background: linear-gradient(135deg, #667ee6, #764ba2);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
   padding: 1em;
-  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+  text-shadow: none;
 }
 
 .logo-container p{
@@ -38,28 +41,31 @@ nav ul li a{
     text-decoration: none;
     transition: all 0.3s;
     font-weight: 500;
+    cursor: pointer;
 }
 
 nav ul li a:hover {
-    color: #fca311;
-    transform: translateY(-2px);
+  background: linear-gradient(135deg, #667ee6, #764ba2);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 
 .btn-login,
-.btn-logout {
-    padding: 8px 16px !important;
-    background: linear-gradient(135deg, #3d5a80 0%, #14213d 100%) !important;
-    color: white !important;
-    border-radius: 6px;
-    font-weight: 600;
+.btn-logout,
+.btn-profile {
+    background: linear-gradient(135deg, #667ee6, #764ba2);
+    color: white;
     transition: transform 0.2s;
     border: none;
+    border-radius: 6px;
+    font-size: 1em;
 }
 
 .btn-login:hover,
-.btn-logout:hover {
+.btn-logout:hover,
+.btn-profile:hover {
     transform: translateY(-2px);
-    color: white !important;
 }
 
 /* Profile Menu Styles */
@@ -67,63 +73,45 @@ nav ul li a:hover {
     position: relative;
 }
 
-.btn-profile {
-    padding: 8px 16px;
-    background: linear-gradient(135deg, #3d5a80 0%, #14213d 100%);
-    color: white;
-    border: none;
-    border-radius: 6px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: transform 0.2s;
-}
-
-.btn-profile:hover {
-    transform: translateY(-2px);
-}
 
 .profile-dropdown {
     position: absolute;
     top: 100%;
     right: 0;
-    background: white;
-    border: 1px solid #ddd;
+    background: #f1f1f1;
+    border: 3px solid #667ee6;
     border-radius: 6px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15), inset 0 0 0 1px rgba(118, 75, 162, 0.3);
     min-width: 150px;
-    margin-top: 8px;
     z-index: 1000;
     overflow: hidden;
+    margin-top: 0.5em;
 }
 
 .profile-dropdown a,
 .profile-dropdown button {
     display: block;
     width: 100%;
-    padding: 12px 16px;
+    padding: 1em 1.5em;
     text-align: left;
     border: none;
-    background: none;
-    color: #14213d;
-    text-decoration: none;
-    cursor: pointer;
-    transition: background-color 0.2s;
-    font-size: 14px;
+    font-size: .8em;
 }
 
 .profile-dropdown a:hover,
 .profile-dropdown button:hover {
-    background-color: #f0f0f0;
-    color: #fca311;
+    background: linear-gradient(135deg, #667ee6, #764ba2);
+    -webkit-text-fill-color: #f1f1f1;
 }
 
 .btn-logout-dropdown {
-    color: #d32f2f !important;
+    -webkit-text-fill-color: #d32f2f !important;
 }
 
 .btn-logout-dropdown:hover {
-    background-color: #ffebee !important;
-    color: #c62828 !important;
+    background: #ffebee !important;
+    -webkit-text-fill-color: #c62828 !important;
+    transform: none !important;
 }
 
 /* Hamburger Menu */
@@ -162,7 +150,6 @@ nav ul li a:hover {
 
 /* Desktop Menu */
 .nav-menu.desktop {
-  background: transparent;
   flex-direction: row;
   gap: 1em;
   padding: 1em 2em;
@@ -178,95 +165,6 @@ nav ul li a:hover {
 .nav-menu.desktop li {
   border: none;
   width: auto;
-}
-
-.nav-menu.desktop li a,
-.nav-menu.desktop li button {
-  display: inline-block;
-  width: auto;
-  padding: 0;
-  text-align: center;
-  color: #14213d;
-  text-decoration: none;
-  transition: all 0.3s;
-  border: none;
-  background: none;
-  cursor: pointer;
-  font-family: inherit;
-  font-size: 1em;
-  font-weight: 500;
-}
-
-.nav-menu.desktop li a:hover,
-.nav-menu.desktop li button:hover {
-  color: #fca311;
-  transform: translateY(-2px);
-}
-
-/* Desktop Profile Menu */
-.nav-menu.desktop .profile-menu {
-  position: relative;
-}
-
-.nav-menu.desktop .btn-profile {
-  padding: 8px 16px;
-  background: linear-gradient(135deg, #3d5a80 0%, #14213d 100%);
-  color: white;
-  border: none;
-  border-radius: 6px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: transform 0.2s;
-  font-size: 1em;
-}
-
-.nav-menu.desktop .btn-profile:hover {
-  transform: translateY(-2px);
-}
-
-.nav-menu.desktop .profile-dropdown {
-  position: absolute;
-  top: 100%;
-  right: 0;
-  background: white;
-  border: 1px solid #ddd;
-  border-radius: 6px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-  min-width: 150px;
-  margin-top: 8px;
-  z-index: 1000;
-  overflow: hidden;
-}
-
-.nav-menu.desktop .profile-dropdown a,
-.nav-menu.desktop .profile-dropdown button {
-  display: block;
-  width: 100%;
-  padding: 12px 16px;
-  text-align: left;
-  border: none;
-  background: none;
-  color: #14213d;
-  text-decoration: none;
-  cursor: pointer;
-  transition: background-color 0.2s;
-  font-size: 14px;
-  font-family: inherit;
-}
-
-.nav-menu.desktop .profile-dropdown a:hover,
-.nav-menu.desktop .profile-dropdown button:hover {
-  background-color: #f0f0f0;
-  color: #fca311;
-}
-
-.nav-menu.desktop .btn-logout-dropdown {
-  color: #d32f2f !important;
-}
-
-.nav-menu.desktop .btn-logout-dropdown:hover {
-  background-color: #ffebee !important;
-  color: #c62828 !important;
 }
 
 /* Mobile Menu */
@@ -295,27 +193,6 @@ nav ul li a:hover {
   border-bottom: none;
 }
 
-.nav-menu.mobile li a,
-.nav-menu.mobile li button {
-  display: block;
-  width: 100%;
-  padding: 15px 20px;
-  text-align: left;
-  color: #14213d;
-  text-decoration: none;
-  transition: background-color 0.2s;
-  border: none;
-  background: none;
-  cursor: pointer;
-  font-family: inherit;
-  font-size: 1.2em;
-}
-
-.nav-menu.mobile li a:hover,
-.nav-menu.mobile li button:hover {
-  background-color: #f5f5f5;
-  color: #fca311;
-}
 
 /* Mobile Profile Styles */
 .nav-menu.mobile .btn-profile {
