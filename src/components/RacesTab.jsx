@@ -12,6 +12,7 @@ import { updateRidersPointsFromResults } from '../services/riderService';
 import { recalculateTeamPointsForRace } from '../services/resultsService';
 import '../css/racesTab.css';
 
+
 export default function RacesTab() {
   const { races, loading: racesLoading, reload: reloadRaces, addRace, editRace, removeRace } = useRaces();
   const { categories, loading: categoriesLoading } = useRacesCategories();
@@ -42,6 +43,8 @@ export default function RacesTab() {
     maxRiders: 7,
     tourId: null,
   });
+
+
 
   // Load race participants when component mounts
   useEffect(() => {

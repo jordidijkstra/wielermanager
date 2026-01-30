@@ -198,10 +198,6 @@
     font-size: 1.5em;
   }
 
-  .step-card {
-    padding: 1.5em 0 2em;
-  }
-
   .step-number span {
     width: 40px;
     height: 40px;
@@ -279,7 +275,6 @@
   }
 
   .step-card {
-    padding: 1.5em 0 2em;
     border-radius: 10px;
   }
 
