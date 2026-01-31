@@ -22,8 +22,13 @@ export default function Results() {
 
     const loadData = async () => {
         try {
-            // Load races
-            const racesSnapshot = await getDocs(collection(db, 'races'));
+            // Load races and results in parallel
+            const [racesSnapshot, resultsSnapshot] = await Promise.all([
+                getDocs(collection(db, 'races')),
+                getDocs(collection(db, 'results'))
+            ]);
+            
+            // Process races
             const racesData = racesSnapshot.docs.map(doc => ({
                 id: doc.data().id,
                 name: doc.data().name,
@@ -31,11 +36,10 @@ export default function Results() {
                 endDate: doc.data().endDate,
                 categoryId: doc.data().categoryId,
                 tourId: doc.data().tourId
-            })).sort((a, b) => a.id - b.id); // Sort by ID
+            })).sort((a, b) => a.id - b.id);
             setRaces(racesData);
 
-            // Load results
-            const resultsSnapshot = await getDocs(collection(db, 'results'));
+            // Process results
             const resultsData = resultsSnapshot.docs.map(doc => ({
                 raceId: doc.data().raceId,
                 results: doc.data().results

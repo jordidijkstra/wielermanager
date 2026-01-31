@@ -51,15 +51,24 @@ export default function Rankings({ user, resetTrigger }) {
     }
   }, []);
 
-  // Load other data (riders, teams, users)
+  // Load other data (riders, teams, users) - load in parallel
   useEffect(() => {
     const loadData = async () => {
       try {
         setLoading(true);
         setError('');
         
-        // Load riders
-        const ridersSnapshot = await getDocs(collection(db, 'riders'));
+        const now = Date.now();
+        const shouldUseCache = teamsCache && (now - cacheTimestamp) < CACHE_DURATION;
+        
+        // Load all data in parallel
+        const [ridersSnapshot, teamsSnapshot, usersData] = await Promise.all([
+          getDocs(collection(db, 'riders')),
+          shouldUseCache ? Promise.resolve(null) : getDocs(collection(db, 'teams')),
+          getAllUsers()
+        ]);
+
+        // Process riders
         const ridersData = ridersSnapshot.docs
           .map(doc => ({
             id: doc.id,
@@ -67,16 +76,13 @@ export default function Rankings({ user, resetTrigger }) {
           }))
           .filter(rider => rider.id !== '911' && rider.id !== 911);
         setAllRiders(ridersData);
-        
-        // Check if cache is still valid
-        const now = Date.now();
-        if (teamsCache && (now - cacheTimestamp) < CACHE_DURATION) {
-          console.log('Using cached teams data');
+
+        // Process teams
+        if (shouldUseCache) {
+          console.log('✅ Using cached teams data');
           setAllTeams(teamsCache);
-          setLoading(false);
-        } else {
-          console.log('Fetching teams from Firestore');
-          const teamsSnapshot = await getDocs(collection(db, 'teams'));
+        } else if (teamsSnapshot) {
+          console.log('📡 Fetching teams from Firestore');
           const teams = [];
           
           teamsSnapshot.forEach(doc => {
@@ -94,8 +100,7 @@ export default function Rankings({ user, resetTrigger }) {
           setAllTeams(teams);
         }
         
-        // Load all users
-        const usersData = await getAllUsers();
+        // Set users
         setAllUsers(usersData);
         
         // Load all user race teams for points calculation
