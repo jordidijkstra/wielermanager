@@ -14,7 +14,7 @@ export default function TeamDetails({
   getUserName,
   handleCloseDetails
 }) {
-  const [currentSpeeldagIndex, setCurrentSpeeldagIndex] = useState(null);
+  const [closestDateIndex, setClosestDateIndex] = useState(0);
   const [userRaceTeams, setUserRaceTeams] = useState({});
   const [loading, setLoading] = useState(true);
   const [selectedRiderResults, setSelectedRiderResults] = useState(null);
@@ -123,62 +123,65 @@ export default function TeamDetails({
     return races.find(r => r.id === raceId)?.name || `Race ${raceId}`;
   };
 
-  // Get unique race dates sorted
-  const sortedDates = useMemo(() => {
-    const dateMap = new Map();
+  // Group races by speeldag (endDate for main races, startDate for stages)
+  const groupRacesByDate = () => {
+    const grouped = {};
+    races.forEach(race => {
+      // Use endDate for main races (GC), startDate for stages
+      const date = race.tourId == null ? (race.endDate || race.startDate) : (race.startDate || 'onbekend');
+      if (!grouped[date]) {
+        grouped[date] = [];
+      }
+      grouped[date].push(race);
+    });
     
-    // Include all races (even past ones with results)
-    races.forEach(r => {
-      // For normal races (no tourId), use startDate
-      // For tour races (stages with tourId), use endDate
-      let raceDate = r.tourId == null ? (r.startDate || '') : (r.endDate || r.startDate || '');
+    // Sort each date's races: main tours first, then their stages
+    Object.keys(grouped).forEach(date => {
+      grouped[date].sort((a, b) => {
+        // Main tours (tourId == null) before stages
+        if ((a.tourId == null) !== (b.tourId == null)) {
+          return a.tourId == null ? -1 : 1;
+        }
+        return 0;
+      });
+    });
+    
+    return grouped;
+  };
+
+  const racesByDate = groupRacesByDate();
+  const sortedDates = Object.keys(racesByDate).sort();
+
+  // Determine closest speeldag to today on first render
+  useEffect(() => {
+    if (sortedDates.length === 0) return;
+    
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    
+    let closestIdx = 0;
+    let closestDiff = Math.abs(new Date(sortedDates[0]).getTime() - today.getTime());
+    
+    sortedDates.forEach((date, idx) => {
+      const speeldagDate = new Date(date);
+      speeldagDate.setHours(0, 0, 0, 0);
+      const diff = Math.abs(speeldagDate.getTime() - today.getTime());
       
-      // If no date found, skip this race
-      if (!raceDate) return;
-      
-      if (!dateMap.has(raceDate)) {
-        dateMap.set(raceDate, raceDate);
+      if (diff < closestDiff) {
+        closestDiff = diff;
+        closestIdx = idx;
       }
     });
     
-    const uniqueDates = Array.from(dateMap.keys());
-    return uniqueDates.sort((a, b) => new Date(a) - new Date(b));
-  }, [races]);
-
-  // Determine closest speeldag to today on first render
-  useMemo(() => {
-    if (currentSpeeldagIndex === null && sortedDates.length > 0) {
-      const today = new Date();
-      today.setHours(0, 0, 0, 0);
-      
-      let closestDateIndex = 0;
-      let closestDiff = Math.abs(new Date(sortedDates[0]).getTime() - today.getTime());
-      
-      sortedDates.forEach((date, idx) => {
-        const speeldagDate = new Date(date);
-        speeldagDate.setHours(0, 0, 0, 0);
-        const diff = Math.abs(speeldagDate.getTime() - today.getTime());
-        if (diff < closestDiff) {
-          closestDiff = diff;
-          closestDateIndex = idx;
-        }
-      });
-      
-      setCurrentSpeeldagIndex(closestDateIndex);
-    }
-  }, [sortedDates, currentSpeeldagIndex]);
+    setClosestDateIndex(closestIdx);
+  }, [sortedDates]);
 
   // Get races for current speeldag
   const currentSpeeldagRaces = useMemo(() => {
-    if (currentSpeeldagIndex === null || sortedDates.length === 0) return [];
-    const currentDate = sortedDates[currentSpeeldagIndex];
-    return races.filter(r => {
-      // For normal races, match on startDate
-      // For tour races (stages), match on endDate
-      const raceDate = r.tourId == null ? (r.startDate || '') : (r.endDate || r.startDate || '');
-      return raceDate === currentDate;
-    });
-  }, [races, currentSpeeldagIndex, sortedDates]);
+    if (sortedDates.length === 0) return [];
+    const currentDate = sortedDates[closestDateIndex];
+    return racesByDate[currentDate] || [];
+  }, [racesByDate, closestDateIndex, sortedDates]);
 
   // Calculate points for current speeldag (only from selected riders)
   // Using pre-calculated points from Cloud Function
@@ -378,26 +381,26 @@ export default function TeamDetails({
         </div>
 
         {/* Speeldag selector */}
-        {sortedDates.length > 0 && currentSpeeldagIndex !== null && (
+        {sortedDates.length > 0 && (
           <div className="speeldag-selector">
             <div className="speeldag-controls">
               <button 
-                onClick={() => setCurrentSpeeldagIndex(Math.max(0, currentSpeeldagIndex - 1))}
-                disabled={currentSpeeldagIndex === 0}
+                onClick={() => setClosestDateIndex(Math.max(0, closestDateIndex - 1))}
+                disabled={closestDateIndex === 0}
                 className="speeldag-nav-btn"
               >
                 ← Vorige
               </button>
               
               <div className="speeldag-info">
-                <span className="speeldag-label">Speeldag: {currentSpeeldagIndex + 1} / {sortedDates.length}</span>
-                <span className="speeldag-date">{new Date(sortedDates[currentSpeeldagIndex]).toLocaleDateString('nl-NL', { year: 'numeric', month: 'long', day: 'numeric' })}</span>
+                <span className="speeldag-label">Speeldag: {closestDateIndex + 1} / {sortedDates.length}</span>
+                <span className="speeldag-date">{new Date(sortedDates[closestDateIndex]).toLocaleDateString('nl-NL', { year: 'numeric', month: 'long', day: 'numeric' })}</span>
                 <span className="speeldag-points">Punten deze speeldag: <strong>{speeldagPoints}</strong></span>
               </div>
               
               <button 
-                onClick={() => setCurrentSpeeldagIndex(Math.min(sortedDates.length - 1, currentSpeeldagIndex + 1))}
-                disabled={currentSpeeldagIndex === sortedDates.length - 1}
+                onClick={() => setClosestDateIndex(Math.min(sortedDates.length - 1, closestDateIndex + 1))}
+                disabled={closestDateIndex === sortedDates.length - 1}
                 className="speeldag-nav-btn"
               >
                 Volgende →
