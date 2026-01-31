@@ -389,8 +389,7 @@ export default function RaceTeamSelector({ user, selectedRiders }) {
       // Check deadline for this specific race
       if (race.startDate) {
         const raceDeadline = new Date(race.startDate);
-        raceDeadline.setHours(9, 0, 0, 0);
-        raceDeadline.setDate(raceDeadline.getDate() - 1); // Deadline is 1 day before race start
+        raceDeadline.setHours(9, 0, 0, 0); // Deadline is 09:00 on race day
         
         // Standard deadline: can build if before race deadline
         // NEW users get extended deadline: they can build until race start time
