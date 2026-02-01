@@ -2,14 +2,6 @@ import { useState, useEffect, memo, useRef, useMemo } from 'react';
 import { useRaces } from '../hooks/useRaces';
 import '../css/raceCountdown.css';
 
-// Module-level cache that persists across component remounts
-let moduleCache = {
-  nearestDeadlineDate: null,
-  nearestDeadlineRaces: null,
-  cachedRacesLength: null,
-  cacheDate: null
-};
-
 const RaceCountdown = memo(function RaceCountdown({ user }) {
   const { races } = useRaces(user);
   const [nextRaces, setNextRaces] = useState([]);
@@ -24,74 +16,56 @@ const RaceCountdown = memo(function RaceCountdown({ user }) {
 
   // Calculate next races - only keep races for the nearest deadline day
   const { nextRaces: calculatedNextRaces, nextDeadlineDate: calculatedDeadlineDate } = useMemo(() => {
-    const racesLength = races?.length || 0;
-    const today = new Date().toDateString();
-    
-    // Check if we have a valid cache from the same day with same races count
-    if (
-      moduleCache.nearestDeadlineDate && 
-      moduleCache.cacheDate === today && 
-      moduleCache.cachedRacesLength === racesLength &&
-      racesLength > 0
-    ) {
-      return {
-        nextRaces: moduleCache.nearestDeadlineRaces,
-        nextDeadlineDate: moduleCache.nearestDeadlineDate
-      };
-    }
-
     if (!races || races.length === 0) {
       return { nextRaces: [], nextDeadlineDate: null };
     }
 
     const now = new Date();
     
-    // Find the nearest race day (only look for next upcoming race date)
-    // Races are already sorted chronologically from useRaces()
-    let nearestDeadlineDate = null;
+    // Group races by speeldag (game day), using same logic as YourPoints
+    const grouped = {};
+    races.forEach(race => {
+      if (!race.startDate) return;
+      
+      // Skip stages for deadline calculation
+      const isStage = race.tourId !== null && race.tourId !== undefined;
+      if (isStage) return;
+      
+      // Use same date logic as YourPoints
+      let date;
+      if (race.name?.includes('Algemeen klassement')) {
+        date = race.startDate;
+      } else {
+        date = race.endDate || race.startDate;
+      }
+      
+      if (!grouped[date]) {
+        grouped[date] = [];
+      }
+      grouped[date].push(race);
+    });
     
-    for (const race of races) {
-      if (!race.startDate) continue;
-      if (race.status === 'raced') continue;
-      if (race.tourId !== null && race.tourId !== undefined) continue; // Skip stages - no selections for stages
-      
-      const startDate = new Date(race.startDate);
-      if (startDate <= now) continue;
-      
-      // Found a future race - this day becomes our deadline
-      nearestDeadlineDate = new Date(startDate);
-      nearestDeadlineDate.setHours(9, 0, 0, 0);
-      break; // Stop at first future race
+    // Find the first speeldag with a future date
+    const sortedDates = Object.keys(grouped).sort();
+    let nearestDeadlineDate = null;
+    let racesOnDeadlineDay = [];
+    
+    for (const dateStr of sortedDates) {
+      const dateObj = new Date(dateStr);
+      if (dateObj >= now) {
+        nearestDeadlineDate = new Date(dateObj);
+        nearestDeadlineDate.setHours(9, 0, 0, 0);
+        racesOnDeadlineDay = grouped[dateStr];
+        break;
+      }
     }
-
+    
     if (!nearestDeadlineDate) {
       return { nextRaces: [], nextDeadlineDate: null };
     }
-
-    // Get only races on this nearest deadline day
-    const racesOnNearestDay = races.filter(race => {
-      if (!race.startDate) return false;
-      if (race.status === 'raced') return false;
-      if (race.tourId !== null && race.tourId !== undefined) return false; // Skip stages
-      
-      const raceDate = new Date(race.startDate);
-      raceDate.setHours(0, 0, 0, 0);
-      
-      const deadlineCheck = new Date(nearestDeadlineDate);
-      deadlineCheck.setHours(0, 0, 0, 0);
-      
-      return raceDate.getTime() === deadlineCheck.getTime();
-    });
     
-    console.log('🔍 RaceCountdown: Found', racesOnNearestDay.length, 'races on', nearestDeadlineDate.toDateString(), ':', racesOnNearestDay.map(r => r.name));
-    
-    // Cache the result at module level
-    moduleCache.nearestDeadlineDate = nearestDeadlineDate;
-    moduleCache.nearestDeadlineRaces = racesOnNearestDay;
-    moduleCache.cachedRacesLength = racesLength;
-    moduleCache.cacheDate = today;
-    
-    return { nextRaces: racesOnNearestDay, nextDeadlineDate: nearestDeadlineDate };
+    console.log('✅ RaceCountdown deadline:', nearestDeadlineDate.toDateString(), 'Races:', racesOnDeadlineDay.map(r => r.name));
+    return { nextRaces: racesOnDeadlineDay, nextDeadlineDate: nearestDeadlineDate };
   }, [races]);
 
   // Update countdown timer using calculated values

@@ -159,25 +159,47 @@ export default function RaceTeamSelector({ user, selectedRiders }) {
     if (!selectedRace && races && races.length > 0) {
       const now = new Date();
       
-      // Races are already sorted chronologically from useRaces()
-      // Find first upcoming race (same logic as RaceCountdown)
-      for (const race of races) {
-        if (!race.startDate) continue;
-        if (race.status === 'raced') continue;
-        if (race.tourId !== null && race.tourId !== undefined) continue; // Skip stages - no selections for stages
+      // Use same speeldag grouping logic as RaceCountdown
+      const grouped = {};
+      races.forEach(race => {
+        if (!race.startDate) return;
         
-        const startDate = new Date(race.startDate);
-        if (startDate <= now) continue;
+        // Skip stages for selection
+        const isStage = race.tourId !== null && race.tourId !== undefined;
+        if (isStage) return;
         
-        // Found the first upcoming race
-        setSelectedRace(race);
-        const deadline = new Date(race.startDate);
-        deadline.setHours(9, 0, 0, 0);
-        setSelectedRaceDeadline(deadline);
-        break;
+        // Use same date logic as YourPoints/RaceCountdown
+        let date;
+        if (race.name?.includes('Algemeen klassement')) {
+          date = race.startDate;
+        } else {
+          date = race.endDate || race.startDate;
+        }
+        
+        if (!grouped[date]) {
+          grouped[date] = [];
+        }
+        grouped[date].push(race);
+      });
+      
+      // Find first speeldag with a future date and available race
+      const sortedDates = Object.keys(grouped).sort();
+      for (const dateStr of sortedDates) {
+        const dateObj = new Date(dateStr);
+        if (dateObj >= now) {
+          // Found a speeldag in the future, use the first race from it
+          const race = grouped[dateStr][0];
+          if (race) {
+            setSelectedRace(race);
+            const deadline = new Date(race.startDate);
+            deadline.setHours(9, 0, 0, 0);
+            setSelectedRaceDeadline(deadline);
+          }
+          break;
+        }
       }
     }
-  }, [races, selectedRace]);
+  }, [races, selectedRace, fullUser]);
 
   // Clear auto-save tracking when race is selected/changed
   // This allows reprocessing if race data is updated (e.g., deadline changed)
