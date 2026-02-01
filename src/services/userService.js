@@ -106,12 +106,9 @@ export const getUserTeamBuildingDeadline = (user, races) => {
     return null;
   }
 
-  // Calculate deadline: one day before race start at 9:00 AM
+  // Calculate deadline: race day at 9:00 AM
   const deadline = new Date(targetRace.startDate);
   deadline.setHours(9, 0, 0, 0);
-  
-  // Subtract one day
-  deadline.setDate(deadline.getDate() - 1);
 
   return deadline;
 };
