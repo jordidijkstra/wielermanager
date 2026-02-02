@@ -2,7 +2,7 @@ export const howToPlay = [
     {
         title: "Stel je ploeg samen",
         stepNumber: 1,
-        description: "Kies minstens 14 renners en maximaal 30 renners binnen het budget van 200 miljoen euro en bouw de perfecte ploeg met sprinters, klimmers, klassiekerspecialisten en tijdrijders."
+        description: "Kies minstens 14 renners en maximaal 30 renners binnen het budget van 380 miljoen euro en bouw de perfecte ploeg met sprinters, klimmers, klassiekerspecialisten en tijdrijders."
     },
     {
         title: "Verzamel punten",

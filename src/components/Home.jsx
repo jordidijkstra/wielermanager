@@ -38,12 +38,12 @@ export default function Home({ setCurrentPage, setShowLoginModal, user }) {
                     Your browser does not support the video tag.
                 </video>
                 <div className="intro-overlay">
-                    <h1>Welkom bij Wielermanager</h1>
                     <p>
-                        Wielermanager is jouw ultieme wielerploegenspel voor het seizoen 2026. 
-                        Stel, net zoals in de echte wielerwereld, een ploeg samen van minstens 14 en maximaal 30 renners die over het hele seizoen de meeste punten voor jou moeten scoren.
+                        Word jij de nieuwe Patrick Lefevre,<br/>
+                        De nieuwe Patron van de koers?
+                        
                     </p>
-                    <button onClick={scrollToHowToPlay}>Ontdek hoe</button>
+                    <button onClick={scrollToHowToPlay}>Ontdek meer</button>
                 </div>
             </section>
 

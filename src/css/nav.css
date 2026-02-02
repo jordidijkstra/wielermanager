@@ -1,5 +1,4 @@
 nav{
-    background-color: #f1f1f1;
     display: flex;
     align-items: center;
     position: fixed;
@@ -7,22 +6,29 @@ nav{
     width: 100%;
     z-index: 10;
     height: 10dvh;
-    box-shadow: 0 8px 32px rgba(20, 33, 61, 0.15), 0 2px 8px rgba(20, 33, 61, 0.08);
+    transition: all 0.4s ease;
+}
+
+nav.scrolled {
+    background: #14213d;
 }
 
 .logo-container {
   font-family: "BBH Bartle", sans-serif;
   font-weight: 900;
-  background: linear-gradient(135deg, #667ee6, #764ba2);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  color: #f1f1f1;
   padding: 1em;
-  text-shadow: none;
+  line-height: 0.8em;
 }
 
 .logo-container p{
-    font-size: 1.5em;
+    font-size: 2em;
+}
+
+.logo-container span{
+    font-size: 0.5em;
+    font-weight: 400;
+    color: #f1f1f1;
 }
 
 nav ul {
@@ -37,18 +43,17 @@ nav ul {
 }
 
 nav ul li a{
-    color: #14213d;
+    color: #f1f1f1;
     text-decoration: none;
-    transition: all 0.3s;
+    transition: background-color 0.3s;
     font-weight: 500;
     cursor: pointer;
+    padding: 0.5em 1em;
+    border-radius: 2em;
 }
 
 nav ul li a:hover {
-  background: linear-gradient(135deg, #667ee6, #764ba2);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  background-color: #667ee6;
 }
 
 .btn-login,
@@ -96,12 +101,8 @@ nav ul li a:hover {
     text-align: left;
     border: none;
     font-size: .8em;
-}
-
-.profile-dropdown a:hover,
-.profile-dropdown button:hover {
-    background: linear-gradient(135deg, #667ee6, #764ba2);
-    -webkit-text-fill-color: #f1f1f1;
+    color: #14213d;
+    border-radius: 0;
 }
 
 .btn-logout-dropdown {

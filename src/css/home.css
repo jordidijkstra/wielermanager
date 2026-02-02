@@ -31,22 +31,21 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-}
-
-.intro h1{
-    font-size: 2.5em;
-    padding-bottom: 0.5em;
-    color: #ffffff;
-    text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.5);
+    background-image: url(../assets/manager.png);
+    background-repeat: no-repeat;
+    background-position: 15% center;
+    background-size: 25%;
 }
 
 .intro p{
-    font-size: 1.2em;
-    font-weight: 100;
+    font-size: 1.5em;
+    font-weight: 500;
     line-height: 1.5em;
     width: 40%;
     color: #ffffff;
     text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.5);
+    font-family: "Zalando Sans Expanded", sans-serif;
+    text-transform: uppercase;
 }
 
 .intro button, .how-to-play button{
@@ -56,6 +55,8 @@
     background: linear-gradient(135deg, #667ee6, #764ba2);
     border: none;
     border-radius: 4px;
+    font-size: 1.2em;
+    text-transform: uppercase;
 }
 
 .intro button:hover, .how-to-play button:hover{
@@ -85,6 +86,7 @@
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
+    font-family: "BBH Bartle", sans-serif;
 }
 
 .steps{

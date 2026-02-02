@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useAuth } from './hooks/useAuth';
 import { useUserTeam } from './hooks/useUserTeam';
+import { useUserBudget } from './hooks/useUserBudget';
 import Nav from './components/Nav';
 import Home from './components/Home';
 import Admin from './components/Admin';
@@ -16,14 +17,13 @@ import RiderStatistics from './components/RiderStatistics';
 import Footer from './components/Footer';
 import '@fortawesome/fontawesome-free/css/all.min.css';
 
-const BUDGET = 200000000; // €200 miljoen
-
 function App() {
   const { user, loading, isAdmin } = useAuth();
+  const { budget } = useUserBudget(user);
   const [currentPage, setCurrentPage] = useState('home');
   const [showLoginModal, setShowLoginModal] = useState(false);
   const [rankingsResetTrigger, setRankingsResetTrigger] = useState(0);
-  const { selectedRiders } = useUserTeam(user, BUDGET);
+  const { selectedRiders } = useUserTeam(user, budget);
 
   // Reset Rankings when clicked in menu
   const handleRankingsClick = () => {
@@ -83,7 +83,7 @@ function App() {
 
   return (
     <>
-      <Nav setCurrentPage={setCurrentPage} handleRankingsClick={handleRankingsClick} setShowLoginModal={setShowLoginModal} />
+      <Nav setCurrentPage={setCurrentPage} handleRankingsClick={handleRankingsClick} setShowLoginModal={setShowLoginModal} currentPage={currentPage} />
       {user && <RaceCountdown user={user} />}
       {renderPage()}
       {showLoginModal && <Login onClose={() => setShowLoginModal(false)} />}

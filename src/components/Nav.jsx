@@ -1,15 +1,40 @@
 import '../css/nav.css';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useAuth } from '../hooks/useAuth';
 import { useLogout } from '../hooks/useLogout';
 import { useTeamDeadline } from '../hooks/useTeamDeadline';
 
-export default function Nav({ setCurrentPage, handleRankingsClick, setShowLoginModal}) {
+export default function Nav({ setCurrentPage, handleRankingsClick, setShowLoginModal, currentPage }) {
     const { user, isAdmin } = useAuth();
     const logout = useLogout();
     const { deadlinePassed } = useTeamDeadline(user);
     const [showProfileMenu, setShowProfileMenu] = useState(false);
     const [showMobileMenu, setShowMobileMenu] = useState(false);
+    const [isScrolled, setIsScrolled] = useState(false);
+
+    // Track scroll position
+    useEffect(() => {
+      const handleScroll = () => {
+        // On home page, no background until scrolling far down; on other pages, always show background
+        if (currentPage === 'home') {
+          // Home page: only show background after scrolling significantly (95% of viewport height)
+          setIsScrolled(window.scrollY > window.innerHeight * 0.5);
+        } else {
+          // Other pages: always show background
+          setIsScrolled(true);
+        }
+      };
+
+      // Set initial state based on current page
+      if (currentPage === 'home') {
+        setIsScrolled(window.scrollY > window.innerHeight * 0.5);
+      } else {
+        setIsScrolled(true);
+      }
+
+      window.addEventListener('scroll', handleScroll);
+      return () => window.removeEventListener('scroll', handleScroll);
+    }, [currentPage]);
 
     const handleProfileClick = (page) => {
         setCurrentPage(page);
@@ -64,9 +89,10 @@ export default function Nav({ setCurrentPage, handleRankingsClick, setShowLoginM
     );
 
     return (
-        <nav>
+        <nav className={isScrolled ? 'scrolled' : ''}>
             <div className="logo-container">
-                <p>Wielermanager</p>
+                <p>De Patron</p>
+                <span>van de koers</span>
             </div>
             
             {/* Hamburger Menu Button */}
