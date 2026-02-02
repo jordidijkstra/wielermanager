@@ -110,8 +110,11 @@ export default function Nav({ setCurrentPage, handleRankingsClick, setShowLoginM
     return (
         <nav className={clsx('nav', { scrolled: isScrolled, 'menu-open': showMobileMenu })}>
             <div className="logo-container">
-                <p>De Patron</p>
-                <span>van de koers</span>
+                <img className="logo-de-patron" src="../assets/silhouette.png" alt="Logo De Patron" />
+                <div className="logo-text">
+                    <p>De Patron</p>
+                    <span>van de koers</span>
+                </div>
             </div>
             
             {/* Hamburger Menu Button */}
