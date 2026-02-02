@@ -1,20 +1,16 @@
-nav{
-    display: flex;
-    align-items: center;
-    position: fixed;
-    top: 0;
-    width: 100%;
-    z-index: 10;
-    height: 10dvh;
-    transition: all 0.4s ease;
+nav {
+  display: flex;
+  align-items: center;
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 10;
+  height: 10dvh;
+  transition: all 0.4s ease;
 }
 
-nav.scrolled {
-    background: #14213d;
-}
-
-nav.menu-open {
-    background: rgba(20, 33, 61, 1);
+nav.scrolled, nav.menu-open {
+  background: #14213d;
 }
 
 .logo-container {
@@ -25,63 +21,62 @@ nav.menu-open {
   line-height: 0.8em;
 }
 
-.logo-container p{
-    font-size: 2em;
+.logo-container p {
+  font-size: 2em;
 }
 
-.logo-container span{
-    font-size: 0.5em;
-    font-weight: 400;
-    color: #f1f1f1;
+.logo-container span {
+  font-size: 0.5em;
+  font-weight: 400;
+  color: #f1f1f1;
 }
 
 nav ul {
-    list-style: none;
-    display: flex;
-    gap: 1em;
-    padding: 1em 2em;
-    margin: 0;
-    align-items: center;
-    position: absolute;
-    right: 0;
+  list-style: none;
+  display: flex;
+  gap: 1em;
+  padding: 1em 2em;
+  margin: 0;
+  align-items: center;
+  position: absolute;
+  right: 0;
 }
 
-nav ul li a{
-    color: #f1f1f1;
-    text-decoration: none;
-    transition: background-color 0.3s;
-    font-weight: 500;
-    cursor: pointer;
-    padding: 0.5em 1em;
-    border-radius: 2em;
+nav ul li a {
+  color: #f1f1f1;
+  text-decoration: none;
+  transition: background-color 0.3s;
+  font-weight: 500;
+  padding: 0.5em 1em;
+  border-radius: 2em;
 }
 
 nav ul li a:hover {
+  cursor: pointer;
   background-color: #667ee6;
 }
 
 .btn-login,
 .btn-logout,
 .btn-profile {
-    background: linear-gradient(135deg, #667ee6, #764ba2);
-    color: white;
-    transition: transform 0.2s;
-    border: none;
-    border-radius: 6px;
-    font-size: 1em;
+  background: linear-gradient(135deg, #667ee6, #764ba2);
+  color: white;
+  transition: transform 0.2s;
+  border: none;
+  border-radius: 6px;
+  font-size: 1em;
 }
 
 .btn-login:hover,
 .btn-logout:hover,
 .btn-profile:hover {
-    transform: translateY(-2px);
+  transform: translateY(-2px);
 }
 
 /* Profile Menu Styles */
 .profile-menu {
-    position: relative;
+  position: relative;
 }
-
 
 .profile-dropdown {
     position: absolute;
@@ -206,11 +201,6 @@ nav ul li a:hover {
   cursor: pointer;
   font-family: inherit;
   transition: background-color 0.2s;
-}
-
-.nav-menu.mobile li a:hover {
-  background-color: #f0f0f0;
-  color: #fca311;
 }
 
 

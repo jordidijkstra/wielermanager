@@ -31,10 +31,10 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    background-image: url(../assets/manager.png);
+    background-image: url(../public/assets/manager.png);
     background-repeat: no-repeat;
     background-position: 15% bottom;
-    background-size: 25%;
+    background-size: 35%;
 }
 
 .intro p{

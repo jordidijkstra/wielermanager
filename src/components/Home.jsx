@@ -39,9 +39,7 @@ export default function Home({ setCurrentPage, setShowLoginModal, user }) {
                 </video>
                 <div className="intro-overlay">
                     <p>
-                        Word jij de nieuwe Patrick Lefevre,<br/>
-                        De nieuwe Patron van de koers?
-                        
+                        Word jij de nieuwe Patrick Lefevere,<br/>De nieuwe Patron van de koers?
                     </p>
                     <button onClick={scrollToHowToPlay}>Ontdek meer</button>
                 </div>

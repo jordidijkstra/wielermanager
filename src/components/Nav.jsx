@@ -1,5 +1,6 @@
 import '../css/nav.css';
 import { useState, useEffect } from 'react';
+import clsx from 'clsx';
 import { useAuth } from '../hooks/useAuth';
 import { useLogout } from '../hooks/useLogout';
 import { useTeamDeadline } from '../hooks/useTeamDeadline';
@@ -51,45 +52,63 @@ export default function Nav({ setCurrentPage, handleRankingsClick, setShowLoginM
     const renderMainNavItems = () => (
         <>
             <li><a href="#" onClick={() => handleNavClick('home')}>Home</a></li>
-            {user && !deadlinePassed && <li><a href="#" onClick={() => handleNavClick('team')}>Jouw team</a></li>}
             {user && <li><a href="#" onClick={() => handleNavClick('pointsTables')}>Puntentabellen</a></li>}
             {user && <li><a href="#" onClick={() => handleRankingsClick()}>Klassement</a></li>}
             {user && <li><a href="#" onClick={() => handleNavClick('riderStatistics')}>Statistieken</a></li>}
         </>
     );
 
-    // Render profile dropdown items (shared between desktop and mobile)
-    const renderProfileItems = () => (
-        <>
-            <a href="#" onClick={() => handleProfileClick('points')}>
-                📊 Jouw punten
-            </a>
-            <a href="#" onClick={() => handleProfileClick('raceTeams')}>
-                🏆 Jouw selecties
-            </a>
-            {isAdmin && (
-                <a href="#" onClick={() => handleProfileClick('admin')}>
-                    ⚙️ Admin
-                </a>
-            )}
-            <a href="#" onClick={() => handleProfileClick('settings')}>
-                🔧 Instellingen
-            </a>
-            <button 
-                className={showMobileMenu ? "btn-logout-submenu" : "btn-logout-dropdown"}
-                onClick={() => {
-                    setShowProfileMenu(false);
-                    setShowMobileMenu(false);
+    // Render profile items (desktop or mobile based on parameter)
+    const renderProfileItems = (isMobile = false) => {
+        const items = [
+            { label: 'Jouw team', page: 'team', requireDeadline: true },
+            { label: 'Jouw punten', page: 'points' },
+            { label: 'Jouw selecties', page: 'raceTeams' },
+            { label: '🔧 Instellingen', page: 'settings' },
+            { label: '⚙️ Admin', page: 'admin', adminOnly: true },
+            { label: '🚪 Uitloggen', logout: true },
+        ];
+
+        const renderItem = (item) => {
+            if (item.adminOnly && !isAdmin) return null;
+            if (item.requireDeadline && deadlinePassed) return null;
+            
+            let content;
+            if (item.logout) {
+                const logoutFn = () => {
+                    if (isMobile) setShowMobileMenu(false);
+                    else setShowProfileMenu(false);
                     logout();
-                }}
-            >
-                🚪 Uitloggen
-            </button>
-        </>
-    );
+                };
+                content = (
+                    <button 
+                        className={isMobile ? 'btn-logout-submenu' : 'btn-logout-dropdown'}
+                        onClick={logoutFn}
+                    >
+                        {item.label}
+                    </button>
+                );
+            } else {
+                content = (
+                    <a href="#" onClick={() => handleProfileClick(item.page)}>
+                        {item.label}
+                    </a>
+                );
+            }
+
+            const key = item.logout ? 'logout' : item.page;
+            return isMobile ? (
+                <li key={key} className="profile-submenu">{content}</li>
+            ) : (
+                <div key={key}>{content}</div>
+            );
+        };
+
+        return <>{items.map(renderItem)}</>;
+    };
 
     return (
-        <nav className={`${isScrolled ? 'scrolled' : ''} ${showMobileMenu ? 'menu-open' : ''}`}>
+        <nav className={clsx('nav', { scrolled: isScrolled, 'menu-open': showMobileMenu })}>
             <div className="logo-container">
                 <p>De Patron</p>
                 <span>van de koers</span>
@@ -97,7 +116,7 @@ export default function Nav({ setCurrentPage, handleRankingsClick, setShowLoginM
             
             {/* Hamburger Menu Button */}
             <button 
-                className={`hamburger-menu ${showMobileMenu ? 'active' : ''}`}
+                className={clsx('hamburger-menu', { active: showMobileMenu })}
                 onClick={() => setShowMobileMenu(!showMobileMenu)}
                 aria-label="Menu"
                 title="Menu"
@@ -136,48 +155,7 @@ export default function Nav({ setCurrentPage, handleRankingsClick, setShowLoginM
             {showMobileMenu && (
                 <ul className="nav-menu mobile">
                     {renderMainNavItems()}
-                    
-                    {user ? (
-                        <>
-                            <li className="profile-submenu">
-                                <a href="#" onClick={() => handleProfileClick('points')}>
-                                    📊 Jouw punten
-                                </a>
-                            </li>
-                            <li className="profile-submenu">
-                                <a href="#" onClick={() => handleProfileClick('raceTeams')}>
-                                    🏆 Jouw selecties
-                                </a>
-                            </li>
-                            {isAdmin && (
-                                <li className="profile-submenu">
-                                    <a href="#" onClick={() => handleProfileClick('admin')}>
-                                        ⚙️ Admin
-                                    </a>
-                                </li>
-                            )}
-                            <li className="profile-submenu">
-                                <a href="#" onClick={() => handleProfileClick('settings')}>
-                                    🔧 Instellingen
-                                </a>
-                            </li>
-                            <li className="profile-submenu">
-                                <button 
-                                    className="btn-logout-submenu"
-                                    onClick={() => {
-                                        setShowMobileMenu(false);
-                                        logout();
-                                    }}
-                                >
-                                    🚪 Uitloggen
-                                </button>
-                            </li>
-                        </>
-                    ) : (
-                        <li>
-                            <button onClick={() => setShowLoginModal(true)} className="btn-login">Inloggen</button>
-                        </li>
-                    )}
+                    {user ? renderProfileItems(true) : <li><button onClick={() => setShowLoginModal(true)} className="btn-login">Inloggen</button></li>}
                 </ul>
             )}
         </nav>
