@@ -89,7 +89,7 @@ export default function Nav({ setCurrentPage, handleRankingsClick, setShowLoginM
     );
 
     return (
-        <nav className={isScrolled ? 'scrolled' : ''}>
+        <nav className={`${isScrolled ? 'scrolled' : ''} ${showMobileMenu ? 'menu-open' : ''}`}>
             <div className="logo-container">
                 <p>De Patron</p>
                 <span>van de koers</span>
