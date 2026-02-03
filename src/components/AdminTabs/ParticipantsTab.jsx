@@ -1,10 +1,11 @@
 import { useState, useEffect } from 'react';
 import * as XLSX from 'xlsx';
 import { collection, getDocs, doc, setDoc, deleteDoc, getDoc, query, where } from 'firebase/firestore';
-import { db } from '../firebase/config';
-import { getAllRaces } from '../services/raceService';
-import { getAllRiders } from '../services/riderService';
-import '../css/participantsTab.css';
+import { db } from '../../firebase/config';
+import { getAllRaces } from '../../services/raceService';
+import { getAllRiders } from '../../services/riderService';
+import { normalizeText } from '../../utils/textUtils';
+import '../../css/participantsTab.css';
 
 export default function ParticipantsTab() {
   const [races, setRaces] = useState([]);
@@ -50,14 +51,6 @@ export default function ParticipantsTab() {
     };
     loadData();
   }, []);
-
-  // Helper function to normalize text (remove diacritics and special characters)
-  const normalizeText = (text) => {
-    return text
-      .normalize('NFD')
-      .replace(/[\u0300-\u036f]/g, '') // Remove diacritics
-      .toLowerCase();
-  };
 
   const getRaceName = (raceId) => {
     return races.find(r => String(r.id) === String(raceId))?.name || `Race ${raceId}`;

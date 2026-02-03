@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
-import { autoFillRaceTeamsLocal } from '../services/autoFillService';
-import { getAutoFillLogs } from '../services/systemLogsService';
-import '../css/adminTools.css';
+import { autoFillRaceTeamsLocal } from '../../services/autoFillService';
+import { getAutoFillLogs } from '../../services/systemLogsService';
+import '../../css/adminTools.css';
 
 export default function AdminToolsTab() {
   const [isProcessing, setIsProcessing] = useState(false);

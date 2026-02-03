@@ -346,63 +346,9 @@
   min-width: 0;
 }
 
-.pagination {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-  padding: 1em 0;
-  position: absolute;
-  bottom: 0;
-  width: 100%;
-  left: 0;
-}
+/* Pagination styles removed - now using dedicated pagination.css */
 
-.pagination-btn {
-  padding: 0;
-  color: #14213d;
-  background: #ffffff;
-  border: 2px solid #14213d;
-  border-radius: 6px;
-  font-size: 16px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.3s;
-  width: 40px;
-  height: 40px;
-}
-
-.pagination-btn.active{
-  background-color: #14213d;
-  color: #ffffff;
-}
-
-.pagination-btn:hover:not(:disabled) {
-  transform: translateY(-2px);
-}
-
-.pagination-btn:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-}
-
-.pagination-pages {
-  display: flex;
-  gap: 5px;
-}
-
-.pagination-info {
-  font-size: 14px;
-  color: #666;
-  margin-left: 10px;
-}
-
-.pagination-ellipsis {
-  padding: 8px 12px;
-  color: #666;
-  font-weight: 600;
-  user-select: none;
-}
+/* Pagination styles removed - now using dedicated pagination.css */
 
 @media (max-width: 1024px) {
   .team-content {

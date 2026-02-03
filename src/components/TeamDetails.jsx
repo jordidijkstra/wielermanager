@@ -174,7 +174,7 @@ export default function TeamDetails({
     });
     
     setClosestDateIndex(closestIdx);
-  }, [sortedDates]);
+  }, []);
 
   // Get races for current speeldag
   const currentSpeeldagRaces = useMemo(() => {
@@ -364,23 +364,17 @@ export default function TeamDetails({
   return (
     <div className="rankings">
       <div className="team-details-header">
-        <button 
-          className="btn-back" 
-          onClick={handleCloseDetails}
-          title="Terug naar Rankings (of druk ESC)"
-        >
-          ← Terug naar Rankings
-        </button>
-      </div>
-      
-      <div className="team-details">
-        <h2>Team Details</h2>
-        <div className="team-info">
-          <p><strong>Team:</strong> {getUserName(teamDetails.id)}</p>
-          <p><strong>Totale Punten:</strong> <span className="team-points">{teamPoints}</span></p>
+        <div className="header-top">
+          <button 
+            className="btn-back" 
+            onClick={handleCloseDetails}
+            title="Terug naar Rankings (of druk ESC)"
+          >
+            ← Terug naar Rankings
+          </button>
         </div>
 
-        {/* Speeldag selector */}
+        {/* Speeldag selector - fixed at top for easy navigation */}
         {sortedDates.length > 0 && (
           <div className="speeldag-selector">
             <div className="speeldag-controls">
@@ -408,6 +402,14 @@ export default function TeamDetails({
             </div>
           </div>
         )}
+      </div>
+      
+      <div className="team-details">
+        <h2>Team Details</h2>
+        <div className="team-info">
+          <p><strong>Team:</strong> {getUserName(teamDetails.id)}</p>
+          <p><strong>Totale Punten:</strong> <span className="team-points">{teamPoints}</span></p>
+        </div>
 
         {/* Renners in dit team */}
         <div className="team-riders">

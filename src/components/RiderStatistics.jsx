@@ -3,7 +3,16 @@ import { getDocs, collection } from 'firebase/firestore';
 import { db } from '../firebase/config';
 import { getTeamJerseyPath } from '../services/cyclingTeamService';
 import { formatPrice, getFullName } from '../utils/formatters';
+import RiderTable from './RiderTable';
 import '../css/riderStatistics.css';
+
+
+const riderColumns = [
+  { label: '#', className: 'rank-column', cellClassName: 'rank-column', render: (_, i) => i + 1 },
+  { label: 'Renner', className: 'name-column', cellClassName: 'name-column', key: 'fullName' },
+  { label: 'Kostprijs', className: 'price-column', cellClassName: 'price-column', render: (rider) => `€${(rider.price || 0).toLocaleString('nl-NL')}` },
+  { label: 'Punten', className: 'points-column', cellClassName: 'points-column', key: 'points' }
+];
 
 export default function RiderStatistics() {
   const [riders, setRiders] = useState([]);
@@ -172,66 +181,22 @@ export default function RiderStatistics() {
 
       {/* Content based on active tab */}
       {activeTab === 'all' && (
-        <div className="riders-table-container">
-          <table className="riders-table">
-            <thead>
-              <tr>
-                <th className="rank-column">#</th>
-                <th className="name-column">Renner</th>
-                <th className="price-column">Kostprijs</th>
-                <th className="points-column">Punten</th>
-              </tr>
-            </thead>
-            <tbody>
-              {sortedRiders.length > 0 ? (
-                sortedRiders.map((rider, index) => (
-                  <tr key={rider.id} className={`${getValueClass(rider)} ${rider.points > 0 ? 'rider-with-points' : 'rider-no-points'}`}>
-                    <td className="rank-column">{index + 1}</td>
-                    <td className="name-column">{rider.fullName}</td>
-                    <td className="price-column">€{(rider.price || 0).toLocaleString('nl-NL')}</td>
-                    <td className="points-column">{rider.points}</td>
-                  </tr>
-                ))
-              ) : (
-                <tr>
-                  <td colSpan="4" className="no-data">Geen renners gevonden</td>
-                </tr>
-              )}
-            </tbody>
-          </table>
-        </div>
+        <RiderTable
+          columns={riderColumns}
+          data={sortedRiders}
+          rowClassName={(rider) => `${getValueClass(rider)} ${rider.points > 0 ? 'rider-with-points' : 'rider-no-points'}`}
+        />
       )}
 
       {/* MVP Tab */}
       {activeTab === 'mvp' && (
         <div className="riders-table-container">
           <h2>MVP Renners (Beste waarde)</h2>
-          <table className="riders-table">
-            <thead>
-              <tr>
-                <th className="rank-column">#</th>
-                <th className="name-column">Renner</th>
-                <th className="price-column">Kostprijs</th>
-                <th className="points-column">Punten</th>
-              </tr>
-            </thead>
-            <tbody>
-              {getMVPRiders().length > 0 ? (
-                getMVPRiders().map((rider, index) => (
-                  <tr key={rider.id} className="rider-good-value rider-with-points">
-                    <td className="rank-column">{index + 1}</td>
-                    <td className="name-column">{rider.fullName}</td>
-                    <td className="price-column">€{(rider.price || 0).toLocaleString('nl-NL')}</td>
-                    <td className="points-column">{rider.points}</td>
-                  </tr>
-                ))
-              ) : (
-                <tr>
-                  <td colSpan="4" className="no-data">Geen MVP's gevonden</td>
-                </tr>
-              )}
-            </tbody>
-          </table>
+          <RiderTable
+            columns={riderColumns}
+            data={getMVPRiders()}
+            rowClassName={() => "rider-good-value rider-with-points"}
+          />
         </div>
       )}
 

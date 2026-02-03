@@ -1,23 +1,26 @@
 import { useState, useEffect } from 'react';
 import * as XLSX from 'xlsx';
 import { collection, getDocs } from 'firebase/firestore';
-import { db } from '../firebase/config';
-import { useRaces } from '../hooks/useRaces';
-import { useRacesCategories } from '../hooks/useRacesCategories';
-import { useResults } from '../hooks/useResults';
-import { useRiders } from '../hooks/useRiders';
-import { usePointsByCategory } from '../hooks/usePointsByCategory';
-import { saveRaceParticipants } from '../services/raceService';
-import { updateRidersPointsFromResults } from '../services/riderService';
-import { recalculateTeamPointsForRace } from '../services/resultsService';
-import '../css/racesTab.css';
+import { db } from '../../firebase/config';
+import { useAdminData } from './AdminDataProvider';
+import { useRacesCategories } from '../../hooks/useRacesCategories';
+import { useRiders } from '../../hooks/useRiders'; // Fallback
+import { usePointsByCategory } from '../../hooks/usePointsByCategory';
+import { saveRaceParticipants } from '../../services/raceService';
+import { updateRidersPointsFromResults } from '../../services/riderService';
+import { recalculateTeamPointsForRace } from '../../services/resultsService';
+import { normalizeText } from '../../utils/textUtils';
+import Pagination from '../Pagination';
+import Modal from '../Modal';
+import '../../css/racesTab.css';
 
 
 export default function RacesTab() {
-  const { races, loading: racesLoading, reload: reloadRaces, addRace, editRace, removeRace } = useRaces();
+  const { racesData, resultsData, ridersData } = useAdminData();
+  const { races, loading: racesLoading, reload: reloadRaces, addRace, editRace, removeRace } = racesData;
   const { categories, loading: categoriesLoading } = useRacesCategories();
-  const { results, addResult, reload: reloadResults } = useResults();
-  const { riders, reload: reloadRiders } = useRiders();
+  const { results, addResult, reload: reloadResults } = resultsData;
+  const { riders, reload: reloadRiders } = ridersData;
   const { loadPointsForCategory } = usePointsByCategory();
   const [showAddRaceForm, setShowAddRaceForm] = useState(false);
   const [editingRaceId, setEditingRaceId] = useState(null);
@@ -62,14 +65,6 @@ export default function RacesTab() {
     };
     loadParticipants();
   }, []);
-
-  // Helper function to normalize text (remove diacritics and special characters)
-  const normalizeText = (text) => {
-    return text
-      .normalize('NFD')
-      .replace(/[\u0300-\u036f]/g, '') // Remove diacritics
-      .toLowerCase();
-  };
 
   // Handle Excel file import
   const handleExcelImport = (event) => {
@@ -834,267 +829,160 @@ export default function RacesTab() {
             ))}
           </tbody>
           {totalPages > 1 && (
-            <tfoot>
-              <tr>
-                <td colSpan="7" style={{ textAlign: 'center', padding: '15px' }}>
-                  <button 
-                    className="pagination-btn"
-                    onClick={goToPrevPage}
-                    disabled={currentPage === 1}
-                  >
-                    Vorige
-                  </button>
-                  <span className="pagination-info" style={{ margin: '0 20px' }}>
-                    Pagina {currentPage} van {totalPages}
-                  </span>
-                  <button 
-                    className="pagination-btn"
-                    onClick={goToNextPage}
-                    disabled={currentPage === totalPages}
-                  >
-                    Volgende
-                  </button>
-                </td>
-              </tr>
-            </tfoot>
+             <tfoot>
+               <tr>
+                 <td colSpan="8">
+                   <Pagination
+                     currentPage={currentPage}
+                     totalPages={totalPages}
+                     onGoToPage={setCurrentPage}
+                     onPrevPage={goToPrevPage}
+                     onNextPage={goToNextPage}
+                   />
+                 </td>
+               </tr>
+             </tfoot>
           )}
         </table>
       </div>
 
-      {showResultModal !== null && (
-        <div className="result-modal-content">
-          {showResultModal.type === 'existing' && (
-            <>
-              <h3>Resultaat beschikbaar</h3>
-              <p>Deze race heeft al een resultaat in het systeem.</p>
-              <p className="result-modal-message">
-                Ga naar het <strong>Resultaten</strong> tabblad om de details te bekijken en te beheren.
-              </p>
-              <div className="result-modal-buttons">
-                <button 
-                  onClick={() => setShowResultModal(null)}
-                  className="result-modal-close-btn"
-                >
-                  Sluiten
-                </button>
-              </div>
-            </>
-          )}
-
-          {showResultModal.type === 'form' && (
-            <>
-              <h3>Resultaten invoeren</h3>
-              <p className="result-modal-info">
-                Race ID: <strong>{showResultModal.raceId}</strong> | Invoervelden: <strong>{showResultModal.pointsCount}</strong>
-              </p>
-
-              <div className="excel-import-section">
-                <label className="excel-import-label">
-                  <input
-                    type="file"
-                    accept=".xlsx,.xls,.csv"
-                    onChange={handleExcelImport}
-                  />
-                  <span className="excel-import-button">
-                    📊 Excel importeren
-                  </span>
-                  <span className="excel-import-hint">(Kolom A: Positie, B: Achternaam en Voornaam)</span>
-                </label>
-              </div>
-
-              <div>
-                <table className="result-entry-table">
-                  <thead>
-                    <tr>
-                      <th>Positie</th>
-                      <th>Renner</th>
-                      <th>Punten</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {resultEntries.map((entry, idx) => {
-                      const searchTerm = riderSearchFilters[idx] || '';
-                      const normalizedSearch = normalizeText(searchTerm);
-                      const filteredRiders = riders.filter(rider => {
-                        const riderFullName = `${rider.firstnameWithoutSpecialChars || ''} ${rider.lastnameWithoutSpecialChars || ''}`.toLowerCase();
-                        return riderFullName.includes(normalizedSearch);
-                      });
-                      const selectedRider = riders.find(r => r.id === entry.riderId);
-                      
-                      return (
-                        <tr key={idx}>
-                          <td><span className="result-entry-position">{idx + 1}</span></td>
-                          <td className="result-entry-renner-cell">
-                            <input
-                              type="text"
-                              placeholder="Type renner naam..."
-                              value={searchTerm}
-                              onChange={(e) => {
-                                setRiderSearchFilters({...riderSearchFilters, [idx]: e.target.value});
-                                setOpenRiderDropdowns({...openRiderDropdowns, [idx]: true});
-                              }}
-                              onFocus={() => setOpenRiderDropdowns({...openRiderDropdowns, [idx]: true})}
-                              onBlur={() => setTimeout(() => setOpenRiderDropdowns({...openRiderDropdowns, [idx]: false}), 200)}
-                              className="result-entry-renner-input"
-                            />
-                            {openRiderDropdowns[idx] && (
-                              <div className="result-entry-dropdown">
-                                {filteredRiders.length === 0 ? (
-                                  <div className="result-entry-dropdown-empty">Geen renners gevonden</div>
-                                ) : (
-                                  filteredRiders.map((rider) => (
-                                    <div
-                                      key={rider.id}
-                                      onClick={() => {
-                                        updateResultEntry(idx, 'riderId', rider.id);
-                                        setRiderSearchFilters({...riderSearchFilters, [idx]: `${rider.firstname} ${rider.lastname}`});
-                                        setOpenRiderDropdowns({...openRiderDropdowns, [idx]: false});
-                                      }}
-                                      className={`result-entry-dropdown-item ${entry.riderId === rider.id ? 'selected' : ''}`}
-                                    >
-                                      {rider.firstname} {rider.lastname}
-                                    </div>
-                                  ))
-                                )}
-                              </div>
-                            )}
-                          </td>
-                          <td className="result-entry-points-cell">
-                            <span className="result-entry-points-value">{entry.points}</span>
-                          </td>
-                        </tr>
-                      );
-                    })}
-                  </tbody>
-                </table>
-              </div>
-
-              <div className="result-modal-buttons">
-                <button 
-                  onClick={() => setShowResultModal(null)}
-                  className="result-modal-cancel-btn"
-                >
-                  Annuleren
-                </button>
-                <button 
-                  onClick={submitResults}
-                  className="result-modal-save-btn"
-                >
-                  Opslaan
-                </button>
-              </div>
-            </>
-          )}
-        </div>
-      )}
-
-      {showResultModal !== null && (
-        <div 
-          className="result-modal-overlay"
-          onClick={() => setShowResultModal(null)}
-        />
-      )}
-
-      {showParticipantsModal !== null && (
-        <div className="result-modal-content">
-          <h3>Startlijst importeren</h3>
-          <p className="result-modal-info">
-            Race ID: <strong>{showParticipantsModal}</strong>
-          </p>
-
-          <div className="excel-import-section">
-            <label className="excel-import-label">
-              <input
-                type="file"
-                accept=".xlsx,.xls,.csv"
-                onChange={handleParticipantsExcelImport}
-              />
-              <span className="excel-import-button">
-                📊 Excel importeren
-              </span>
-              <span className="excel-import-hint">(Kolom A: Renner voornaam en achternaam)</span>
-            </label>
-          </div>
-
-          <div>
-            <table className="result-entry-table">
-              <thead>
-                <tr>
-                  <th>Renner</th>
-                  <th>Acties</th>
-                </tr>
-              </thead>
-              <tbody>
-                {participantEntries.map((entry, idx) => {
-                  const searchTerm = participantSearchFilters[idx] || '';
-                  const normalizedSearch = normalizeText(searchTerm);
-                  const filteredRiders = riders.filter(rider => {
-                    const riderFullName = `${rider.firstnameWithoutSpecialChars || ''} ${rider.lastnameWithoutSpecialChars || ''}`.toLowerCase();
-                    return riderFullName.includes(normalizedSearch);
-                  });
-                  const selectedRider = riders.find(r => r.id === entry.riderId);
-                  
-                  return (
-                    <tr key={idx}>
-                      <td className="result-entry-renner-cell">
-                        <input
-                          type="text"
-                          placeholder="Type renner naam..."
-                          value={searchTerm}
-                          onChange={(e) => {
-                            setParticipantSearchFilters({...participantSearchFilters, [idx]: e.target.value});
-                            setOpenParticipantDropdowns({...openParticipantDropdowns, [idx]: true});
-                          }}
-                          onFocus={() => setOpenParticipantDropdowns({...openParticipantDropdowns, [idx]: true})}
-                          onBlur={() => setTimeout(() => setOpenParticipantDropdowns({...openParticipantDropdowns, [idx]: false}), 200)}
-                          className="result-entry-renner-input"
-                        />
-                        {openParticipantDropdowns[idx] && (
-                          <div className="result-entry-dropdown">
-                            {filteredRiders.length === 0 ? (
-                              <div className="result-entry-dropdown-empty">Geen renners gevonden</div>
-                            ) : (
-                              filteredRiders.map((rider) => (
-                                <div
-                                  key={rider.id}
-                                  onClick={() => {
-                                    updateParticipantEntry(idx, rider.id);
-                                    setParticipantSearchFilters({...participantSearchFilters, [idx]: `${rider.firstname} ${rider.lastname}`});
-                                    setOpenParticipantDropdowns({...openParticipantDropdowns, [idx]: false});
-                                  }}
-                                  className={`result-entry-dropdown-item ${entry.riderId === rider.id ? 'selected' : ''}`}
-                                >
-                                  {rider.firstname} {rider.lastname}
-                                </div>
-                              ))
-                            )}
-                          </div>
-                        )}
-                      </td>
-                      <td>
-                        <button 
-                          onClick={() => removeParticipantEntry(idx)}
-                          className="btn-delete"
-                          style={{ padding: '5px 10px', fontSize: '12px' }}
-                        >
-                          Verwijder
-                        </button>
-                      </td>
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </table>
+      {/* Results Modal */}
+      <Modal
+        isOpen={showResultModal !== null}
+        onClose={() => setShowResultModal(null)}
+        title={showResultModal?.type === 'existing' ? 'Resultaat beschikbaar' : 'Resultaten invoeren'}
+        footer={
+          showResultModal?.type === 'existing' ? (
             <button 
-              onClick={addParticipantEntry}
-              className="btn-edit"
-              style={{ marginTop: '10px' }}
+              onClick={() => setShowResultModal(null)}
+              className="result-modal-close-btn"
+              style={{ padding: '8px 16px', background: '#333', color: 'white', borderRadius: '4px', border: 'none', cursor: 'pointer' }}
             >
-              + Renner toevoegen
+              Sluiten
             </button>
-          </div>
+          ) : (
+            <>
+              <button 
+                onClick={() => setShowResultModal(null)}
+                className="result-modal-cancel-btn"
+              >
+                Annuleren
+              </button>
+              <button 
+                onClick={submitResults}
+                className="result-modal-save-btn"
+              >
+                Opslaan
+              </button>
+            </>
+          )
+        }
+      >
+        {showResultModal?.type === 'existing' && (
+          <>
+            <p>Deze race heeft al een resultaat in het systeem.</p>
+            <p className="result-modal-message">
+              Ga naar het <strong>Resultaten</strong> tabblad om de details te bekijken en te beheren.
+            </p>
+          </>
+        )}
 
-          <div className="result-modal-buttons">
+        {showResultModal?.type === 'form' && (
+          <>
+            <p className="result-modal-info">
+              Race ID: <strong>{showResultModal.raceId}</strong> | Invoervelden: <strong>{showResultModal.pointsCount}</strong>
+            </p>
+
+            <div className="excel-import-section">
+              <label className="excel-import-label">
+                <input
+                  type="file"
+                  accept=".xlsx,.xls,.csv"
+                  onChange={handleExcelImport}
+                />
+                <span className="excel-import-button">
+                  📊 Excel importeren
+                </span>
+                <span className="excel-import-hint">(Kolom A: Positie, B: Achternaam en Voornaam)</span>
+              </label>
+            </div>
+
+            <div>
+              <table className="result-entry-table">
+                <thead>
+                  <tr>
+                    <th>Positie</th>
+                    <th>Renner</th>
+                    <th>Punten</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {resultEntries.map((entry, idx) => {
+                    const searchTerm = riderSearchFilters[idx] || '';
+                    const normalizedSearch = normalizeText(searchTerm);
+                    const filteredRiders = riders.filter(rider => {
+                      const riderFullName = `${rider.firstnameWithoutSpecialChars || ''} ${rider.lastnameWithoutSpecialChars || ''}`.toLowerCase();
+                      return riderFullName.includes(normalizedSearch);
+                    });
+                    
+                    return (
+                      <tr key={idx}>
+                        <td><span className="result-entry-position">{idx + 1}</span></td>
+                        <td className="result-entry-renner-cell">
+                          <input
+                            type="text"
+                            placeholder="Type renner naam..."
+                            value={searchTerm}
+                            onChange={(e) => {
+                              setRiderSearchFilters({...riderSearchFilters, [idx]: e.target.value});
+                              setOpenRiderDropdowns({...openRiderDropdowns, [idx]: true});
+                            }}
+                            onFocus={() => setOpenRiderDropdowns({...openRiderDropdowns, [idx]: true})}
+                            onBlur={() => setTimeout(() => setOpenRiderDropdowns({...openRiderDropdowns, [idx]: false}), 200)}
+                            className="result-entry-renner-input"
+                          />
+                          {openRiderDropdowns[idx] && (
+                            <div className="result-entry-dropdown">
+                              {filteredRiders.length === 0 ? (
+                                <div className="result-entry-dropdown-empty">Geen renners gevonden</div>
+                              ) : (
+                                filteredRiders.map((rider) => (
+                                  <div
+                                    key={rider.id}
+                                    onClick={() => {
+                                      updateResultEntry(idx, 'riderId', rider.id);
+                                      setRiderSearchFilters({...riderSearchFilters, [idx]: `${rider.firstname} ${rider.lastname}`});
+                                      setOpenRiderDropdowns({...openRiderDropdowns, [idx]: false});
+                                    }}
+                                    className={`result-entry-dropdown-item ${entry.riderId === rider.id ? 'selected' : ''}`}
+                                  >
+                                    {rider.firstname} {rider.lastname}
+                                  </div>
+                                ))
+                              )}
+                            </div>
+                          )}
+                        </td>
+                        <td className="result-entry-points-cell">
+                          <span className="result-entry-points-value">{entry.points}</span>
+                        </td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+            </div>
+          </>
+        )}
+      </Modal>
+
+      {/* Participants Modal */}
+      <Modal
+        isOpen={showParticipantsModal !== null}
+        onClose={() => setShowParticipantsModal(null)}
+        title="Startlijst importeren"
+        footer={
+          <>
             <button 
               onClick={() => setShowParticipantsModal(null)}
               className="result-modal-cancel-btn"
@@ -1107,16 +995,104 @@ export default function RacesTab() {
             >
               Opslaan
             </button>
-          </div>
-        </div>
-      )}
+          </>
+        }
+      >
+        <p className="result-modal-info">
+          Race ID: <strong>{showParticipantsModal}</strong>
+        </p>
 
-      {showParticipantsModal !== null && (
-        <div 
-          className="result-modal-overlay"
-          onClick={() => setShowParticipantsModal(null)}
-        />
-      )}
+        <div className="excel-import-section">
+          <label className="excel-import-label">
+            <input
+              type="file"
+              accept=".xlsx,.xls,.csv"
+              onChange={handleParticipantsExcelImport}
+            />
+            <span className="excel-import-button">
+              📊 Excel importeren
+            </span>
+            <span className="excel-import-hint">(Kolom A: Renner voornaam en achternaam)</span>
+          </label>
+        </div>
+
+        <div>
+          <table className="result-entry-table">
+            <thead>
+              <tr>
+                <th>Renner</th>
+                <th>Acties</th>
+              </tr>
+            </thead>
+            <tbody>
+              {participantEntries.map((entry, idx) => {
+                const searchTerm = participantSearchFilters[idx] || '';
+                const normalizedSearch = normalizeText(searchTerm);
+                const filteredRiders = riders.filter(rider => {
+                  const riderFullName = `${rider.firstnameWithoutSpecialChars || ''} ${rider.lastnameWithoutSpecialChars || ''}`.toLowerCase();
+                  return riderFullName.includes(normalizedSearch);
+                });
+                
+                return (
+                  <tr key={idx}>
+                    <td className="result-entry-renner-cell">
+                      <input
+                        type="text"
+                        placeholder="Type renner naam..."
+                        value={searchTerm}
+                        onChange={(e) => {
+                          setParticipantSearchFilters({...participantSearchFilters, [idx]: e.target.value});
+                          setOpenParticipantDropdowns({...openParticipantDropdowns, [idx]: true});
+                        }}
+                        onFocus={() => setOpenParticipantDropdowns({...openParticipantDropdowns, [idx]: true})}
+                        onBlur={() => setTimeout(() => setOpenParticipantDropdowns({...openParticipantDropdowns, [idx]: false}), 200)}
+                        className="result-entry-renner-input"
+                      />
+                      {openParticipantDropdowns[idx] && (
+                        <div className="result-entry-dropdown">
+                          {filteredRiders.length === 0 ? (
+                            <div className="result-entry-dropdown-empty">Geen renners gevonden</div>
+                          ) : (
+                            filteredRiders.map((rider) => (
+                              <div
+                                key={rider.id}
+                                onClick={() => {
+                                  updateParticipantEntry(idx, rider.id);
+                                  setParticipantSearchFilters({...participantSearchFilters, [idx]: `${rider.firstname} ${rider.lastname}`});
+                                  setOpenParticipantDropdowns({...openParticipantDropdowns, [idx]: false});
+                                }}
+                                className={`result-entry-dropdown-item ${entry.riderId === rider.id ? 'selected' : ''}`}
+                              >
+                                {rider.firstname} {rider.lastname}
+                              </div>
+                            ))
+                          )}
+                        </div>
+                      )}
+                    </td>
+                    <td>
+                      <button 
+                        onClick={() => removeParticipantEntry(idx)}
+                        className="btn-delete"
+                        style={{ padding: '5px 10px', fontSize: '12px' }}
+                      >
+                        Verwijder
+                      </button>
+                    </td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+          <button 
+            onClick={addParticipantEntry}
+            className="btn-edit"
+            style={{ marginTop: '10px' }}
+          >
+            + Renner toevoegen
+          </button>
+        </div>
+      </Modal>
     </div>
   );
 }

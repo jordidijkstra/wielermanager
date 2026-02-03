@@ -75,13 +75,10 @@ export default function YourPoints({ user }) {
   const groupRacesByDate = () => {
     const grouped = {};
     races.forEach(race => {
-      // For "Algemeen klassement" races: use startDate (first day)
-      // For other main races (GC): use endDate (last day)
+      // For all main races (including "Algemeen klassement"): use endDate (last day)
       // For stages: use startDate
       let date;
-      if (race.name?.includes('Algemeen klassement')) {
-        date = race.startDate;
-      } else if (race.tourId == null) {
+      if (race.tourId == null) {
         date = race.endDate || race.startDate;
       } else {
         date = race.startDate || 'onbekend';

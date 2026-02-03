@@ -165,6 +165,14 @@
 /* Team Details */
 .team-details-header {
   margin: 10dvh auto 1em auto;
+  display: flex;
+  flex-direction: column;
+  gap: 1em;
+}
+
+.header-top {
+  display: flex;
+  gap: 1em;
 }
 
 .team-details {

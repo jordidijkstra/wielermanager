@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
 import { collection, getDocs, setDoc, doc } from 'firebase/firestore';
-import { db } from '../firebase/config';
-import { getAllRaceCategories } from '../services/raceCategoryService';
-import '../css/pointsTab.css';
+import { db } from '../../firebase/config';
+import { getAllRaceCategories } from '../../services/raceCategoryService';
+import '../../css/pointsTab.css';
 
 export default function PointsTab() {
   const [categories, setCategories] = useState([]);

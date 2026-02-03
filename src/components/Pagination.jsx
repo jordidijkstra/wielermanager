@@ -1,4 +1,5 @@
 import PropTypes from 'prop-types';
+import '../css/pagination.css';
 
 export default function Pagination({ 
   currentPage, 

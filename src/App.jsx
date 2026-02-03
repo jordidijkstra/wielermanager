@@ -14,6 +14,7 @@ import Settings from './components/Settings';
 import YourPoints from './components/YourPoints';
 import RaceCountdown from './components/RaceCountdown';
 import RiderStatistics from './components/RiderStatistics';
+import Rules from './components/Rules';
 import Footer from './components/Footer';
 import '@fortawesome/fontawesome-free/css/all.min.css';
 
@@ -76,6 +77,8 @@ function App() {
         return <RiderStatistics />;
       case 'settings':
         return user ? <Settings user={user} /> : <Home user={user} setCurrentPage={setCurrentPage} setShowLoginModal={setShowLoginModal} />;
+      case 'rules':
+        return <Rules />;
       default:
         return <Home user={user} setCurrentPage={setCurrentPage} setShowLoginModal={setShowLoginModal} />;
     }

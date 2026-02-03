@@ -1,14 +1,14 @@
 import { useState, useRef, useEffect } from 'react';
 import { doc, getDoc, collection, getDocs } from 'firebase/firestore';
-import { db } from '../firebase/config';
-import { useResults } from '../hooks/useResults';
-import { useRaces } from '../hooks/useRaces';
-import { useRiders } from '../hooks/useRiders';
-import { usePointsByCategory } from '../hooks/usePointsByCategory';
-import { updateRidersPointsFromResults, removeRidersPointsFromResults, setRaceLeaderPoints, getRaceLeaderPointsForCategory } from '../services/riderService';
-import { recalculateTeamPointsForRace } from '../services/resultsService';
-import { getPointsByCategory } from '../services/pointsByCategoryService';
-import '../css/resultsTab.css';
+import { db } from '../../firebase/config';
+import { useResults } from '../../hooks/useResults';
+import { useRaces } from '../../hooks/useRaces';
+import { useRiders } from '../../hooks/useRiders';
+import { usePointsByCategory } from '../../hooks/usePointsByCategory';
+import { updateRidersPointsFromResults, removeRidersPointsFromResults, setRaceLeaderPoints, getRaceLeaderPointsForCategory } from '../../services/riderService';
+import { recalculateTeamPointsForRace } from '../../services/resultsService';
+import { getPointsByCategory } from '../../services/pointsByCategoryService';
+import '../../css/resultsTab.css';
 
 export default function ResultsTab() {
   const { results, loading: resultsLoading, editResult, deleteResult, addResult, reload: reloadResults } = useResults();

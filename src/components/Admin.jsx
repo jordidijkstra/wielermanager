@@ -1,10 +1,11 @@
 import { useState } from 'react';
-import RidersTab from './RidersTab';
-import RacesTab from './RacesTab';
-import ResultsTab from './ResultsTab';
-import ParticipantsTab from './ParticipantsTab';
-import PointsTab from './PointsTab';
-import AdminToolsTab from './AdminToolsTab';
+import { AdminDataProvider } from './AdminTabs/AdminDataProvider';
+import RidersTab from './AdminTabs/RidersTab';
+import RacesTab from './AdminTabs/RacesTab';
+import ResultsTab from './AdminTabs/ResultsTab';
+import ParticipantsTab from './AdminTabs/ParticipantsTab';
+import PointsTab from './AdminTabs/PointsTab';
+import AdminToolsTab from './AdminTabs/AdminToolsTab';
 import '../css/admin.css';
 
 export default function Admin() {
@@ -54,23 +55,25 @@ export default function Admin() {
         </button>
       </div>
 
-      {/* Riders Tab */}
-      {activeTab === 'riders' && <RidersTab />}
+      <AdminDataProvider>
+        {/* Riders Tab */}
+        {activeTab === 'riders' && <RidersTab />}
 
-      {/* Races Tab */}
-      {activeTab === 'races' && <RacesTab />}
+        {/* Races Tab */}
+        {activeTab === 'races' && <RacesTab />}
 
-      {/* Results Tab */}
-      {activeTab === 'results' && <ResultsTab />}
+        {/* Results Tab */}
+        {activeTab === 'results' && <ResultsTab />}
 
-      {/* Participants Tab */}
-      {activeTab === 'participants' && <ParticipantsTab />}
+        {/* Participants Tab */}
+        {activeTab === 'participants' && <ParticipantsTab />}
 
-      {/* Points Tab */}
-      {activeTab === 'points' && <PointsTab />}
+        {/* Points Tab */}
+        {activeTab === 'points' && <PointsTab />}
 
-      {/* Tools Tab */}
-      {activeTab === 'tools' && <AdminToolsTab />}
+        {/* Tools Tab */}
+        {activeTab === 'tools' && <AdminToolsTab />}
+      </AdminDataProvider>
     </div>
   );
 }

@@ -1,0 +1,199 @@
+.rules-container {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 2em 1.5em;
+  margin-top: 10dvh;
+}
+
+.rules-header {
+  text-align: center;
+  margin-bottom: 3em;
+  padding-bottom: 2em;
+  border-bottom: 3px solid #667ee6;
+}
+
+.rules-header h1 {
+  font-size: 2.5em;
+  color: #14213d;
+  margin-bottom: 0.5em;
+  font-family: "BBH Bartle", sans-serif;
+  background: linear-gradient(135deg, #667ee6, #764ba2);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.rules-header p {
+  font-size: 1.1em;
+  color: #555;
+}
+
+.rules-content {
+  display: flex;
+  flex-direction: column;
+  gap: 2.5em;
+}
+
+.rule-section {
+  background: white;
+  border-left: 4px solid #667ee6;
+  padding: 2em;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.rule-section h2 {
+  color: #14213d;
+  font-size: 1.5em;
+  margin-bottom: 1em;
+  margin-top: 0;
+}
+
+.rule-section p {
+  color: #555;
+  line-height: 1.8;
+  font-size: 0.95em;
+}
+
+.rule-section ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.rule-section li {
+  padding: 0.8em 0;
+  color: #555;
+  border-bottom: 1px solid #eee;
+  line-height: 1.6;
+}
+
+.rule-section li:last-child {
+  border-bottom: none;
+}
+
+.rule-section strong {
+  color: #14213d;
+}
+
+/* Points Table */
+
+.points-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1em;
+  background: linear-gradient(135deg, #f5f7ff 0%, #f0f5ff 100%);
+  border-radius: 6px;
+  border-left: 4px solid #667ee6;
+}
+
+.points-placement {
+  font-weight: 600;
+  color: #14213d;
+}
+
+.points-value {
+  background: linear-gradient(135deg, #667ee6, #764ba2);
+  color: white;
+  padding: 0.4em 0.8em;
+  border-radius: 20px;
+  font-weight: bold;
+  font-size: 0.9em;
+}
+
+/* FAQ Section */
+.faq {
+  background: #f9f9f9 !important;
+}
+
+.faq-item {
+  margin-bottom: 1.5em;
+  padding-bottom: 1.5em;
+  border-bottom: 1px solid #eee;
+}
+
+.faq-item:last-child {
+  margin-bottom: 0;
+  padding-bottom: 0;
+  border-bottom: none;
+}
+
+.faq-item h3 {
+  color: #667ee6;
+  font-size: 1em;
+  margin: 0 0 0.5em 0;
+}
+
+.faq-item p {
+  color: #555;
+  margin: 0;
+  font-size: 0.95em;
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+  .rules-container {
+    padding: 1.5em 1em;
+    margin-top: 60px;
+  }
+
+  .rules-header h1 {
+    font-size: 2em;
+  }
+
+  .rule-section {
+    padding: 1.5em;
+  }
+
+  .rule-section h2 {
+    font-size: 1.3em;
+  }
+
+  .points-table {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 480px) {
+  .rules-container {
+    padding: 1em;
+    margin-top: 50px;
+  }
+
+  .rules-header h1 {
+    font-size: 1.6em;
+  }
+
+  .rules-header p {
+    font-size: 1em;
+  }
+
+  .rule-section {
+    padding: 1.2em;
+    border-left-width: 3px;
+  }
+
+  .rule-section h2 {
+    font-size: 1.2em;
+  }
+
+  .rule-section p {
+    font-size: 0.9em;
+  }
+
+  .rule-section li {
+    padding: 0.6em 0;
+    font-size: 0.9em;
+  }
+
+  .points-row {
+    padding: 0.8em;
+    font-size: 0.9em;
+  }
+
+  .points-value {
+    padding: 0.3em 0.6em;
+    font-size: 0.8em;
+  }
+}
