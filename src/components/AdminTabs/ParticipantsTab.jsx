@@ -1,52 +1,46 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useReducer } from 'react';
 import * as XLSX from 'xlsx';
-import { collection, getDocs, doc, setDoc, deleteDoc, getDoc, query, where } from 'firebase/firestore';
-import { db } from '../../firebase/config';
-import { getAllRaces } from '../../services/raceService';
+import { getAllRaces, fetchRaceParticipantsList, updateRaceParticipants, deleteRaceParticipants, cleanupUserTeams } from '../../services/raceService';
 import { getAllRiders } from '../../services/riderService';
 import { normalizeText } from '../../utils/textUtils';
+import { INITIAL_STATE, reducer } from './ParticipantsTab.reducer';
 import '../../css/participantsTab.css';
 
 export default function ParticipantsTab() {
-  const [races, setRaces] = useState([]);
-  const [riders, setRiders] = useState([]);
-  const [participants, setParticipants] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [selectedRaceId, setSelectedRaceId] = useState(null);
-  const [editingRaceId, setEditingRaceId] = useState(null);
-  const [editData, setEditData] = useState({});
-  const [approvingRaceId, setApprovingRaceId] = useState(null);
-  const [riderSearchFilters, setRiderSearchFilters] = useState({});
-  const [openRiderDropdowns, setOpenRiderDropdowns] = useState({});
+  const [state, dispatch] = useReducer(reducer, INITIAL_STATE);
+  const { 
+    races, 
+    riders, 
+    participants, 
+    loading, 
+    editingRaceId, 
+    editData, 
+    approvingRaceId, 
+    riderSearchFilters, 
+    openRiderDropdowns 
+  } = state;
 
   // Load all races and participants
   useEffect(() => {
     const loadData = async () => {
       try {
-        setLoading(true);
+        dispatch({ type: 'SET_LOADING', payload: true });
         const allRaces = await getAllRaces();
-        setRaces(allRaces);
-        
         const allRiders = await getAllRiders();
-        setRiders(allRiders);
+        const participantsList = await fetchRaceParticipantsList();
         
-        // Load participants for all races
-        const participantsSnapshot = await getDocs(collection(db, 'raceParticipants'));
-        const participantsMap = {};
-        participantsSnapshot.docs.forEach(doc => {
-          participantsMap[doc.id] = {
-            raceId: doc.id,
-            status: doc.data().status || 'ingediend',
-            participants: doc.data().participants || [],
-            submittedAt: doc.data().submittedAt,
-            approvedAt: doc.data().approvedAt
-          };
+        dispatch({ 
+          type: 'DATA_LOADED', 
+          payload: { 
+            races: allRaces, 
+            riders: allRiders, 
+            participants: participantsList 
+          } 
         });
-        setParticipants(Object.values(participantsMap));
       } catch (err) {
         console.error('Error loading data:', err);
       } finally {
-        setLoading(false);
+        dispatch({ type: 'SET_LOADING', payload: false });
       }
     };
     loadData();
@@ -142,9 +136,12 @@ export default function ParticipantsTab() {
           return;
         }
 
-        setEditData({
-          ...editData,
-          participants: updatedParticipants
+        dispatch({
+          type: 'UPDATE_EDIT_DATA',
+          payload: {
+            ...editData,
+            participants: updatedParticipants
+          }
         });
 
         alert(`✅ Excel gegevens ingeladen! ${matchedCount} renners toegevoegd.`);
@@ -171,47 +168,8 @@ export default function ParticipantsTab() {
     });
   };
 
-  const removeRidersFromUserTeams = async (raceId, participantRiderIds) => {
-    try {
-      // Get all users
-      const usersSnapshot = await getDocs(collection(db, 'users'));
-      
-      for (const userDoc of usersSnapshot.docs) {
-        const userId = userDoc.id;
-        
-        // Get this user's race team for this race
-        const raceTeamRef = doc(db, 'users', userId, 'teams', String(raceId));
-        const raceTeamSnap = await getDoc(raceTeamRef);
-        
-        if (raceTeamSnap.exists()) {
-          const raceTeam = raceTeamSnap.data();
-          const currentRiderIds = raceTeam.riderIds || [];
-          
-          // Filter out riders that are no longer in participants
-          const updatedRiderIds = currentRiderIds.filter(riderId => 
-            participantRiderIds.includes(riderId)
-          );
-          
-          // If any riders were removed, update the race team
-          if (updatedRiderIds.length < currentRiderIds.length) {
-            await setDoc(raceTeamRef, {
-              ...raceTeam,
-              riderIds: updatedRiderIds,
-              riders: raceTeam.riders?.filter(rider => updatedRiderIds.includes(rider.id)) || []
-            });
-            console.log(`✅ Verwijderde ${currentRiderIds.length - updatedRiderIds.length} rennerselecties voor user ${userId}`);
-          }
-        }
-      }
-    } catch (err) {
-      console.error('Error cleaning up user teams:', err);
-      // Don't throw - this is a secondary operation
-    }
-  };
-
   const handleApproveParticipants = async (raceId) => {
     try {
-      setApprovingRaceId(null);
       const participant = participants.find(p => p.raceId === raceId);
       const updatedData = {
         participants: participant?.participants || [],
@@ -224,18 +182,20 @@ export default function ParticipantsTab() {
         updatedData.submittedAt = participant.submittedAt;
       }
 
-      await setDoc(doc(db, 'raceParticipants', raceId), updatedData);
+      await updateRaceParticipants(raceId, updatedData);
 
       // Remove riders from user team selections if they're no longer in participants
       const participantRiderIds = updatedData.participants.map(p => p.riderId);
-      await removeRidersFromUserTeams(raceId, participantRiderIds);
+      await cleanupUserTeams(raceId, participantRiderIds);
 
       // Update local state
-      setParticipants(
-        participants.map(p =>
+      dispatch({
+        type: 'OPERATION_SUCCESS',
+        payload: participants.map(p =>
           p.raceId === raceId ? { ...p, ...updatedData } : p
         )
-      );
+      });
+      
       alert('✅ Startlijst definitief doorgegeven');
     } catch (err) {
       console.error('Error approving participants:', err);
@@ -247,12 +207,16 @@ export default function ParticipantsTab() {
     if (!window.confirm('Wil je deze startlijst verwijderen?')) return;
 
     try {
-      await deleteDoc(doc(db, 'raceParticipants', raceId));
+      await deleteRaceParticipants(raceId);
       
       // Remove all riders from user team selections when entire startlijst is deleted
-      await removeRidersFromUserTeams(raceId, []);
+      await cleanupUserTeams(raceId, []);
       
-      setParticipants(participants.filter(p => p.raceId !== raceId));
+      dispatch({
+        type: 'OPERATION_SUCCESS',
+        payload: participants.filter(p => p.raceId !== raceId)
+      });
+
       alert('✅ Startlijst verwijderd');
     } catch (err) {
       console.error('Error deleting participants:', err);
@@ -261,9 +225,6 @@ export default function ParticipantsTab() {
   };
 
   const handleStartEdit = (participantData) => {
-    setEditingRaceId(participantData.raceId);
-    setEditData({ ...participantData });
-    
     // Populate rider search filters with existing rider names
     const newFilters = {};
     participantData.participants?.forEach((p, idx) => {
@@ -271,7 +232,15 @@ export default function ParticipantsTab() {
         newFilters[idx] = getRiderName(p.riderId);
       }
     });
-    setRiderSearchFilters(newFilters);
+    
+    dispatch({
+      type: 'START_EDIT',
+      payload: { 
+        raceId: participantData.raceId, 
+        data: { ...participantData }, 
+        filters: newFilters
+      }
+    });
   };
 
   const saveEdit = async (raceId) => {
@@ -289,19 +258,20 @@ export default function ParticipantsTab() {
         updatedData.approvedAt = editData.approvedAt;
       }
 
-      await setDoc(doc(db, 'raceParticipants', raceId), updatedData);
+      await updateRaceParticipants(raceId, updatedData);
 
       // Remove riders from user team selections if they're no longer in participants
       const participantRiderIds = updatedData.participants.map(p => p.riderId);
-      await removeRidersFromUserTeams(raceId, participantRiderIds);
+      await cleanupUserTeams(raceId, participantRiderIds);
 
       // Update local state
-      setParticipants(
-        participants.map(p =>
+      dispatch({
+        type: 'OPERATION_SUCCESS',
+        payload: participants.map(p =>
           p.raceId === raceId ? { ...p, ...updatedData } : p
         )
-      );
-      setEditingRaceId(null);
+      });
+
       alert('✅ Startlijst bijgewerkt');
     } catch (err) {
       console.error('Error saving participants:', err);
@@ -358,7 +328,7 @@ export default function ParticipantsTab() {
             <label>Status:</label>
             <select
               value={editData.status || 'ingediend'}
-              onChange={(e) => setEditData({ ...editData, status: e.target.value })}
+              onChange={(e) => dispatch({ type: 'UPDATE_EDIT_STATUS', payload: e.target.value })}
             >
               <option value="ingediend">📋 Ingediend</option>
               <option value="definitief">✅ Definitief</option>
@@ -379,11 +349,11 @@ export default function ParticipantsTab() {
                       <input
                         type="text"
                         value={searchValue}
-                        onChange={(e) => {
-                          setRiderSearchFilters({ ...riderSearchFilters, [idx]: e.target.value });
-                          setOpenRiderDropdowns({ ...openRiderDropdowns, [idx]: true });
-                        }}
-                        onFocus={() => setOpenRiderDropdowns({ ...openRiderDropdowns, [idx]: true })}
+                        onChange={(e) => dispatch({ 
+                          type: 'SET_SEARCH_FILTER', 
+                          payload: { index: idx, value: e.target.value } 
+                        })}
+                        onFocus={() => dispatch({ type: 'OPEN_DROPDOWN', payload: { index: idx } })}
                         placeholder="Zoek renner..."
                         className="rider-search-input"
                       />
@@ -394,13 +364,10 @@ export default function ParticipantsTab() {
                             <div
                               key={rider.id}
                               className="rider-option"
-                              onClick={() => {
-                                const updated = [...(editData.participants || [])];
-                                updated[idx] = { riderId: rider.id };
-                                setEditData({ ...editData, participants: updated });
-                                setRiderSearchFilters({ ...riderSearchFilters, [idx]: `${rider.firstname} ${rider.lastname}` });
-                                setOpenRiderDropdowns({ ...openRiderDropdowns, [idx]: false });
-                              }}
+                              onClick={() => dispatch({ 
+                                type: 'SELECT_RIDER', 
+                                payload: { index: idx, rider } 
+                              })}
                             >
                               {rider.firstname} {rider.lastname}
                             </div>
@@ -419,30 +386,7 @@ export default function ParticipantsTab() {
                     
                     <button
                       className="btn-delete-small"
-                      onClick={() => {
-                        const updated = editData.participants.filter((_, i) => i !== idx);
-                        setEditData({ ...editData, participants: updated });
-                        
-                        // Re-index riderSearchFilters and openRiderDropdowns after deletion
-                        const newFilters = {};
-                        const newDropdowns = {};
-                        let newIdx = 0;
-                        
-                        editData.participants.forEach((participant, originalIdx) => {
-                          if (originalIdx !== idx) {
-                            if (riderSearchFilters[originalIdx]) {
-                              newFilters[newIdx] = riderSearchFilters[originalIdx];
-                            }
-                            if (openRiderDropdowns[originalIdx]) {
-                              newDropdowns[newIdx] = openRiderDropdowns[originalIdx];
-                            }
-                            newIdx++;
-                          }
-                        });
-                        
-                        setRiderSearchFilters(newFilters);
-                        setOpenRiderDropdowns(newDropdowns);
-                      }}
+                      onClick={() => dispatch({ type: 'REMOVE_PARTICIPANT_ROW', payload: idx })}
                     >
                       ✕
                     </button>
@@ -453,12 +397,7 @@ export default function ParticipantsTab() {
             <div className="button-group">
               <button
                 className="btn-add-small"
-                onClick={() => {
-                  setEditData({
-                    ...editData,
-                    participants: [...(editData.participants || []), { riderId: null }]
-                  });
-                }}
+                onClick={() => dispatch({ type: 'ADD_PARTICIPANT_ROW' })}
               >
                 ➕ Renner toevoegen
               </button>
@@ -482,10 +421,7 @@ export default function ParticipantsTab() {
             </button>
             <button
               className="btn-cancel"
-              onClick={() => {
-                setEditingRaceId(null);
-                setEditData({});
-              }}
+              onClick={() => dispatch({ type: 'CANCEL_EDIT' })}
             >
               ❌ Annuleren
             </button>
@@ -527,7 +463,7 @@ export default function ParticipantsTab() {
             </button>
             <button
               className="btn-cancel"
-              onClick={() => setApprovingRaceId(null)}
+              onClick={() => dispatch({ type: 'CANCEL_APPROVE' })}
             >
               ❌ Annuleren
             </button>
@@ -563,7 +499,7 @@ export default function ParticipantsTab() {
                     <>
                       <button
                         className="btn-approve"
-                        onClick={() => setApprovingRaceId(participant.raceId)}
+                        onClick={() => dispatch({ type: 'START_APPROVE', payload: participant.raceId })}
                         title="Controleren en definitief doorgeven"
                       >
                         <i className="fas fa-eye"></i>

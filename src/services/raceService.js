@@ -47,6 +47,93 @@ export const getAllRaces = async () => {
 };
 
 
+export const getAllRaceParticipants = async () => {
+    try {
+        const participantsSnapshot = await getDocs(collection(db, 'raceParticipants'));
+        const participantsMap = {};
+        participantsSnapshot.docs.forEach(doc => {
+            participantsMap[doc.id] = doc.data().participants || [];
+        });
+        return participantsMap;
+    } catch (error) {
+        console.error('Error fetching all race participants:', error);
+        throw error;
+    }
+};
+
+export const fetchRaceParticipantsList = async () => {
+  try {
+    const participantsSnapshot = await getDocs(collection(db, 'raceParticipants'));
+    const participantsList = participantsSnapshot.docs.map(doc => ({
+      raceId: doc.id,
+      status: doc.data().status || 'ingediend',
+      participants: doc.data().participants || [],
+      submittedAt: doc.data().submittedAt,
+      approvedAt: doc.data().approvedAt
+    }));
+    return participantsList;
+  } catch (error) {
+    console.error('Error fetching race participants list:', error);
+    throw error;
+  }
+};
+
+export const updateRaceParticipants = async (raceId, data) => {
+  try {
+    await setDoc(doc(db, 'raceParticipants', String(raceId)), data);
+  } catch (error) {
+    console.error(`Error updating race participants for race ${raceId}:`, error);
+    throw error;
+  }
+};
+
+export const deleteRaceParticipants = async (raceId) => {
+  try {
+    await deleteDoc(doc(db, 'raceParticipants', String(raceId)));
+  } catch (error) {
+    console.error(`Error deleting race participants for race ${raceId}:`, error);
+    throw error;
+  }
+};
+
+export const cleanupUserTeams = async (raceId, participantRiderIds) => {
+  try {
+    // Get all users
+    const usersSnapshot = await getDocs(collection(db, 'users'));
+    
+    for (const userDoc of usersSnapshot.docs) {
+      const userId = userDoc.id;
+      
+      // Get this user's race team for this race
+      const raceTeamRef = doc(db, 'users', userId, 'teams', String(raceId));
+      const raceTeamSnap = await getDoc(raceTeamRef);
+      
+      if (raceTeamSnap.exists()) {
+        const raceTeam = raceTeamSnap.data();
+        const currentRiderIds = raceTeam.riderIds || [];
+        
+        // Filter out riders that are no longer in participants
+        const updatedRiderIds = currentRiderIds.filter(riderId => 
+          participantRiderIds.includes(riderId)
+        );
+        
+        // If any riders were removed, update the race team
+        if (updatedRiderIds.length < currentRiderIds.length) {
+          await setDoc(raceTeamRef, {
+            ...raceTeam,
+            riderIds: updatedRiderIds,
+            riders: raceTeam.riders?.filter(rider => updatedRiderIds.includes(rider.id)) || []
+          });
+          console.log(`✅ Verwijderde ${currentRiderIds.length - updatedRiderIds.length} rennerselecties voor user ${userId}`);
+        }
+      }
+    }
+  } catch (err) {
+    console.error('Error cleaning up user teams:', err);
+    // Don't throw - this is a secondary operation
+  }
+};
+
 // Haal een specifieke race op
 export const getRaceById = async (raceId) => {
   const snap = await getDoc(doc(db, 'races', raceId));
