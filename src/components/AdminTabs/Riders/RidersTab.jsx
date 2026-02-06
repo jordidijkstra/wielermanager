@@ -1,10 +1,10 @@
 import React, { useState, useEffect, useReducer, useMemo } from 'react';
-import { useAdminData } from './AdminDataProvider';
-import { useRaces } from '../../hooks/useRaces'; // Fallback / mixed usage helper
-import { useRiderActions } from '../../hooks/useRiderActions';
-import RiderTable from '../RiderTable';
-import RiderResultsModal from '../RiderResultsModal';
-import AddRiderForm from '../AddRiderForm';
+import { useAdminData } from '../AdminDataProvider';
+import { useRaces } from '../../../hooks/useRaces'; // Fallback / mixed usage helper
+import { useRiderActions } from '../../../hooks/useRiderActions';
+import RiderTable from '../../Shared/RiderTable';
+import RiderResultsModal from './RiderResultsModal';
+import AddRiderForm from './AddRiderForm';
 import { INITIAL_STATE, reducer } from './RidersTab.reducer';
 
 const RIDERS_PER_PAGE = 50;

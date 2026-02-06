@@ -37,13 +37,15 @@ export default function Nav({ setCurrentPage, handleRankingsClick, setShowLoginM
       return () => window.removeEventListener('scroll', handleScroll);
     }, [currentPage]);
 
-    const handleProfileClick = (page) => {
+    const handleProfileClick = (e, page) => {
+        e.preventDefault();
         setCurrentPage(page);
         setShowProfileMenu(false);
         setShowMobileMenu(false);
     };
 
-    const handleNavClick = (page) => {
+    const handleNavClick = (e, page) => {
+        e.preventDefault();
         setCurrentPage(page);
         setShowMobileMenu(false);
     };
@@ -51,10 +53,10 @@ export default function Nav({ setCurrentPage, handleRankingsClick, setShowLoginM
     // Render main nav items (shared between desktop and mobile)
     const renderMainNavItems = () => (
         <>
-            <li><a href="#" onClick={() => handleNavClick('home')}>Home</a></li>
-            {user && <li><a href="#" onClick={() => handleNavClick('pointsTables')}>Puntentabellen</a></li>}
-            {user && <li><a href="#" onClick={() => handleRankingsClick()}>Klassement</a></li>}
-            {user && <li><a href="#" onClick={() => handleNavClick('riderStatistics')}>Statistieken</a></li>}
+            <li><a href="#" onClick={(e) => handleNavClick(e, 'home')}>Home</a></li>
+            {user && <li><a href="#" onClick={(e) => handleNavClick(e, 'pointsTables')}>Puntentabellen</a></li>}
+            {user && <li><a href="#" onClick={(e) => { e.preventDefault(); handleRankingsClick(); }}>Klassement</a></li>}
+            {user && <li><a href="#" onClick={(e) => handleNavClick(e, 'riderStatistics')}>Statistieken</a></li>}
         </>
     );
 
@@ -90,7 +92,7 @@ export default function Nav({ setCurrentPage, handleRankingsClick, setShowLoginM
                 );
             } else {
                 content = (
-                    <a href="#" onClick={() => handleProfileClick(item.page)}>
+                    <a href="#" onClick={(e) => handleProfileClick(e, item.page)}>
                         {item.label}
                     </a>
                 );

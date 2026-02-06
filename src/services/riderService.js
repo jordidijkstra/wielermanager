@@ -196,6 +196,24 @@ export const getTotalPointsFromRaces = async (riderId) => {
 // Used for multi-day races (stages) to award points to the race leader
 
 /**
+ * Get results for a specific rider in a specific race
+ */
+export const getRiderResult = async (riderId, raceId) => {
+  try {
+    const docRef = doc(db, 'riders', riderId.toString(), 'riderResults', String(raceId));
+    const docSnap = await getDoc(docRef);
+    
+    if (docSnap.exists()) {
+      return { id: docSnap.id, ...docSnap.data() };
+    }
+    return null;
+  } catch (error) {
+    console.error(`Error getting rider result for rider ${riderId} race ${raceId}:`, error);
+    return null;
+  }
+};
+
+/**
  * Get race leader points for a specific race category
  * Looks up the raceLeaderCategorie in the raceCategory document
  * Then fetches the points from pointsPerCategory
@@ -217,7 +235,8 @@ export const getRaceLeaderPointsForCategory = async (raceCategoryId) => {
     }
 
     const raceCategoryData = raceCategoryDoc.data();
-    const raceLeaderCategoryId = raceCategoryData.raceLeaderCategorie;
+    // Check both potential field names for compatibility
+    const raceLeaderCategoryId = raceCategoryData.raceLeaderCategorie || raceCategoryData.raceleaderCategory;
 
     if (!raceLeaderCategoryId) {
       console.log(`ℹ️ Race category ${raceCategoryId} has no race leader category`);

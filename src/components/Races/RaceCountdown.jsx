@@ -1,6 +1,6 @@
 import { useState, useEffect, memo, useRef, useMemo } from 'react';
-import { useRaces } from '../hooks/useRaces';
-import '../css/raceCountdown.css';
+import { useRaces } from '../../hooks/useRaces';
+import '../../css/raceCountdown.css';
 
 const RaceCountdown = memo(function RaceCountdown({ user }) {
   const { races } = useRaces(user);

@@ -1,13 +1,13 @@
 import { useEffect } from 'react';
-import { useRiders } from '../hooks/useRiders';
-import { useUserTeam } from '../hooks/useUserTeam';
-import { useCyclingTeams } from '../hooks/useCyclingTeams';
-import { useUserBudget } from '../hooks/useUserBudget';
-import { useTeamDeadline } from '../hooks/useTeamDeadline';
+import { useRiders } from '../../hooks/useRiders';
+import { useUserTeam } from '../../hooks/useUserTeam';
+import { useCyclingTeams } from '../../hooks/useCyclingTeams';
+import { useUserBudget } from '../../hooks/useUserBudget';
+import { useTeamDeadline } from '../../hooks/useTeamDeadline';
 import SelectedTeam from './SelectedTeam';
 import AvailableRiders from './AvailableRiders';
-import { formatPrice } from '../utils/formatters';
-import '../css/TeamBuilder.css';
+import { formatPrice } from '../../utils/formatters';
+import '../../css/TeamBuilder.css';
 
 function TeamBuilder({ user, setCurrentPage }) {
   const { budget, loading: budgetLoading } = useUserBudget(user);

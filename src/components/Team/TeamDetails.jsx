@@ -1,8 +1,8 @@
 import PropTypes from 'prop-types';
 import React, { useState, useMemo, useEffect } from 'react';
 import { collection, getDocs, doc, getDoc } from 'firebase/firestore';
-import { db } from '../firebase/config';
-import { getRiderRacePoints } from '../services/riderService';
+import { db } from '../../firebase/config';
+import { getRiderRacePoints } from '../../services/riderService';
 
 export default function TeamDetails({
   teamDetails,

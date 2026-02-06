@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import RiderCard from './RiderCard';
-import Pagination from './Pagination';
+import RiderCard from '../Riders/RiderCard';
+import Pagination from '../Shared/Pagination';
 
 export default function AvailableRiders({ 
   riders, 

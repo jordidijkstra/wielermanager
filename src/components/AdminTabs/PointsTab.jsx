@@ -1,72 +1,34 @@
-import { useState, useEffect } from 'react';
-import { collection, getDocs, setDoc, doc } from 'firebase/firestore';
-import { db } from '../../firebase/config';
+import { useEffect, useReducer } from 'react';
 import { getAllRaceCategories } from '../../services/raceCategoryService';
+import { getAllPointsPerCategory, savePointsPerCategory } from '../../services/pointsByCategoryService';
+import { INITIAL_STATE, reducer } from './PointsTab.reducer';
 import '../../css/pointsTab.css';
 
 export default function PointsTab() {
-  const [categories, setCategories] = useState([]);
-  const [pointsData, setPointsData] = useState({});
-  const [loading, setLoading] = useState(true);
-  const [saving, setSaving] = useState(false);
-  const [saveStatus, setSaveStatus] = useState('');
-  const [editingCategoryId, setEditingCategoryId] = useState(null);
-  const [editingPoints, setEditingPoints] = useState([]);
+  const [state, dispatch] = useReducer(reducer, INITIAL_STATE);
+  const { categories, pointsData, loading, saving, saveStatus, editingCategoryId, editingPoints } = state;
 
   // Load categories and points data
   useEffect(() => {
     const loadData = async () => {
       try {
-        setLoading(true);
+        dispatch({ type: 'SET_LOADING', payload: true });
         
         // Load categories
         const cats = await getAllRaceCategories();
         console.log('Loaded categories:', cats);
-        setCategories(cats);
 
-        // Load points per category from Firestore
-        const pointsSnapshot = await getDocs(collection(db, 'pointsPerCategory'));
-        console.log('Points snapshot docs:', pointsSnapshot.docs.length);
-        
-        const pointsMap = {};
-        
-        pointsSnapshot.forEach(docSnapshot => {
-          const data = docSnapshot.data();
-          console.log('Doc:', docSnapshot.id, 'Data:', data);
-          
-          // Probeer beide categoryId (als getal en string) te gebruiken als key
-          const categoryId = data.categoryId || docSnapshot.id;
-          const key = String(categoryId); // Converteer naar string voor consistent keying
-          
-          // Extract de punten array en zorg dat het getallen zijn
-          let pointsArray = [];
-          if (Array.isArray(data.points)) {
-            pointsArray = data.points.map(p => {
-              // Als p een object is, probeer de 'points' property te extraheren
-              if (typeof p === 'object' && p !== null) {
-                return parseInt(p.points || p.value || 0);
-              }
-              // Anders converteer naar getal
-              return parseInt(p || 0);
-            });
-          }
-          
-          console.log('Processed points for category', categoryId, ':', pointsArray);
-          
-          pointsMap[key] = {
-            id: docSnapshot.id,
-            categoryId: categoryId,
-            points: pointsArray
-          };
-        });
-        
+        // Load points per category
+        const pointsMap = await getAllPointsPerCategory();
         console.log('Final pointsMap:', pointsMap);
-        setPointsData(pointsMap);
+        
+        dispatch({ 
+            type: 'DATA_LOADED', 
+            payload: { categories: cats, pointsMap: pointsMap }
+        });
       } catch (err) {
         console.error('Fout bij laden data:', err);
-        setSaveStatus('❌ Fout bij laden data');
-      } finally {
-        setLoading(false);
+        dispatch({ type: 'LOAD_ERROR' });
       }
     };
     loadData();
@@ -88,31 +50,30 @@ export default function PointsTab() {
       : [];
     console.log('EditingPoints array (processed):', pointsArray);
     
-    setEditingCategoryId(categoryId);
-    setEditingPoints(pointsArray);
+    dispatch({ 
+        type: 'START_EDIT', 
+        payload: { categoryId, points: pointsArray } 
+    });
   };
 
   const handleEditPointsChange = (position, newValue) => {
-    const newPoints = [...editingPoints];
-    while (newPoints.length <= position) {
-      newPoints.push(0);
-    }
-    newPoints[position] = parseInt(newValue) || 0;
-    setEditingPoints(newPoints);
+    dispatch({ 
+        type: 'UPDATE_POINT_VALUE', 
+        payload: { index: position, value: newValue } 
+    });
   };
 
   const handleAddPositionToEdit = () => {
-    setEditingPoints([...editingPoints, 0]);
+    dispatch({ type: 'ADD_POINT_POSITION' });
   };
 
   const handleRemovePositionFromEdit = (position) => {
-    setEditingPoints(editingPoints.filter((_, idx) => idx !== position));
+    dispatch({ type: 'REMOVE_POINT_POSITION', payload: position });
   };
 
   const handleSaveEdit = async () => {
     try {
-      setSaving(true);
-      setSaveStatus('Opslaan...');
+      dispatch({ type: 'SET_SAVING', payload: true });
 
       const key = String(editingCategoryId);
       const categoryData = pointsData[key] || { categoryId: editingCategoryId };
@@ -120,31 +81,20 @@ export default function PointsTab() {
       
       console.log('Saving points for category:', editingCategoryId, 'DocId:', docId, 'Points:', editingPoints);
       
-      await setDoc(doc(db, 'pointsPerCategory', docId), {
-        categoryId: editingCategoryId,
-        points: editingPoints
-      });
+      await savePointsPerCategory(docId, editingCategoryId, editingPoints);
 
-      setSaveStatus('✅ Punten opgeslagen!');
-      setTimeout(() => setSaveStatus(''), 3000);
-      
-      // Update local data
-      setPointsData(prev => ({
-        ...prev,
-        [key]: {
-          id: docId,
-          categoryId: editingCategoryId,
-          points: editingPoints
+      dispatch({
+        type: 'SAVE_SUCCESS',
+        payload: {
+            categoryId: editingCategoryId,
+            id: docId,
+            points: editingPoints
         }
-      }));
-
-      // Close editor
-      setEditingCategoryId(null);
+      });
+      
     } catch (err) {
       console.error('Fout bij opslaan:', err);
-      setSaveStatus('❌ Fout bij opslaan');
-    } finally {
-      setSaving(false);
+      dispatch({ type: 'SAVE_ERROR' });
     }
   };
 
@@ -222,7 +172,7 @@ export default function PointsTab() {
               </button>
               <button 
                 className="btn-cancel"
-                onClick={() => setEditingCategoryId(null)}
+                onClick={() => dispatch({ type: 'CANCEL_EDIT' })}
               >
                 Annuleren
               </button>

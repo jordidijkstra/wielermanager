@@ -1,4 +1,4 @@
-import { collection, getDocs, doc, getDoc } from 'firebase/firestore';
+import { collection, getDocs, doc, getDoc, setDoc } from 'firebase/firestore';
 import { db } from '../firebase/config';
 
 // Cache for pointsPerCategory
@@ -73,4 +73,54 @@ export const invalidatePointsCategoryCache = () => {
   console.log('🔄 Invalidating pointsPerCategory cache');
   pointsCategoryCache = null;
   pointsCategoryCacheTimestamp = 0;
+};
+
+export const getAllPointsPerCategory = async () => {
+  try {
+    const pointsSnapshot = await getDocs(collection(db, 'pointsPerCategory'));
+    const pointsMap = {};
+    
+    pointsSnapshot.forEach(docSnapshot => {
+      const data = docSnapshot.data();
+      
+      const categoryId = data.categoryId || docSnapshot.id;
+      const key = String(categoryId);
+      
+      let pointsArray = [];
+      if (Array.isArray(data.points)) {
+        pointsArray = data.points.map(p => {
+          if (typeof p === 'object' && p !== null) {
+            return parseInt(p.points || p.value || 0);
+          }
+          return parseInt(p || 0);
+        });
+      }
+      
+      pointsMap[key] = {
+        id: docSnapshot.id,
+        categoryId: categoryId,
+        points: pointsArray
+      };
+    });
+    
+    return pointsMap;
+  } catch (error) {
+    console.error('Error getting all points per category:', error);
+    throw error;
+  }
+};
+
+export const savePointsPerCategory = async (docId, categoryId, points) => {
+  try {
+    await setDoc(doc(db, 'pointsPerCategory', String(docId)), {
+      categoryId: categoryId,
+      points: points
+    });
+    
+    // Invalidate cache
+    invalidatePointsCategoryCache();
+  } catch (error) {
+    console.error('Error saving points per category:', error);
+    throw error;
+  }
 };

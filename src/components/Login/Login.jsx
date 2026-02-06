@@ -1,12 +1,12 @@
 import { useState, useEffect } from 'react';
 import { signInWithEmailAndPassword, createUserWithEmailAndPassword } from 'firebase/auth';
-import { auth } from '../firebase/config';
-import { ensureUserDocument } from '../services/userService';
-import LoginCard from './Login/LoginCard';
-import GoogleSignInButton from './Login/GoogleSignInButton';
-import EmailPasswordForm from './Login/EmailPasswordForm';
-import ProfileSetupForm from './Login/ProfileSetupForm';
-import '../css/login.css';
+import { auth } from '../../firebase/config';
+import { ensureUserDocument } from '../../services/userService';
+import LoginCard from './LoginCard';
+import GoogleSignInButton from './GoogleSignInButton';
+import EmailPasswordForm from './EmailPasswordForm';
+import ProfileSetupForm from './ProfileSetupForm';
+import '../../css/login.css';
 
 const INITIAL_FORM_STATE = {
   email: '',

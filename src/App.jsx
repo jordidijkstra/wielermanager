@@ -4,16 +4,16 @@ import { useUserTeam } from './hooks/useUserTeam';
 import { useUserBudget } from './hooks/useUserBudget';
 import Nav from './components/Nav';
 import Home from './components/Home';
-import Admin from './components/Admin';
-import Login from './components/Login';
-import TeamBuilder from './components/TeamBuilder';
-import RaceTeamSelector from './components/RaceTeamSelector';
-import PointsTables from './components/PointsTables';
-import Rankings from './components/Rankings';
+import Admin from './components/AdminTabs/Admin';
+import Login from './components/Login/Login';
+import TeamBuilder from './components/Team/TeamBuilder';
+import RaceTeamSelector from './components/Team/RaceTeamSelector';
+import PointsTables from './components/Standings/PointsTables';
+import Rankings from './components/Standings/Rankings';
 import Settings from './components/Settings';
-import YourPoints from './components/YourPoints';
-import RaceCountdown from './components/RaceCountdown';
-import RiderStatistics from './components/RiderStatistics';
+import YourPoints from './components/Standings/YourPoints';
+import RaceCountdown from './components/Races/RaceCountdown';
+import RiderStatistics from './components/Riders/RiderStatistics';
 import Rules from './components/Rules';
 import Footer from './components/Footer';
 import '@fortawesome/fontawesome-free/css/all.min.css';
@@ -21,10 +21,35 @@ import '@fortawesome/fontawesome-free/css/all.min.css';
 function App() {
   const { user, loading, isAdmin } = useAuth();
   const { budget } = useUserBudget(user);
-  const [currentPage, setCurrentPage] = useState('home');
+  
+  // Initialize from URL hash to persist page on refresh
+  const [currentPage, setCurrentPage] = useState(() => {
+    const hash = window.location.hash.replace('#', '');
+    return hash || 'home';
+  });
+  
   const [showLoginModal, setShowLoginModal] = useState(false);
   const [rankingsResetTrigger, setRankingsResetTrigger] = useState(0);
   const { selectedRiders } = useUserTeam(user, budget);
+
+  // Sync state to URL hash
+  useEffect(() => {
+    window.location.hash = currentPage;
+  }, [currentPage]);
+
+  // Handle browser back/forward buttons
+  useEffect(() => {
+    const onHashChange = () => {
+      const hash = window.location.hash.replace('#', '');
+      if (hash && hash !== currentPage) {
+        setCurrentPage(hash);
+      } else if (!hash) {
+        setCurrentPage('home');
+      }
+    };
+    window.addEventListener('hashchange', onHashChange);
+    return () => window.removeEventListener('hashchange', onHashChange);
+  }, [currentPage]);
 
   // Reset Rankings when clicked in menu
   const handleRankingsClick = () => {
@@ -32,8 +57,9 @@ function App() {
     setRankingsResetTrigger(prev => prev + 1);
   };
 
-  // Reset to home when user logs out
-  if (!user && currentPage !== 'home') {
+  // Reset to home when user logs out (only for protected pages)
+  const protectedPages = ['team', 'raceTeams', 'admin', 'settings', 'points'];
+  if (!loading && !user && protectedPages.includes(currentPage)) {
     setCurrentPage('home');
   }
 

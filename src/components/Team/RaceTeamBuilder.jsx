@@ -1,5 +1,5 @@
-import { RaceInfo } from './RaceInfo';
-import { RidersGrid } from './RidersGrid';
+import { RaceInfo } from '../Races/RaceInfo';
+import { RidersGrid } from '../Riders/RidersGrid';
 
 export function RaceTeamBuilder({
   selectedRace,

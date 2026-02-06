@@ -1,12 +1,12 @@
 import { useState, useEffect } from 'react';
 import { doc, getDoc } from 'firebase/firestore';
-import { db } from '../firebase/config';
-import { useUserTeam } from '../hooks/useUserTeam';
-import { useCyclingTeams } from '../hooks/useCyclingTeams';
-import { useRaces } from '../hooks/useRaces';
-import { useResults } from '../hooks/useResults';
-import { getUserRaceTeams } from '../services/raceService';
-import '../css/yourPoints.css';
+import { db } from '../../firebase/config';
+import { useUserTeam } from '../../hooks/useUserTeam';
+import { useCyclingTeams } from '../../hooks/useCyclingTeams';
+import { useRaces } from '../../hooks/useRaces';
+import { useResults } from '../../hooks/useResults';
+import { getUserRaceTeams } from '../../services/raceService';
+import '../../css/yourPoints.css';
 
 export default function YourPoints({ user }) {
   const { selectedRiders } = useUserTeam(user, 10000000);

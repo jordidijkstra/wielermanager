@@ -1,12 +1,12 @@
 import { useState, useEffect, useCallback, useMemo } from 'react';
 import { collection, getDocs, doc, getDoc, onSnapshot } from 'firebase/firestore';
-import { db } from '../firebase/config';
-import { useRaces } from '../hooks/useRaces';
-import { useResults } from '../hooks/useResults';
-import { useCyclingTeams } from '../hooks/useCyclingTeams';
-import { getAllUsers } from '../services/userService';
-import TeamDetails from './TeamDetails';
-import '../css/rankings.css';
+import { db } from '../../firebase/config';
+import { useRaces } from '../../hooks/useRaces';
+import { useResults } from '../../hooks/useResults';
+import { useCyclingTeams } from '../../hooks/useCyclingTeams';
+import { getAllUsers } from '../../services/userService';
+import TeamDetails from '../Team/TeamDetails';
+import '../../css/rankings.css';
 
 // Simple cache for teams data
 let teamsCache = null;

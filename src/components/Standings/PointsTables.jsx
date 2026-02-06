@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
-import { getAllRaceCategories } from '../services/raceCategoryService';
-import { getPointsByCategory } from '../services/pointsByCategoryService';
-import '../css/pointsTables.css';
+import { getAllRaceCategories } from '../../services/raceCategoryService';
+import { getPointsByCategory } from '../../services/pointsByCategoryService';
+import '../../css/pointsTables.css';
 
 export default function PointsTables() {
   const [categories, setCategories] = useState([]);

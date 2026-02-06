@@ -1,12 +1,12 @@
 import { useState } from 'react';
-import { AdminDataProvider } from './AdminTabs/AdminDataProvider';
-import RidersTab from './AdminTabs/RidersTab';
-import RacesTab from './AdminTabs/RacesTab';
-import ResultsTab from './AdminTabs/ResultsTab';
-import ParticipantsTab from './AdminTabs/ParticipantsTab';
-import PointsTab from './AdminTabs/PointsTab';
-import AdminToolsTab from './AdminTabs/AdminToolsTab';
-import '../css/admin.css';
+import { AdminDataProvider } from './AdminDataProvider';
+import RidersTab from './Riders/RidersTab';
+import RacesTab from './Races/RacesTab';
+import ResultsTab from './ResultsTab';
+import ParticipantsTab from './ParticipantsTab';
+import PointsTab from './PointsTab';
+import AdminToolsTab from './AdminToolsTab';
+import '../../css/admin.css';
 
 export default function Admin() {
   const [activeTab, setActiveTab] = useState('riders');

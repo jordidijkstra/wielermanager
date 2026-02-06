@@ -1,5 +1,5 @@
-import { getTeamJerseyPath } from '../services/cyclingTeamService';
-import { formatPrice, getFullName } from '../utils/formatters';
+import { getTeamJerseyPath } from '../../services/cyclingTeamService';
+import { formatPrice, getFullName } from '../../utils/formatters';
 
 export default function RiderCard({ rider, selectedRiders, remainingBudget, onAdd, isDisabled }) {
   return (

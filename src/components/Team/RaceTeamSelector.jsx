@@ -1,14 +1,14 @@
 import { useState, useEffect, useRef } from 'react';
 import { doc, getDoc } from 'firebase/firestore';
-import { db } from '../firebase/config';
-import { useRaces } from '../hooks/useRaces';
-import { getRaceParticipants, filterRidersByParticipants } from '../services/raceService';
-import { getCyclingTeams } from '../services/cyclingTeamService';
-import { getUserTeam } from '../services/teamService';
-import { getPointsByCategory } from '../services/pointsByCategoryService';
-import { RaceSelector } from './RaceSelector';
+import { db } from '../../firebase/config';
+import { useRaces } from '../../hooks/useRaces';
+import { getRaceParticipants, filterRidersByParticipants } from '../../services/raceService';
+import { getCyclingTeams } from '../../services/cyclingTeamService';
+import { getUserTeam } from '../../services/teamService';
+import { getPointsByCategory } from '../../services/pointsByCategoryService';
+import { RaceSelector } from '../Races/RaceSelector';
 import { RaceTeamBuilder } from './RaceTeamBuilder';
-import '../css/raceTeamSelector.css';
+import '../../css/raceTeamSelector.css';
 
 const INITIAL_RIDERS_COUNT = 7;
 

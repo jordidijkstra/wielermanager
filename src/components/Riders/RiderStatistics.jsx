@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { getDocs, collection } from 'firebase/firestore';
-import { db } from '../firebase/config';
-import { getTeamJerseyPath } from '../services/cyclingTeamService';
-import { formatPrice, getFullName } from '../utils/formatters';
-import RiderTable from './RiderTable';
-import '../css/riderStatistics.css';
+import { db } from '../../firebase/config';
+import { getTeamJerseyPath } from '../../services/cyclingTeamService';
+import { formatPrice, getFullName } from '../../utils/formatters';
+import RiderTable from '../Shared/RiderTable';
+import '../../css/riderStatistics.css';
 
 
 const riderColumns = [
