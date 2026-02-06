@@ -226,13 +226,12 @@ exports.autoFillRaceTeamsScheduled = functions.region('europe-west1').pubsub
         endOfRaceDay.setDate(endOfRaceDay.getDate() + 1);
         endOfRaceDay.setHours(0, 0, 0, 0);
         
-        // Only process if we're in the window OR deadline is in future
-        // This prevents processing very old races
+        // Only process if we're in the window
+        // This prevents processing very old races or races too far in the future
         const isInWindow = now >= deadlineMinusOneDay && now < endOfRaceDay;
-        const isUpcoming = now < deadline; // Deadline not yet reached
-        const shouldProcess = isInWindow || isUpcoming;
+        const shouldProcess = isInWindow;
         
-        addLog(`Race ${race.id}: deadline=${deadline.toISOString()}, inWindow=${isInWindow}, isUpcoming=${isUpcoming}, shouldProcess=${shouldProcess}`);
+        addLog(`Race ${race.id}: deadline=${deadline.toISOString()}, inWindow=${isInWindow}, shouldProcess=${shouldProcess}`);
         return shouldProcess;
       });
 

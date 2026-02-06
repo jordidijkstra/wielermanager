@@ -71,8 +71,6 @@ export default function RacesTab() {
     handleDeleteRace(raceId, removeRace, reloadRaces);
   };
 
-  if (racesLoading) return <div><p>Races laden...</p></div>;
-
   // Sorting logic
   const sortedRaces = useMemo(() => {
     // Enable map-sort-map pattern (Schwartzian transform) for better performance
@@ -279,6 +277,8 @@ export default function RacesTab() {
       alert('Fout bij opslaan resultaten');
     }
   };
+
+  if (racesLoading) return <div><p>Races laden...</p></div>;
 
   return (
     <div className="tab-content">
