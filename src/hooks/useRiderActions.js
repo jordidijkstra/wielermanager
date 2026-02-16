@@ -1,4 +1,3 @@
-import { useCallback } from 'react';
 import { getRiderRacePoints } from '../services/riderService';
 
 const clearCaches = async (reloadResults, reloadRaces) => {
@@ -6,7 +5,7 @@ const clearCaches = async (reloadResults, reloadRaces) => {
 };
 
 export const useRiderActions = (state, dispatch, { editRider, deleteRider: deleteRiderFromHook, addRider, reloadResults, reloadRaces }) => {
-  const saveEdit = useCallback(async (riderId) => {
+  const saveEdit = async (riderId) => {
     const data = {
       firstname: state.editing.data.firstname || '',
       lastname: state.editing.data.lastname || '',
@@ -29,9 +28,9 @@ export const useRiderActions = (state, dispatch, { editRider, deleteRider: delet
     } finally {
       dispatch({ type: 'SET_SAVING', payload: false });
     }
-  }, [state.editing.data, editRider, reloadResults, reloadRaces, dispatch]);
+  };
 
-  const deleteRider = useCallback(async (riderId) => {
+  const deleteRider = async (riderId) => {
     if (!confirm('Zeker weten dat je deze renner wilt verwijderen?')) return;
     
     dispatch({ type: 'SET_SAVING', payload: true });
@@ -45,9 +44,9 @@ export const useRiderActions = (state, dispatch, { editRider, deleteRider: delet
     } finally {
       dispatch({ type: 'SET_SAVING', payload: false });
     }
-  }, [deleteRiderFromHook, reloadResults, reloadRaces, dispatch]);
+  };
 
-  const viewRiderResults = useCallback(async (riderId) => {
+  const viewRiderResults = async (riderId) => {
     try {
       dispatch({ type: 'SET_MODAL_LOADING', payload: true });
       const results = await getRiderRacePoints(riderId);
@@ -56,9 +55,9 @@ export const useRiderActions = (state, dispatch, { editRider, deleteRider: delet
       console.error('Error loading rider results:', error);
       alert('Fout bij laden resultaten');
     }
-  }, [dispatch]);
+  };
 
-  const addNewRider = useCallback(async (data) => {
+  const addNewRider = async (data) => {
     dispatch({ type: 'SET_SAVING', payload: true });
     try {
       await addRider(data);
@@ -71,7 +70,7 @@ export const useRiderActions = (state, dispatch, { editRider, deleteRider: delet
     } finally {
       dispatch({ type: 'SET_SAVING', payload: false });
     }
-  }, [addRider, reloadResults, reloadRaces, dispatch]);
+  };
 
   return {
     saveEdit,

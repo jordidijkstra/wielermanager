@@ -1,4 +1,3 @@
-/* Participants Tab */
 .participants-tab {
   padding: 20px 0;
 }
@@ -92,7 +91,7 @@
 .participant-item {
   display: flex;
   gap: 8px;
-  align-items: center;
+  align-items: flex-start;
   flex: 0 1 calc(25% - 6px);
   min-width: 160px;
 }
@@ -114,6 +113,7 @@
   cursor: pointer;
   font-weight: 500;
   transition: background-color 0.3s;
+  margin-top: 2px;
 }
 
 .btn-delete-small:hover {
@@ -140,6 +140,7 @@
   border-radius: 4px;
   font-size: 14px;
   font-family: inherit;
+  width: 100%;
 }
 
 .rider-search-input:focus {
@@ -186,6 +187,23 @@
 .rider-search-wrapper {
   flex: 1;
   position: relative;
+  min-width: 0;
+}
+
+.rider-search-row {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.team-badge {
+  font-size: 0.75rem;
+  color: #666;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  padding-left: 2px;
+  height: 1.2em;
 }
 
 .button-group {
@@ -225,4 +243,39 @@
 
 .file-input-hidden {
   display: none;
+}
+
+.team-group-section {
+  width: 100%;
+  margin-bottom: 15px;
+  border: 1px solid #eee;
+  border-radius: 4px;
+  background-color: #fafafa;
+}
+
+.team-group-header {
+  margin: 0;
+  padding: 8px 12px;
+  background-color: #f0f0f0;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #333;
+  border-bottom: 1px solid #ddd;
+}
+
+/* Jersey Styles */
+.rider-jersey-small {
+  height: 32px;
+  width: auto;
+  object-fit: contain;
+  margin-right: 4px;
+  align-self: flex-start;
+  margin-top: 2px;
+}
+
+.rider-jersey-table {
+  height: 24px;
+  width: auto;
+  object-fit: contain;
+  display: block;
 }

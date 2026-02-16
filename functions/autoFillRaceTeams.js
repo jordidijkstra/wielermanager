@@ -33,18 +33,28 @@ exports.autoFillRaceTeams = functions.region('europe-west1').https.onRequest(asy
     const upcomingDeadlineRaces = races.filter(race => {
       if (!race.startDate) return false;
       if (race.name && race.name.includes('Stage')) return false; // Exclude stages
-      const deadline = new Date(race.startDate);
-      deadline.setHours(9, 0, 0, 0);
-      const deadlineMinusOneDay = new Date(deadline);
-      deadlineMinusOneDay.setDate(deadlineMinusOneDay.getDate() - 1);
-      deadlineMinusOneDay.setHours(0, 0, 0, 0); // Start from 00:00 on the day before
-      const endOfRaceDay = new Date(deadline);
-      endOfRaceDay.setDate(endOfRaceDay.getDate() + 1);
-      endOfRaceDay.setHours(0, 0, 0, 0); // End at 00:00 on the day after (i.e., end of race day)
-      const isInWindow = now >= deadlineMinusOneDay && now < endOfRaceDay;
-      console.log(`Race ${race.id}: deadline=${deadline.toISOString()}, now=${now.toISOString()}, inWindow=${isInWindow}`);
-      return isInWindow; // Autofill works from (deadline - 1 day at 00:00) until end of race day
-    });
+        
+        const deadline = new Date(race.startDate);
+        deadline.setHours(9, 0, 0, 0); // Deadline is at 9:00 AM
+        
+        // Window starts 1 day before deadline at 00:00
+        const windowStart = new Date(deadline);
+        windowStart.setDate(windowStart.getDate() - 1);
+        windowStart.setHours(0, 0, 0, 0);
+        
+        // Window ends 1 day AFTER deadline at 00:00 (i.e. end of race day)
+        const windowEnd = new Date(deadline);
+        windowEnd.setDate(windowEnd.getDate() + 1);
+        windowEnd.setHours(0, 0, 0, 0);
+        
+        const isInWindow = now >= windowStart && now < windowEnd;
+        
+        if (isInWindow) {
+          console.log(`Processing race: ${race.name || 'Unknown'} (ID: ${race.id}) - Deadline: ${deadline.toISOString()}`);
+        }
+        
+        return isInWindow;
+      });
 
     console.log(`Found ${upcomingDeadlineRaces.length} races with upcoming deadlines`);
 
@@ -209,30 +219,30 @@ exports.autoFillRaceTeamsScheduled = functions.region('europe-west1').pubsub
       }));
 
       // Filter races where autofill window is still open (1 day before deadline until end of race day)
-      // Also exclude stages since they share the same selection as the general classification
       const upcomingDeadlineRaces = races.filter(race => {
         if (!race.startDate) return false;
         if (race.name && race.name.includes('Stage')) return false; // Exclude stages
+        
         const deadline = new Date(race.startDate);
-        deadline.setHours(9, 0, 0, 0);
+        deadline.setHours(9, 0, 0, 0); // Deadline is at 9:00 AM on race day
         
-        // CRITICAL: Only run autofill if deadline has NOT yet passed far in the past
-        // Deadline must be within last 1 day (recent) OR future (upcoming)
-        const deadlineMinusOneDay = new Date(deadline);
-        deadlineMinusOneDay.setDate(deadlineMinusOneDay.getDate() - 1);
-        deadlineMinusOneDay.setHours(0, 0, 0, 0);
+        // Window starts 1 day before deadline at 00:00
+        const windowStart = new Date(deadline);
+        windowStart.setDate(windowStart.getDate() - 1);
+        windowStart.setHours(0, 0, 0, 0);
         
-        const endOfRaceDay = new Date(deadline);
-        endOfRaceDay.setDate(endOfRaceDay.getDate() + 1);
-        endOfRaceDay.setHours(0, 0, 0, 0);
+        // Window ends 1 day AFTER deadline at 00:00 (i.e. end of race day)
+        const windowEnd = new Date(deadline);
+        windowEnd.setDate(windowEnd.getDate() + 1);
+        windowEnd.setHours(0, 0, 0, 0);
         
-        // Only process if we're in the window
-        // This prevents processing very old races or races too far in the future
-        const isInWindow = now >= deadlineMinusOneDay && now < endOfRaceDay;
-        const shouldProcess = isInWindow;
+        const isInWindow = now >= windowStart && now < windowEnd;
         
-        addLog(`Race ${race.id}: deadline=${deadline.toISOString()}, inWindow=${isInWindow}, shouldProcess=${shouldProcess}`);
-        return shouldProcess;
+        if (isInWindow) {
+          addLog(`Will process race: ${race.name || 'Unknown'} (ID: ${race.id}) - deadline=${deadline.toISOString()}`);
+        }
+        
+        return isInWindow;
       });
 
       addLog(`Found ${upcomingDeadlineRaces.length} races with upcoming deadlines`);
@@ -290,6 +300,7 @@ exports.autoFillRaceTeamsScheduled = functions.region('europe-west1').pubsub
         // Check each race with upcoming deadline
         for (const race of upcomingDeadlineRaces) {
           const raceId = race.id;
+          const raceName = race.name || `Race ${raceId}`;
           const maxRiders = race.maxRiders || 7;
 
           // Check if user already has a saved team for this race
@@ -307,7 +318,8 @@ exports.autoFillRaceTeamsScheduled = functions.region('europe-west1').pubsub
 
           // Check if team has less than maxRiders
           if (currentTeam.length >= maxRiders) {
-            addLog(`Team already has ${currentTeam.length} riders (max is ${maxRiders}) - skipping for user ${userId}, race ${raceId}`);
+            // Only log if it's not a full team to avoid spam
+             // addLog(`Team already has ${currentTeam.length} riders (max is ${maxRiders}) - skipping for user ${userName}, race ${raceName}`);
             continue;
           }
 
@@ -339,9 +351,9 @@ exports.autoFillRaceTeamsScheduled = functions.region('europe-west1').pubsub
 
           if (sortedRiders.length === 0) {
             if (isExistingTeam && currentTeam.length > 0) {
-              addLog(`No additional riders available to fill team for ${userName}, race ${raceId}`);
+              addLog(`No additional riders available to fill team for ${userName}, race: ${raceName}`);
             } else {
-              addLog(`No available riders for ${userName} in race ${raceId}`);
+              addLog(`No available riders for ${userName} in race: ${raceName}`);
             }
             continue;
           }
@@ -363,7 +375,7 @@ exports.autoFillRaceTeamsScheduled = functions.region('europe-west1').pubsub
           });
 
           filledTeams++;
-          addLog(`${isExistingTeam ? 'Updated' : 'Auto-filled'} race ${raceId} for ${userName} with ${updatedRiderIds.length} riders`);
+          addLog(`${isExistingTeam ? 'Updated' : 'Auto-filled'} race: ${raceName} for ${userName} with ${updatedRiderIds.length} riders`);
         }
       }
 

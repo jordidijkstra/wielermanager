@@ -1,0 +1,661 @@
+import { useEffect, useReducer } from 'react';
+import * as XLSX from 'xlsx';
+import { getAllRaces, fetchRaceParticipantsList, updateRaceParticipants, deleteRaceParticipants, cleanupUserTeams } from '../../../services/raceService';
+import { getAllRiders } from '../../../services/riderService';
+import { getCyclingTeams } from '../../../services/cyclingTeamService';
+import { normalizeText } from '../../../utils/textUtils';
+import { INITIAL_STATE, reducer } from './ParticipantsTab.reducer';
+import '../../../css/participantsTab.css';
+
+export default function ParticipantsTab() {
+  const [state, dispatch] = useReducer(reducer, INITIAL_STATE);
+  const { 
+    races, 
+    riders, 
+    teams,
+    participants, 
+    loading, 
+    editingRaceId, 
+    editData, 
+    approvingRaceId, 
+    riderSearchFilters, 
+    openRiderDropdowns 
+  } = state;
+
+  // Load all races and participants
+  useEffect(() => {
+    const loadData = async () => {
+      try {
+        dispatch({ type: 'SET_LOADING', payload: true });
+        const allRaces = await getAllRaces();
+        const allRiders = await getAllRiders();
+        const participantsList = await fetchRaceParticipantsList();
+        const allTeams = await getCyclingTeams();
+        
+        dispatch({ 
+          type: 'DATA_LOADED', 
+          payload: { 
+            races: allRaces, 
+            riders: allRiders, 
+            participants: participantsList,
+            teams: allTeams
+          } 
+        });
+      } catch (err) {
+        console.error('Error loading data:', err);
+      } finally {
+        dispatch({ type: 'SET_LOADING', payload: false });
+      }
+    };
+    loadData();
+  }, []);
+
+  const getRaceName = (raceId) => {
+    return races.find(r => String(r.id) === String(raceId))?.name || `Race ${raceId}`;
+  };
+
+  const getRiderName = (riderId) => {
+    const rider = riders.find(r => r.id === riderId);
+    if (rider) {
+      return `${rider.firstname} ${rider.lastname}`;
+    }
+    return `Renner ${riderId}`;
+  };
+
+  const getTeamName = (teamId) => {
+    const team = teams.find(t => t.id === teamId);
+    return team?.name || 'Onbekend team';
+  };
+
+  const getCyclingJerseyPath = (teamId) => {
+    const team = teams?.find(t => t?.id === teamId);
+    return team?.cyclingKit
+      ? `/assets/${team.cyclingKit}`
+      : '/assets/default.webp';
+  };
+
+  const sortParticipantsByTeam = (participantsList) => {
+    if (!participantsList) return [];
+    
+    return [...participantsList].sort((a, b) => {
+      const riderA = riders.find(r => r.id === a.riderId);
+      const riderB = riders.find(r => r.id === b.riderId);
+      
+      if (!riderA) return 1;
+      if (!riderB) return -1;
+      
+      const teamNameA = getTeamName(riderA.teamId);
+      const teamNameB = getTeamName(riderB.teamId);
+      
+      // First sort by team name
+      const teamComparison = teamNameA.localeCompare(teamNameB);
+      if (teamComparison !== 0) return teamComparison;
+      
+      // Then sort by rider name
+      const nameA = `${riderA.firstname} ${riderA.lastname}`;
+      const nameB = `${riderB.firstname} ${riderB.lastname}`;
+      return nameA.localeCompare(nameB);
+    });
+  };
+
+  const getRaceStartDate = (raceId) => {
+    return races.find(r => r.id === raceId)?.startDate || '';
+  };
+
+  const formatDate = (dateString) => {
+    if (!dateString) return '-';
+    const date = new Date(dateString);
+    return date.toLocaleDateString('nl-NL', { year: 'numeric', month: '2-digit', day: '2-digit' });
+  };
+
+  const handleExcelImportParticipants = (event) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      try {
+        const data = e.target?.result;
+        const workbook = XLSX.read(data, { type: 'array' });
+        const worksheet = workbook.Sheets[workbook.SheetNames[0]];
+        const rows = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
+
+        const updatedParticipants = [];
+        const seenRiderIds = new Set();
+        const duplicates = [];
+        let matchedCount = 0;
+        
+        rows.forEach((row, rowIdx) => {
+          const fullName = String(row[0] || '').trim();
+
+          if (!fullName) return; // Skip empty rows
+
+          // Find rider with fuzzy matching on normalized full name
+          const normalizedSearch = normalizeText(fullName);
+          
+          // Split name to try both orders (voornaam achternaam vs achternaam voornaam)
+          const nameParts = fullName.split(/\s+/).filter(p => p.length > 0);
+
+          const matchedRider = riders.find(rider => {
+            const riderFullname = normalizeText(
+              `${rider.firstnameWithoutSpecialChars || rider.firstname || ''} ${rider.lastnameWithoutSpecialChars || rider.lastname || ''}`
+            );
+            
+            // Check multiple matching strategies
+            if (riderFullname.includes(normalizedSearch)) return true;
+            if (normalizedSearch.includes(riderFullname)) return true;
+            
+            // Check if all name parts match anywhere in rider's name
+            return nameParts.every(part => riderFullname.includes(normalizeText(part)));
+          });
+
+          if (matchedRider) {
+            // Check for duplicates
+            if (seenRiderIds.has(matchedRider.id)) {
+              duplicates.push(`${matchedRider.firstname} ${matchedRider.lastname} (rij ${rowIdx + 1})`);
+              return;
+            }
+            
+            seenRiderIds.add(matchedRider.id);
+            updatedParticipants.push({ riderId: matchedRider.id });
+            matchedCount++;
+            console.log(`✅ Gevonden: "${fullName}" -> ${matchedRider.firstname} ${matchedRider.lastname}`);
+          } else {
+            console.log(`⚠️ Niet gevonden: "${fullName}"`);
+          }
+        });
+
+        if (duplicates.length > 0) {
+          const duplicateList = duplicates.join('\n');
+          alert(`❌ Dubbele renners gevonden:\n\n${duplicateList}\n\nZe zijn niet toegevoegd. Controleer het Excel-bestand.`);
+          return;
+        }
+
+        if (matchedCount === 0) {
+          alert('❌ Geen renners gevonden in het Excel-bestand');
+          return;
+        }
+
+        const sortedUpdatedParticipants = sortParticipantsByTeam(updatedParticipants);
+        
+        // Create new search filters for the sorted list
+        const newFilters = {};
+        sortedUpdatedParticipants.forEach((p, idx) => {
+          if (p.riderId) {
+            newFilters[idx] = getRiderName(p.riderId);
+          }
+        });
+
+        dispatch({
+          type: 'UPDATE_EDIT_DATA',
+          payload: {
+            ...editData,
+            participants: sortedUpdatedParticipants
+          },
+          filters: newFilters
+        });
+
+        alert(`✅ Excel gegevens ingeladen! ${matchedCount} renners toegevoegd en gesorteerd op team.`);
+      } catch (error) {
+        console.error('Fout bij importeren Excel:', error);
+        alert('❌ Fout bij importeren Excel-bestand');
+      }
+    };
+    
+    reader.readAsArrayBuffer(file);
+    event.target.value = '';
+  };
+
+  const getFilteredRiders = (index) => {
+    const searchText = riderSearchFilters[index] || '';
+    if (!searchText) return [];
+
+    const normalizedSearch = normalizeText(searchText);
+    return riders.filter(rider => {
+      const riderFullname = normalizeText(
+        `${rider.firstname || ''} ${rider.lastname || ''}`
+      );
+      return riderFullname.includes(normalizedSearch);
+    });
+  };
+
+  const handleApproveParticipants = async (raceId) => {
+    try {
+      const participant = participants.find(p => p.raceId === raceId);
+      const updatedData = {
+        participants: participant?.participants || [],
+        status: 'definitief',
+        approvedAt: new Date().toISOString()
+      };
+
+      // Only include submittedAt if it exists
+      if (participant?.submittedAt) {
+        updatedData.submittedAt = participant.submittedAt;
+      }
+
+      await updateRaceParticipants(raceId, updatedData);
+
+      // Remove riders from user team selections if they're no longer in participants
+      const participantRiderIds = updatedData.participants.map(p => p.riderId);
+      await cleanupUserTeams(raceId, participantRiderIds);
+
+      // Update local state
+      dispatch({
+        type: 'OPERATION_SUCCESS',
+        payload: participants.map(p =>
+          p.raceId === raceId ? { ...p, ...updatedData } : p
+        )
+      });
+      
+      alert('✅ Startlijst definitief doorgegeven');
+    } catch (err) {
+      console.error('Error approving participants:', err);
+      alert('Fout bij goedkeuren startlijst');
+    }
+  };
+
+  const handleDeleteParticipants = async (raceId) => {
+    if (!window.confirm('Wil je deze startlijst verwijderen?')) return;
+
+    try {
+      await deleteRaceParticipants(raceId);
+      
+      // Remove all riders from user team selections when entire startlijst is deleted
+      await cleanupUserTeams(raceId, []);
+      
+      dispatch({
+        type: 'OPERATION_SUCCESS',
+        payload: participants.filter(p => p.raceId !== raceId)
+      });
+
+      alert('✅ Startlijst verwijderd');
+    } catch (err) {
+      console.error('Error deleting participants:', err);
+      alert('Fout bij verwijderen startlijst');
+    }
+  };
+
+  const handleStartEdit = (participantData) => {
+    // Sort participants by team before editing
+    const sortedParticipants = sortParticipantsByTeam(participantData.participants);
+    
+    // Populate rider search filters with existing rider names
+    const newFilters = {};
+    sortedParticipants?.forEach((p, idx) => {
+      if (p.riderId) {
+        newFilters[idx] = getRiderName(p.riderId);
+      }
+    });
+    
+    dispatch({
+      type: 'START_EDIT',
+      payload: { 
+        raceId: participantData.raceId, 
+        data: { ...participantData, participants: sortedParticipants }, 
+        filters: newFilters
+      }
+    });
+  };
+
+  const saveEdit = async (raceId) => {
+    try {
+      const updatedData = {
+        participants: editData.participants || [],
+        status: editData.status
+      };
+
+      // Only include timestamps if they exist
+      if (editData.submittedAt) {
+        updatedData.submittedAt = editData.submittedAt;
+      }
+      if (editData.approvedAt) {
+        updatedData.approvedAt = editData.approvedAt;
+      }
+
+      await updateRaceParticipants(raceId, updatedData);
+
+      // Remove riders from user team selections if they're no longer in participants
+      const participantRiderIds = updatedData.participants.map(p => p.riderId);
+      await cleanupUserTeams(raceId, participantRiderIds);
+
+      // Update local state
+      dispatch({
+        type: 'OPERATION_SUCCESS',
+        payload: participants.map(p =>
+          p.raceId === raceId ? { ...p, ...updatedData } : p
+        )
+      });
+
+      alert('✅ Startlijst bijgewerkt');
+    } catch (err) {
+      console.error('Error saving participants:', err);
+      alert('Fout bij opslaan startlijst');
+    }
+  };
+
+  const getStatusBadgeColor = (status) => {
+    switch (status) {
+      case 'ingediend':
+        return '#fca311';
+      case 'definitief':
+        return '#28a745';
+      default:
+        return '#999';
+    }
+  };
+
+  const getStatusLabel = (status) => {
+    switch (status) {
+      case 'ingediend':
+        return '📋 Ingediend';
+      case 'definitief':
+        return '✅ Definitief';
+      default:
+        return status;
+    }
+  };
+
+  if (loading) return <div className="tab-content">Laden...</div>;
+
+  if (participants.length === 0) {
+    return (
+      <div className="tab-content">
+        <h2>📋 Startlijsten</h2>
+        <p className="no-data-message">Geen startlijsten ingediend</p>
+      </div>
+    );
+  }
+
+  return (
+    <div className="tab-content">
+      <h2>Startlijsten beheren</h2>
+
+      {editingRaceId ? (
+        // EDIT MODE
+        <div className="edit-form">
+          <div className="form-group">
+            <label>Race:</label>
+            <input type="text" value={getRaceName(editingRaceId)} disabled />
+          </div>
+
+          <div className="form-group">
+            <label>Status:</label>
+            <select
+              value={editData.status || 'ingediend'}
+              onChange={(e) => dispatch({ type: 'UPDATE_EDIT_STATUS', payload: e.target.value })}
+            >
+              <option value="ingediend">📋 Ingediend</option>
+              <option value="definitief">✅ Definitief</option>
+            </select>
+          </div>
+
+          <div className="form-group">
+            <label>Deelnemers ({editData.participants?.length || 0}):</label>
+            <div className="participants-list-edit-container">
+              {(() => {
+                // Group participants by team
+                const participantsWithIndex = editData.participants?.map((p, idx) => ({ ...p, originalIndex: idx })) || [];
+                
+                const groupedByTeam = participantsWithIndex.reduce((acc, p) => {
+                  let teamId = 'unknown';
+                  let teamName = 'Nog te selecteren';
+                  let teamOrder = 9999;
+                  
+                  if (p.riderId) {
+                    const rider = riders.find(r => r.id === p.riderId);
+                    if (rider && rider.teamId) {
+                      const team = teams.find(t => t.id === rider.teamId);
+                      if (team) {
+                        teamId = team.id;
+                        teamName = team.name;
+                        teamOrder = 1; // Prioritize real teams
+                      }
+                    }
+                  } else {
+                     teamOrder = 0; // Put "Nog te selecteren" at the top or bottom? Let's put at top for visibility
+                  }
+                  
+                  if (!acc[teamId]) {
+                    acc[teamId] = { id: teamId, name: teamName, order: teamOrder, participants: [] };
+                  }
+                  acc[teamId].participants.push(p);
+                  return acc;
+                }, {});
+
+                // Sort teams
+                const sortedTeams = Object.values(groupedByTeam).sort((a, b) => {
+                   if (a.order !== b.order) return a.order - b.order;
+                   return a.name.localeCompare(b.name);
+                });
+
+                return sortedTeams.map(teamGroup => (
+                  <div key={teamGroup.id} className="team-group-section">
+                    <h4 className="team-group-header">{teamGroup.name} ({teamGroup.participants.length})</h4>
+                    <div className="participants-list-edit">
+                      {teamGroup.participants.map((p) => {
+                        const idx = p.originalIndex;
+                        const filteredRiders = getFilteredRiders(idx);
+                        const isDropdownOpen = openRiderDropdowns[idx];
+                        const searchValue = riderSearchFilters[idx] || '';
+                        const currentRider = riders.find(r => r.id === p.riderId);
+                        const teamName = currentRider ? getTeamName(currentRider.teamId) : '';
+                        const jerseyPath = currentRider ? getCyclingJerseyPath(currentRider.teamId) : '';
+                        
+                        return (
+                          <div key={idx} className="participant-item search-container">
+                            {jerseyPath && (
+                              <img 
+                                src={jerseyPath} 
+                                alt="Jersey" 
+                                className="rider-jersey-small" 
+                                title={teamName}
+                              />
+                            )}
+                            <div className="rider-search-wrapper">
+                              <div className="rider-search-row">
+                                <input
+                                  type="text"
+                                  value={searchValue}
+                                  onChange={(e) => dispatch({ 
+                                    type: 'SET_SEARCH_FILTER', 
+                                    payload: { index: idx, value: e.target.value } 
+                                  })}
+                                  onFocus={() => dispatch({ type: 'OPEN_DROPDOWN', payload: { index: idx } })}
+                                  placeholder="Zoek renner..."
+                                  className="rider-search-input"
+                                />
+                              </div>
+                              
+                              {isDropdownOpen && searchValue && filteredRiders.length > 0 && (
+                                <div className="rider-dropdown">
+                                  {filteredRiders.slice(0, 10).map((rider) => (
+                                    <div
+                                      key={rider.id}
+                                      className="rider-option"
+                                      onClick={() => dispatch({ 
+                                        type: 'SELECT_RIDER', 
+                                        payload: { index: idx, rider } 
+                                      })}
+                                    >
+                                      {rider.firstname} {rider.lastname}
+                                    </div>
+                                  ))}
+                                </div>
+                              )}
+
+                              {isDropdownOpen && searchValue && filteredRiders.length === 0 && (
+                                <div className="rider-dropdown">
+                                  <div className="rider-option rider-option-notfound">
+                                    Geen renners gevonden
+                                  </div>
+                                </div>
+                              )}
+                            </div>
+                            
+                            <button
+                              className="btn-delete-small"
+                              onClick={() => dispatch({ type: 'REMOVE_PARTICIPANT_ROW', payload: idx })}
+                            >
+                              ✕
+                            </button>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
+                ));
+              })()}
+            </div>
+            <div className="button-group">
+              <button
+                className="btn-add-small"
+                onClick={() => dispatch({ type: 'ADD_PARTICIPANT_ROW' })}
+              >
+                ➕ Renner toevoegen
+              </button>
+              <label className="excel-import-label excel-import-no-margin">
+                <input
+                  type="file"
+                  accept=".xlsx,.xls,.csv"
+                  onChange={handleExcelImportParticipants}
+                  className="file-input-hidden"
+                />
+                <span className="excel-import-button">
+                  📊 Excel importeren
+                </span>
+              </label>
+            </div>
+          </div>
+
+          <div className="form-actions">
+            <button className="btn-save-participants" onClick={() => saveEdit(editingRaceId)}>
+              💾 Opslaan
+            </button>
+            <button
+              className="btn-cancel"
+              onClick={() => dispatch({ type: 'CANCEL_EDIT' })}
+            >
+              ❌ Annuleren
+            </button>
+          </div>
+        </div>
+      ) : approvingRaceId ? (
+        // APPROVE MODE
+        <div className="approve-form">
+          <h3>Controleer startlijst: {getRaceName(approvingRaceId)}</h3>
+          
+          <div className="participants-list">
+            <p className="count-info">
+              Totaal deelnemers: <strong>{participants.find(p => p.raceId === approvingRaceId)?.participants?.length || 0}</strong>
+            </p>
+            <table className="participants-mini-table">
+              <thead>
+                <tr>
+                  <th>Renner</th>
+                  <th>Team</th>
+                  <th>Shirt</th>
+                </tr>
+              </thead>
+              <tbody>
+                {sortParticipantsByTeam(
+                  participants.find(p => p.raceId === approvingRaceId)?.participants
+                ).map((p, idx) => {
+                    const rider = riders.find(r => r.id === p.riderId);
+                    const team = teams.find(t => t.id === rider?.teamId);
+                    const jerseyPath = team ? getCyclingJerseyPath(team.id) : '';
+                    
+                    return (
+                      <tr key={idx}>
+                        <td>{getRiderName(p.riderId)}</td>
+                        <td>{team?.name || '-'}</td>
+                        <td>
+                          {jerseyPath && <img src={jerseyPath} alt="Jersey" className="rider-jersey-table" />}
+                        </td>
+                      </tr>
+                    );
+                  })}
+              </tbody>
+            </table>
+          </div>
+
+          <div className="form-actions">
+            <button
+              className="btn-approve"
+              onClick={() => handleApproveParticipants(approvingRaceId)}
+            >
+              ✅ Definitief Doorgeven
+            </button>
+            <button
+              className="btn-cancel"
+              onClick={() => dispatch({ type: 'CANCEL_APPROVE' })}
+            >
+              ❌ Annuleren
+            </button>
+          </div>
+        </div>
+      ) : (
+        // LIST MODE
+        <table className="startlists-table">
+          <thead>
+            <tr>
+              <th>Race</th>
+              <th>Deelnemers</th>
+              <th>Status</th>
+              <th>Acties</th>
+            </tr>
+          </thead>
+          <tbody>
+            {[...participants]
+              .sort((a, b) => {
+                const dateA = new Date(a.approvedAt || a.submittedAt || 0);
+                const dateB = new Date(b.approvedAt || b.submittedAt || 0);
+                return dateB - dateA;
+              })
+              .map(participant => (
+              <tr key={participant.raceId}>
+                <td className="race-name-startlists">
+                  <p>{getRaceName(participant.raceId)}</p>
+                </td>
+                <td className="center">{participant.participants?.length || 0}</td>
+                <td className="center">
+                  <span
+                    className={`status-badge status-${participant.status?.toLowerCase().replace(/\s+/g, '-')}`}
+                  >
+                    {getStatusLabel(participant.status)}
+                  </span>
+                </td>
+                <td className="actions-cell">
+                  {participant.status === 'ingediend' && (
+                    <>
+                      <button
+                        className="btn-approve"
+                        onClick={() => dispatch({ type: 'START_APPROVE', payload: participant.raceId })}
+                        title="Controleren en definitief doorgeven"
+                      >
+                        <i className="fas fa-eye"></i>
+                      </button>
+                    </>
+                  )}
+                  <button
+                    className="btn-edit"
+                    onClick={() => handleStartEdit(participant)}
+                    title="Startlijst bewerken"
+                  >
+                    <i className="fas fa-edit"></i>
+                  </button>
+                  <button
+                    className="btn-delete"
+                    onClick={() => handleDeleteParticipants(participant.raceId)}
+                    title="Startlijst verwijderen"
+                  >
+                    <i className="fas fa-trash"></i>
+                  </button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      )}
+    </div>
+  );
+}

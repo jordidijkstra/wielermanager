@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect } from 'react';
 import { getAllRaces, getRaceById, getRaceTeam, saveRaceTeam, getUserRaceTeams, invalidateRacesCache } from '../services/raceService';
 import { setDoc, deleteDoc, doc, collection, onSnapshot } from 'firebase/firestore';
 import { db } from '../firebase/config';
@@ -34,9 +34,15 @@ export function useRaces(user) {
           id: doc.id,
           ...doc.data()
         }));
-        setRaces(data);
+        // Only update if data actually changed to prevent infinite loops if array reference changes but content is same
+        setRaces(prevRaces => {
+            if (JSON.stringify(prevRaces) === JSON.stringify(data)) {
+                return prevRaces;
+            }
+            return data;
+        });
         setLoading(false);
-        console.log('🔄 Real-time races update:', data.length, 'races');
+        // console.log('🔄 Real-time races update:', data.length, 'races');
       }, (error) => {
         console.error('Error in real-time listener:', error);
         setLoading(false);
@@ -54,7 +60,7 @@ export function useRaces(user) {
   // This ensures:
   // 1. RaceCountdown finds main races first chronologically
   // 2. TeamDetails correctly groups speeldagen by endDate/startDate
-  const memoizedRaces = useMemo(() => {
+  const memoizedRaces = (() => {
     return [...races].sort((a, b) => {
       // Separate main races and stages
       const aIsStage = a.tourId != null && a.tourId !== undefined;
@@ -77,7 +83,7 @@ export function useRaces(user) {
       const dateB = b.startDate || '';
       return new Date(dateA) - new Date(dateB);
     });
-  }, [races]);
+  })();
 
   // Laad user's race teams wanneer user verandert
   useEffect(() => {
@@ -166,7 +172,7 @@ export function useRaces(user) {
   };
 
   // Memoize the entire return object so the reference doesn't change unnecessarily
-  const returnValue = useMemo(() => ({
+  const returnValue = {
     races: memoizedRaces,
     userRaceTeams,
     loading,
@@ -179,7 +185,7 @@ export function useRaces(user) {
     editRace,
     removeRace,
     reload: loadRaces
-  }), [memoizedRaces, userRaceTeams, loading, error, saveStatus]);
+  };
 
   return returnValue;
 }
