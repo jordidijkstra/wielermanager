@@ -3,7 +3,7 @@ import { useResults } from '../../../hooks/useResults';
 import { useRaces } from '../../../hooks/useRaces';
 import { useRiders } from '../../../hooks/useRiders';
 import { updateRidersPointsFromResults, removeRidersPointsFromResults, setRaceLeaderPoints, getRaceLeaderPointsForCategory, getRiderResult } from '../../../services/riderService';
-import { recalculateTeamPointsForRace } from '../../../services/resultsService';
+import { recalculateTeamPointsForRace, clearTeamPointsForRace } from '../../../services/resultsService';
 import { INITIAL_STATE, reducer } from './ResultsTab.reducer';
 import { EditResultModal } from './EditResultModal';
 import { ApproveResultModal } from './ApproveResultModal';
@@ -156,6 +156,12 @@ export default function ResultsTab() {
         // Delete the result
         await deleteResult(resultId);
         console.log('✅ Resultaat verwijderd');
+        
+        // Clear team points for this race for all users
+        if (result && result.raceId) {
+          await clearTeamPointsForRace(result.raceId);
+          console.log('✅ User team punten gecleared');
+        }
         
         // Reload caches to ensure all data is fresh
         await reloadRiders();

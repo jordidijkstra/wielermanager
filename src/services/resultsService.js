@@ -1,4 +1,4 @@
-import { collection, getDocs, doc, setDoc, deleteDoc } from 'firebase/firestore';
+import { collection, getDocs, doc, setDoc, deleteDoc, updateDoc } from 'firebase/firestore';
 import { db } from '../firebase/config';
 
 // Cache for results
@@ -143,6 +143,47 @@ export const recalculateTeamPointsForRace = async (raceId, races) => {
     invalidateResultsCache();
   } catch (err) {
     console.error('❌ Error recalculating team points:', err);
+    throw err;
+  }
+};
+
+// Clear team points for a race (e.g. when result is deleted)
+export const clearTeamPointsForRace = async (raceId) => {
+  try {
+    console.log(`🧹 Clearing team points for race ${raceId}...`);
+    
+    // Get all users
+    const usersSnapshot = await getDocs(collection(db, 'users'));
+    let updated = 0;
+
+    // Process each user
+    for (const userDoc of usersSnapshot.docs) {
+      const userId = userDoc.id;
+      const raceIdStr = String(raceId);
+      
+      try {
+        // Try to update the team document for this race
+        // If it doesn't exist, this will fail with 'not-found', which we catch and ignore
+        await updateDoc(doc(db, `users/${userId}/teams`, raceIdStr), {
+          calculatedPoints: 0,
+          riderPoints: {},
+          lastCalculated: new Date()
+        });
+        
+        updated++;
+      } catch (err) {
+        // Ignore if document not found (user didn't have a team for this race)
+        // Also check for the string error message as firestore error codes can vary slightly in older sdks
+        if (err.code !== 'not-found' && !err.message.includes('No document to update')) {
+          console.error(`❌ Error clearing points for user ${userId}, race ${raceId}:`, err);
+        }
+      }
+    }
+    
+    console.log(`✅ Cleared points for race ${raceId}. Updated ${updated} users.`);
+    invalidateResultsCache();
+  } catch (err) {
+    console.error('❌ Error clearing team points:', err);
     throw err;
   }
 };

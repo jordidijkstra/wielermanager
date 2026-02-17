@@ -1,4 +1,4 @@
-import { collection, getDocs, doc, setDoc, getDoc } from 'firebase/firestore';
+import { collection, getDocs, doc, setDoc, getDoc, deleteDoc } from 'firebase/firestore';
 import { db } from '../firebase/config';
 
 // Cache for riders
@@ -103,50 +103,57 @@ export const updateRidersPointsFromResults = async (raceResults, raceId = null) 
 };
 
 export const removeRidersPointsFromResults = async (raceResults, raceId = null) => {
-  // raceResults is an array of { riderId, points } - verwijder deze punten
+  if (!raceResults || raceResults.length === 0) return;
+  
+  // Calculate total points to remove per rider
   const updates = {};
   
-  for (const result of raceResults) {
-    // Skip rider 911 (placeholder/test rider)
-    if (!result.riderId || result.riderId === '911' || result.riderId === 911 || result.points === undefined) continue;
+  for (const entry of raceResults) {
+    if (!entry.riderId || entry.riderId === '911' || entry.riderId === 911) continue;
     
-    const riderId = result.riderId.toString();
-    if (!updates[riderId]) {
-      updates[riderId] = 0;
+    // Support either { riderId, points } or simplified format
+    const riderId = String(entry.riderId);
+    const pointsToRemove = Number(entry.points) || 0;
+    
+    if (pointsToRemove > 0) {
+      if (!updates[riderId]) {
+        updates[riderId] = 0;
+      }
+      updates[riderId] += pointsToRemove;
     }
-    updates[riderId] += Number(result.points || 0);
   }
   
-  // Update each rider's points (subtract)
-  for (const [riderId, pointsToRemove] of Object.entries(updates)) {
+  // Apply updates to each rider
+  for (const riderId of Object.keys(updates)) {
     try {
+      const pointsToRemove = updates[riderId];
       const riderRef = doc(db, 'riders', riderId);
-      const currentRiderDoc = await getDoc(riderRef);
-      const currentRider = currentRiderDoc.exists() ? currentRiderDoc.data() : null;
       
-      const currentPoints = currentRider?.points || 0;
-      const newPoints = Math.max(0, currentPoints - pointsToRemove); // Ensure no negative points
+      // Get current points
+      const riderSnap = await getDoc(riderRef);
+      if (riderSnap.exists()) {
+        const currentPoints = riderSnap.data().points || 0;
+        const newPoints = Math.max(0, currentPoints - pointsToRemove);
+        
+        await setDoc(riderRef, { points: newPoints }, { merge: true });
+        console.log(`✅ Punten verwijderd voor rider ${riderId}: ${currentPoints} - ${pointsToRemove} = ${newPoints}`);
+      }
       
-      await setDoc(riderRef, {
-        points: newPoints
-      }, { merge: true });
-      
-      console.log(`✅ Punten verwijderd voor rider ${riderId}: ${currentPoints} - ${pointsToRemove} = ${newPoints}`);
-
-      // Also remove per-race points if raceId is provided
+      // If we know the raceId, we should delete the riderResult document entirely
+      // instead of just setting points to 0. This keeps the subcollection clean.
       if (raceId) {
-        const riderResultRef = doc(db, 'riders', riderId, 'riderResults', String(raceId));
-        await setDoc(riderResultRef, {
-          points: 0,
-          raceLeaderPoints: 0,
-          timestamp: new Date().toISOString()
-        }, { merge: true });
-        console.log(`📊 Race punten verwijderd voor rider ${riderId} in race ${raceId}`);
+        // First try to delete the specific race result
+        const resultRef = doc(db, `riders/${riderId}/riderResults`, String(raceId));
+        await deleteDoc(resultRef);
+        console.log(`🗑️ Race resultaat document verwijderd voor rider ${riderId} in race ${raceId}`);
       }
     } catch (error) {
       console.error(`Error removing points for rider ${riderId}:`, error);
     }
   }
+  
+  invalidateRidersCache();
+};
   
   // Invalidate cache
   invalidateRidersCache();
