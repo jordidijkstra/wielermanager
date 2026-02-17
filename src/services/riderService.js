@@ -154,10 +154,6 @@ export const removeRidersPointsFromResults = async (raceResults, raceId = null) 
   
   invalidateRidersCache();
 };
-  
-  // Invalidate cache
-  invalidateRidersCache();
-};
 
 // Cache invalidation function
 export const invalidateRidersCache = () => {
