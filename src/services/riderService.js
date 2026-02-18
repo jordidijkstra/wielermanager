@@ -217,6 +217,35 @@ export const getRiderResult = async (riderId, raceId) => {
 };
 
 /**
+ * Get points for a specific race leader category ID
+ */
+export const getPointsForRaceLeaderCategory = async (raceLeaderCategoryId) => {
+  if (!raceLeaderCategoryId) {
+    return 0;
+  }
+
+  try {
+    // Get the race leader points from pointsPerCategory
+    const pointsCategoryRef = doc(db, 'pointsPerCategory', String(raceLeaderCategoryId));
+    const pointsCategoryDoc = await getDoc(pointsCategoryRef);
+
+    if (!pointsCategoryDoc.exists()) {
+      console.warn(`⚠️ Points category ${raceLeaderCategoryId} not found`);
+      return 0;
+    }
+
+    const pointsCategoryData = pointsCategoryDoc.data();
+    // Assume first position (index 0) contains the race leader points
+    const raceLeaderPoints = pointsCategoryData.points?.[0] || 0;
+
+    return raceLeaderPoints;
+  } catch (error) {
+    console.error(`Error getting points for race leader category ${raceLeaderCategoryId}:`, error);
+    return 0;
+  }
+};
+
+/**
  * Get race leader points for a specific race category
  * Looks up the raceLeaderCategorie in the raceCategory document
  * Then fetches the points from pointsPerCategory
@@ -246,18 +275,7 @@ export const getRaceLeaderPointsForCategory = async (raceCategoryId) => {
       return 0;
     }
 
-    // Get the race leader points from pointsPerCategory
-    const pointsCategoryRef = doc(db, 'pointsPerCategory', String(raceLeaderCategoryId));
-    const pointsCategoryDoc = await getDoc(pointsCategoryRef);
-
-    if (!pointsCategoryDoc.exists()) {
-      console.warn(`⚠️ Points category ${raceLeaderCategoryId} not found`);
-      return 0;
-    }
-
-    const pointsCategoryData = pointsCategoryDoc.data();
-    // Assume first position (index 0) contains the race leader points
-    const raceLeaderPoints = pointsCategoryData.points?.[0] || 0;
+    const raceLeaderPoints = await getPointsForRaceLeaderCategory(raceLeaderCategoryId);
 
     console.log(`🏆 Race leader points for category ${raceCategoryId}: ${raceLeaderPoints} (from pointsPerCategory: ${raceLeaderCategoryId})`);
     return raceLeaderPoints;

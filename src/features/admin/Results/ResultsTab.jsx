@@ -2,7 +2,7 @@ import { useRef, useEffect, useReducer } from 'react';
 import { useResults } from '../../../hooks/useResults';
 import { useRaces } from '../../../hooks/useRaces';
 import { useRiders } from '../../../hooks/useRiders';
-import { updateRidersPointsFromResults, removeRidersPointsFromResults, setRaceLeaderPoints, getRaceLeaderPointsForCategory, getRiderResult } from '../../../services/riderService';
+import { updateRidersPointsFromResults, removeRidersPointsFromResults, setRaceLeaderPoints, getRaceLeaderPointsForCategory, getPointsForRaceLeaderCategory, getRiderResult } from '../../../services/riderService';
 import { recalculateTeamPointsForRace, clearTeamPointsForRace } from '../../../services/resultsService';
 import { INITIAL_STATE, reducer } from './ResultsTab.reducer';
 import { EditResultModal } from './EditResultModal';
@@ -98,7 +98,13 @@ export default function ResultsTab() {
         return 0;
       }
 
-      // Get the race's category
+      // 1. Check if race has a specific race leader category OVERRIDE
+      if (race.raceLeaderCategory) {
+        console.log(`🏆 Using race-specific leader category: ${race.raceLeaderCategory} for race ${race.name}`);
+        return await getPointsForRaceLeaderCategory(race.raceLeaderCategory);
+      }
+
+      // 2. Fallback: Get the race's category
       if (!race.categoryId) {
         console.log(`ℹ️ Race ${raceId} has no category`);
         return 0;
