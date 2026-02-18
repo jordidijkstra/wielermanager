@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import React, { useState, useEffect } from 'react';
-import { collection, getDocs, doc, getDoc } from 'firebase/firestore';
+import { collection, getDocs } from 'firebase/firestore';
 import { db } from '../../firebase/config';
 import { getRiderRacePoints } from '../../services/riderService';
 
@@ -420,6 +420,8 @@ export default function TeamDetails({
                 .map(rider => {
                   // Collect all selected riders for this speeldag
                   const selectedRiderIds = new Set();
+                  const participatingRaceNames = [];
+
                   currentSpeeldagRaces.forEach(race => {
                     const raceIdNum = typeof race.id === 'string' ? parseInt(race.id) : race.id;
                     // Selections are stored at tour ID for stages
@@ -430,6 +432,9 @@ export default function TeamDetails({
                     const raceTeamData = userRaceTeams[raceIdForSelection];
                     if (raceTeamData && raceTeamData.riderIds) {
                       raceTeamData.riderIds.forEach(riderId => selectedRiderIds.add(riderId));
+                      if (raceTeamData.riderIds.includes(rider.id)) {
+                        participatingRaceNames.push(getRaceName(race.id));
+                      }
                     }
                   });
                   
@@ -469,7 +474,8 @@ export default function TeamDetails({
                   return {
                     ...rider,
                     speeldagPoints: riderAllSpeeldagPoints,
-                    isSelected: isSelectedForThisSpeeldag || teamDetails.isVirtual // For virtual teams, all riders are "selected"
+                    isSelected: isSelectedForThisSpeeldag || teamDetails.isVirtual, // For virtual teams, all riders are "selected"
+                    participatingRaces: participatingRaceNames
                   };
                 })
                 .sort((a, b) => {
@@ -505,6 +511,11 @@ export default function TeamDetails({
                         <p className="rider-price">€{(rider.price / 1000000).toFixed(1)}M</p>
                         <div className="rider-points-breakdown">
                           <p className="rider-points-total">Speeldag: <strong>{rider.speeldagPoints}</strong> pts</p>
+                          {rider.participatingRaces && rider.participatingRaces.length > 0 && (
+                            <p style={{ fontSize: '0.75rem', marginTop: '0.25rem', color: '#666', fontStyle: 'italic' }}>
+                              {rider.participatingRaces.join(', ')}
+                            </p>
+                          )}
                         </div>
                       </div>
                     </div>
