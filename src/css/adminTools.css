@@ -82,6 +82,122 @@
   color: #c62828;
 }
 
+/* Availability Check Styles */
+.tool-controls {
+  display: flex;
+  gap: 15px;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.race-select-upcoming {
+  padding: 10px;
+  background: #f0f4c3;
+  border: 1px solid #cddc39;
+  border-radius: 6px;
+  font-size: 14px;
+  color: #33691e;
+  min-width: 250px;
+}
+
+.no-race-msg {
+  color: #757575;
+  font-style: italic;
+  font-size: 14px;
+}
+
+.availability-results {
+  margin-top: 20px;
+  padding: 15px;
+  background-color: #fff3e0;
+  border: 1px solid #ffb74d;
+  border-radius: 8px;
+}
+
+.success-msg {
+  color: #2e7d32;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.excess-table-container {
+  overflow-x: auto;
+  margin-top: 15px;
+}
+
+.excess-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: white;
+  font-size: 0.9em;
+}
+
+.excess-table th, 
+.excess-table td {
+  padding: 10px;
+  text-align: left;
+  border-bottom: 1px solid #eee;
+}
+
+.excess-table th {
+  background-color: #f5f5f5;
+  font-weight: 600;
+  color: #333;
+}
+
+.excess-table tr:hover {
+  background-color: #fafafa;
+}
+
+.excess-count {
+  color: #d32f2f;
+  font-weight: bold;
+}
+
+.ok-count {
+  color: #2e7d32;
+  font-weight: 500;
+}
+
+.row-excess {
+  background-color: #fff8e1;
+}
+
+.row-excess:hover {
+  background-color: #fff3e0;
+}
+
+.row-ok {
+  background-color: #ffffff;
+}
+
+.row-ok:hover {
+  background-color: #f1f8e9;
+}
+
+.bold-cell {
+  font-weight: bold;
+  font-size: 1.05em;
+  color: #14213d;
+}
+
+.filter-controls {
+  margin-left: 10px;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+}
+
+.filter-controls label {
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  user-select: none;
+}
+
 .tools-summary p {
   margin: 8px 0;
   color: #333;

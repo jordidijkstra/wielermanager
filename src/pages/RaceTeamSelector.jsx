@@ -12,7 +12,7 @@ import '../css/raceTeamSelector.css';
 
 const INITIAL_RIDERS_COUNT = 7;
 
-export default function RaceTeamSelector({ user, selectedRiders }) {
+export default function RaceTeamSelector({ user }) {
   const [selectedRace, setSelectedRace] = useState(null);
   const [selectedRaceDeadline, setSelectedRaceDeadline] = useState(null);
   const [raceTeams, setRaceTeams] = useState({});
