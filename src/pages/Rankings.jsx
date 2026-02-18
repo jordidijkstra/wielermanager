@@ -149,6 +149,94 @@ export default function Rankings({ user, resetTrigger }) {
     return () => window.removeEventListener('keydown', handleKeyPress);
   }, [teamDetails]);
 
+  // Helper: Get races for current speeldag (closest date)
+  const getCurrentSpeeldagRaces = () => {
+    if (!races || races.length === 0) return [];
+    
+    // Group races by date (same as TeamDetails logic)
+    const grouped = {};
+    races.forEach(race => {
+      // Use endDate for main races, startDate for stages
+      const date = race.tourId == null 
+        ? (race.endDate || race.startDate) 
+        : (race.startDate || 'onbekend');
+        
+      if (!grouped[date]) {
+        grouped[date] = [];
+      }
+      grouped[date].push(race);
+    });
+
+    const dates = Object.keys(grouped).sort();
+    if (dates.length === 0) return [];
+
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    // Find the closest date index
+    let closestIdx = 0;
+    let minDiff = Infinity;
+
+    dates.forEach((dateStr, idx) => {
+      const dateObj = new Date(dateStr);
+      const diff = Math.abs(dateObj - today);
+      if (diff < minDiff) {
+        minDiff = diff;
+        closestIdx = idx;
+      }
+    });
+    
+    const targetDate = dates[closestIdx];
+    return grouped[targetDate] || [];
+  };
+
+  const currentSpeeldagRaces = getCurrentSpeeldagRaces();
+
+  // Calculate speeldag points for a team
+  const calculateSpeeldagPoints = (team) => {
+    // 1. Virtual Team (Best Team)
+    if (team.isVirtual || team.id === 'bestteam') {
+      if (!team.riders || team.riders.length === 0) return 0;
+      
+      // Sum points from results for current speeldag races
+      let speeldagTotal = 0;
+      
+      currentSpeeldagRaces.forEach(race => {
+        // Find result for this race
+        const raceResult = results.find(r => r.raceId === race.id);
+        if (raceResult && raceResult.entries) {
+          team.riders.forEach(rider => {
+            const entry = raceResult.entries.find(e => e.riderId === rider.id);
+            if (entry) {
+              speeldagTotal += (entry.points || 0);
+            }
+          });
+        }
+      });
+      
+      return speeldagTotal;
+    }
+    
+    // 2. Normal Team (User)
+    let speeldagTotal = 0;
+    const userId = team.id;
+    const userTeams = allUserRaceTeams[userId] || {};
+
+    currentSpeeldagRaces.forEach(race => {
+      const raceId = race.id;
+      // Selections are stored at tour ID for stages, points calculation is usually per raceId but let's check structure
+      // userTeams is map of raceId -> calculatedPoints.
+      // If userTeams stores points per raceId, we just sum them.
+      
+      const raceData = userTeams[raceId];
+      if (raceData && raceData.calculatedPoints) {
+        speeldagTotal += raceData.calculatedPoints;
+      }
+    });
+
+    return speeldagTotal;
+  };
+
   // Calculate total points for a team (memoized)
   // Using pre-calculated points from Cloud Function for normal teams
   // For virtual teams, sum points from all riders
@@ -180,22 +268,70 @@ export default function Rankings({ user, resetTrigger }) {
   // Rankings table view (memoized)
   // Only user teams sorted by points, bestteam added at end without ranking
   const rankedTeams = (() => {
+    // Current speeldag races for points calc
+    const speeldagRaces = getCurrentSpeeldagRaces();
+
+    const calculateSpeeldagPoints = (team) => {
+      // 1. Virtual Team (Best Team)
+      if (team.isVirtual || team.id === 'bestteam') {
+        if (!team.riders || team.riders.length === 0) return 0;
+        
+        let speeldagTotal = 0;
+        
+        speeldagRaces.forEach(race => {
+          // Find result for this race
+          const raceIdNum = typeof race.id === 'string' ? parseInt(race.id) : race.id;
+          const raceResult = results && results.find(r => r.raceId === raceIdNum);
+          if (raceResult && raceResult.entries) {
+            team.riders.forEach(rider => {
+              const entry = raceResult.entries.find(e => e.riderId === rider.id);
+              if (entry) {
+                speeldagTotal += (entry.points || 0);
+              }
+            });
+          }
+        });
+        
+        return speeldagTotal;
+      }
+      
+      // 2. Normal Team (User)
+      let speeldagTotal = 0;
+      const userId = team.id;
+      const userTeamsData = allUserRaceTeams[userId] || {};
+  
+      speeldagRaces.forEach(race => {
+        const raceIdNum = typeof race.id === 'string' ? parseInt(race.id) : race.id;
+        const raceData = userTeamsData[raceIdNum];
+        if (raceData && raceData.calculatedPoints) {
+          speeldagTotal += raceData.calculatedPoints;
+        }
+      });
+  
+      return speeldagTotal;
+    };
+
     const userTeams = allTeams
       .filter(team => team.id !== 'bestteam')
       .map(team => ({
         ...team,
-        totalPoints: calculateTeamPoints(team)
+        totalPoints: calculateTeamPoints(team),
+        speeldagPoints: calculateSpeeldagPoints(team)
       }))
       .sort((a, b) => b.totalPoints - a.totalPoints);
     
     // Add bestteam at the end with data from bestTeamData (real-time listener)
     if (bestTeamData && bestTeamData.riders && bestTeamData.riders.length > 0) {
-      userTeams.push({
+      const bestTeam = {
         ...bestTeamData,
         id: 'bestteam',
         isVirtual: true,
         totalPoints: bestTeamData.totalPoints || 0
-      });
+      };
+      // Calculate speeldag points for best team
+      bestTeam.speeldagPoints = calculateSpeeldagPoints(bestTeam);
+      
+      userTeams.push(bestTeam);
     }
     
     return userTeams;
@@ -340,6 +476,7 @@ export default function Rankings({ user, resetTrigger }) {
               <tr>
                 <th className="rank">Plaats</th>
                 <th className="team-name">Ploeg</th>
+                <th className="points">Speeldag punten</th>
                 <th className="points">Punten</th>
                 <th className="action"></th>
               </tr>
@@ -363,6 +500,9 @@ export default function Rankings({ user, resetTrigger }) {
                         <div className="manager-name-display">{getUserName(team.id)}</div>
                       )}
                     </div>
+                  </td>
+                  <td className="points">
+                    <span className="speeldag-points-rankings">{team.speeldagPoints || 0}</span>
                   </td>
                   <td className="points">
                     <span className="points-badge">{team.totalPoints}</span>

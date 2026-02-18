@@ -53,11 +53,11 @@
 }
 
 .rankings-table .action{
-  width: 20%;
+  width: 30%;
 }
 
 .rankings-table .team-name{
-  width: 60%;
+  width: 50%;
 }
 
 .rankings-table thead {
@@ -363,19 +363,10 @@
   font-size: 1em;
 }
 
-.speeldag-points {
-  background: white;
-  padding: 8px 12px;
-  border-radius: 6px;
-  color: #14213d;
-  font-size: 0.9em;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-}
-
-.speeldag-points strong {
+.speeldag-points-rankings {
   color: #667ee6;
-  font-weight: 700;
-  font-size: 1.1em;
+  padding: 8px 15px;
+  font-weight: bold;
 }
 
 /* Actieve renners sectie */
