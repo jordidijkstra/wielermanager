@@ -442,8 +442,27 @@ export default function RaceTeamSelector({ user }) {
     if (!selectedRace) return;
 
     const raceId = selectedRace.id;
-    const team = raceTeams[raceId] || [];
+    let team = raceTeams[raceId] || [];
     const { minRiders = 0, maxRiders } = selectedRace;
+
+    // Validate that all riders are actually on the startlist (if startlist exists)
+    if (raceParticipants && raceParticipants.participants && raceParticipants.participants.length > 0) {
+      const validRiderIds = new Set(raceParticipants.participants.map(p => p.riderId));
+      const invalidRiders = team.filter(riderId => !validRiderIds.has(riderId));
+      
+      if (invalidRiders.length > 0) {
+        // Remove invalid riders
+        team = team.filter(riderId => validRiderIds.has(riderId));
+        
+        // Update local state to reflect removal
+        setRaceTeams(prev => ({
+          ...prev,
+          [raceId]: team
+        }));
+        
+        alert(`Oeps! ${invalidRiders.length} renner(s) zijn verwijderd uit je selectie omdat ze niet (meer) op de startlijst staan.`);
+      }
+    }
 
     if (team.length < minRiders || team.length > maxRiders) {
       alert(`Je team moet minimaal ${minRiders} en maximaal ${maxRiders} renners bevatten!`);

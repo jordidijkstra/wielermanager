@@ -274,28 +274,56 @@ export default function ResultsTab() {
       // Find entries that were removed or changed
       const pointsToRemove = [];
       for (const [riderId, oldEntry] of oldEntriesMap) {
-        const newEntry = newEntriesMap.get(riderId);
+        const newEntry =
+          newEntriesMap.get(riderId) ||
+          Array.from(newEntriesMap.values()).find(
+            (e) => e.riderId && e.riderId.toString() === riderId
+          );
+
         if (!newEntry) {
-          // Entry was removed
+          // Entry was removed completely
+          console.log(`🗑️ Removing points for rider ${riderId}: ${oldEntry.points}`);
           pointsToRemove.push({ riderId, points: Number(oldEntry.points) || 0 });
-        } else if (Number(newEntry.points) !== Number(oldEntry.points)) {
-          // Points changed - remove old, add new difference
-          const difference = Number(oldEntry.points) || 0;
-          pointsToRemove.push({ riderId, points: difference });
+        } else {
+          const oldPts = Number(oldEntry.points) || 0;
+          const newPts = Number(newEntry.points) || 0;
+          
+          if (newPts !== oldPts) {
+            // Points changed - calculate the difference
+            if (newPts < oldPts) {
+               // Points decreased (e.g. 100 -> 80), so remove the difference (20)
+               const diff = oldPts - newPts;
+               console.log(`📉 Decreasing points for rider ${riderId}: ${oldPts} -> ${newPts} (remove ${diff})`);
+               pointsToRemove.push({ riderId, points: diff });
+            }
+            // If points increased, we handle it in pointsToAdd
+          }
         }
       }
       
       // Find entries that are new or changed
       const pointsToAdd = [];
-      for (const [riderId, newEntry] of newEntriesMap) {
+      // Re-map to ensure we catch all new entries
+      const newEntriesArray =  resultRenners; 
+
+      for (const newEntry of newEntriesArray) {
+        const riderId = newEntry.riderId?.toString();
+        if (!riderId) continue;
+        
         const oldEntry = oldEntriesMap.get(riderId);
+        
+        const newPts = Number(newEntry.points) || 0;
+        const oldPts = oldEntry ? (Number(oldEntry.points) || 0) : 0;
+        
         if (!oldEntry) {
-          // New entry
-          pointsToAdd.push({ riderId, points: Number(newEntry.points) || 0 });
-        } else if (Number(newEntry.points) !== Number(oldEntry.points)) {
-          // Points changed - add only the difference
-          const difference = Number(newEntry.points) - (Number(oldEntry.points) || 0);
-          pointsToAdd.push({ riderId, points: difference });
+           // New entry - add full points
+           console.log(`➕ Adding new points for rider ${riderId}: ${newPts}`);
+           pointsToAdd.push({ riderId, points: newPts });
+        } else if (newPts > oldPts) {
+           // Points increased (e.g. 120 -> 140), add the difference (20)
+           const diff = newPts - oldPts;
+           console.log(`📈 Increasing points for rider ${riderId}: ${oldPts} -> ${newPts} (add ${diff})`);
+           pointsToAdd.push({ riderId, points: diff });
         }
       }
       

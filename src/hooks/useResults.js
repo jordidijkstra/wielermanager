@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { getAllResults } from '../services/resultsService';
-import { setDoc, deleteDoc, doc, collection, onSnapshot } from 'firebase/firestore';
+import { setDoc, deleteDoc, doc, collection, onSnapshot, getDoc } from 'firebase/firestore';
 import { db } from '../firebase/config';
 
 export function useResults() {
@@ -117,7 +117,40 @@ export function useResults() {
   // Delete result
   const deleteResult = async (resultId) => {
     try {
-      await deleteDoc(doc(db, 'results', String(resultId)));
+      console.log(`🗑️ Deleting result ${resultId}...`);
+      
+      // Get the result first to know which rider results to clean up
+      const resultRef = doc(db, 'results', String(resultId));
+      const resultSnap = await getDoc(resultRef);
+
+      if (resultSnap.exists()) {
+        const resultData = resultSnap.data();
+        const raceId = resultData.raceId;
+
+        // If we found the raceId and entries, delete corresponding rider results
+        if (raceId && resultData.entries && Array.isArray(resultData.entries)) {
+          console.log(`🧹 Cleaning up rider results for race ${raceId}...`);
+          
+          const deletePromises = resultData.entries.map(async (entry) => {
+            if (entry.riderId) {
+              const riderResultRef = doc(db, 'riders', String(entry.riderId), 'riderResults', String(raceId));
+              try {
+                await deleteDoc(riderResultRef);
+              } catch (e) {
+                console.warn(`Failed to delete rider result for rider ${entry.riderId}:`, e);
+              }
+            }
+          });
+          
+          await Promise.all(deletePromises);
+          console.log(`✅ Cleaned up ${deletePromises.length} rider results`);
+        }
+      }
+
+      // Finally delete the main result document
+      await deleteDoc(resultRef);
+      console.log('✅ Main result document deleted');
+      
       await loadResults();
     } catch (err) {
       console.error('Fout bij verwijderen result:', err);

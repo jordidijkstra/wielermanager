@@ -434,6 +434,7 @@ export default function TeamDetails({
                       raceTeamData.riderIds.forEach(riderId => selectedRiderIds.add(riderId));
                       if (raceTeamData.riderIds.includes(rider.id)) {
                         participatingRaceNames.push(getRaceName(race.id));
+                        console.log(participatingRaceNames)
                       }
                     }
                   });
