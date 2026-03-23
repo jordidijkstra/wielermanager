@@ -1,141 +1,113 @@
-import { useState, useEffect } from 'react';
-import { collection, getDocs, doc, getDoc, onSnapshot } from 'firebase/firestore';
-import { db } from '../firebase/config';
+import { useState, useEffect, useMemo } from 'react';
 import { useRaces } from '../hooks/useRaces';
 import { useResults } from '../hooks/useResults';
 import { useCyclingTeams } from '../hooks/useCyclingTeams';
-import { getAllUsers } from '../services/userService';
+import { useRankingsData } from '../hooks/useRankingsData';
 import TeamDetails from '../features/team/TeamDetails';
 import '../css/rankings.css';
-
-// Simple cache for teams data
-let teamsCache = null;
-let cacheTimestamp = 0;
-const CACHE_DURATION = 5 * 60 * 1000; // 5 minutes
 
 export default function Rankings({ user, resetTrigger }) {
   const { races } = useRaces(user);
   const { results } = useResults();
   const { teams } = useCyclingTeams();
-  const [allTeams, setAllTeams] = useState([]);
-  const [allUsers, setAllUsers] = useState([]);
-  const [allUserRaceTeams, setAllUserRaceTeams] = useState({});
+  
+  const { 
+    allTeams, 
+    allUsers, 
+    allUserRaceTeams, 
+    allRiders, 
+    loading, 
+    error 
+  } = useRankingsData(resetTrigger);
+
   const [teamDetails, setTeamDetails] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState('');
-  const [allRiders, setAllRiders] = useState([]);
-  const [bestTeamData, setBestTeamData] = useState(null);
+  
+  // Calculate best possible team locally to ensure budget constraints
+  const bestTeamCalculated = useMemo(() => {
+    if (!allRiders.length) return null;
+
+    const BUDGET = 300000000; // 300 miljoen
+    const MIN_RIDERS = 14;
+    const MAX_RIDERS = 30;
+
+    // Filter riders with price and points, sort by points descending
+    // Note: ensure rider point properties are valid numbers
+    const availableRiders = allRiders
+      .filter(rider => rider.price && (rider.points || rider.totalPoints))
+      .map(rider => ({
+        ...rider,
+        points: rider.points || rider.totalPoints || 0 // normalize points property
+      }))
+      .sort((a, b) => b.points - a.points); // Meeste punten eerst
+
+    // Greedy selectie: voeg renners toe naar aantal punten, zolang we onder budget blijven
+    let team = [];
+    let ignoredRiderIds = new Set();
+    
+    // Helper to calculate current cost
+    const getCost = (t) => t.reduce((sum, r) => sum + (r.price || 0), 0);
+
+    // Loop to ensure we get a valid team (MIN_RIDERS constraint) within budget
+    let iterations = 0;
+    const MAX_ITERATIONS = 100; // safety break
+
+    while (iterations < MAX_ITERATIONS) {
+      iterations++;
+      
+      // 1. Try to fill team
+      for (const rider of availableRiders) {
+        if (team.some(t => t.id === rider.id) || ignoredRiderIds.has(rider.id)) continue;
+        
+        const currentCost = getCost(team);
+        const riderCost = rider.price || 0;
+        
+        if (currentCost + riderCost <= BUDGET && team.length < MAX_RIDERS) {
+          team.push(rider);
+        }
+      }
+      
+      // 2. Check constraints
+      if (team.length >= MIN_RIDERS) {
+        break; // Success
+      }
+      
+      if (team.length === 0) {
+        break; // Impossible
+      }
+      
+      // 3. Remove most expensive to make space
+      const sortedByPrice = [...team].sort((a, b) => {
+        const priceDiff = (b.price || 0) - (a.price || 0);
+        if (priceDiff !== 0) return priceDiff;
+        return (a.points || 0) - (b.points || 0);
+      });
+      
+      const mostExpensive = sortedByPrice[0];
+      
+      team = team.filter(t => t.id !== mostExpensive.id);
+      ignoredRiderIds.add(mostExpensive.id);
+    }
+
+    // Sort by points descending
+    team.sort((a, b) => b.points - a.points);
+    
+    // Calculate total points
+    const totalPoints = team.reduce((sum, r) => sum + r.points, 0);
+
+    return {
+      id: 'bestteam',
+      isVirtual: true,
+      riders: team,
+      totalPoints,
+      riderCount: team.length,
+      totalBudget: getCost(team)
+    };
+  }, [allRiders]);
 
   // Reset team details when Rankings menu is clicked (resetTrigger changes)
   useEffect(() => {
     setTeamDetails(null);
   }, [resetTrigger]);
-
-  // Load all teams and users from Firestore (cached)
-  useEffect(() => {
-    // Set up real-time listener for best team data
-    try {
-      const bestTeamRef = doc(db, 'teams', 'bestteam');
-      const unsubscribe = onSnapshot(bestTeamRef, (docSnapshot) => {
-        if (docSnapshot.exists()) {
-          setBestTeamData(docSnapshot.data());
-          console.log('🔄 Best team data updated:', docSnapshot.data());
-        }
-      }, (error) => {
-        console.error('Error listening to best team:', error);
-      });
-      
-      return () => unsubscribe();
-    } catch (err) {
-      console.error('Fout bij setup best team listener:', err);
-    }
-  }, []);
-
-  // Load other data (riders, teams, users) - load in parallel
-  useEffect(() => {
-    const loadData = async () => {
-      try {
-        setLoading(true);
-        setError('');
-        
-        const now = Date.now();
-        const shouldUseCache = teamsCache && (now - cacheTimestamp) < CACHE_DURATION;
-        
-        // Load all data in parallel
-        const [ridersSnapshot, teamsSnapshot, usersData] = await Promise.all([
-          getDocs(collection(db, 'riders')),
-          shouldUseCache ? Promise.resolve(null) : getDocs(collection(db, 'teams')),
-          getAllUsers()
-        ]);
-
-        // Process riders
-        const ridersData = ridersSnapshot.docs
-          .map(doc => ({
-            id: doc.id,
-            ...doc.data()
-          }))
-          .filter(rider => rider.id !== '911' && rider.id !== 911);
-        setAllRiders(ridersData);
-
-        // Process teams
-        if (shouldUseCache) {
-          console.log('✅ Using cached teams data');
-          setAllTeams(teamsCache);
-        } else if (teamsSnapshot) {
-          console.log('📡 Fetching teams from Firestore');
-          const teams = [];
-          
-          teamsSnapshot.forEach(doc => {
-            // Skip bestteam - it's loaded separately via real-time listener
-            if (doc.id === 'bestteam') return;
-            
-            teams.push({
-              id: doc.id,
-              ...doc.data()
-            });
-          });
-
-          teamsCache = teams;
-          cacheTimestamp = now;
-          setAllTeams(teams);
-        }
-        
-        // Set users
-        setAllUsers(usersData);
-        
-        // Load all user race teams for points calculation
-        const userRaceTeamsMap = {};
-        for (const userDoc of usersData) {
-          const userId = userDoc.id;
-          try {
-            const teamsSnapshot = await getDocs(collection(db, `users/${userId}/teams`));
-            const userTeams = {};
-            teamsSnapshot.forEach(doc => {
-              const data = doc.data();
-              userTeams[parseInt(doc.id)] = {
-                riderIds: data.riderIds || [],
-                calculatedPoints: data.calculatedPoints || 0,
-                riderPoints: data.riderPoints || {}
-              };
-            });
-            userRaceTeamsMap[userId] = userTeams;
-          } catch (err) {
-            console.error(`Error loading race teams for user ${userId}:`, err);
-          }
-        }
-        setAllUserRaceTeams(userRaceTeamsMap);
-        
-        setLoading(false);
-      } catch (err) {
-        console.error('Fout bij laden data:', err);
-        setError('Kon data niet laden. Controleer je Firestore permissions.');
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    loadData();
-  }, []);
 
   // Add keyboard shortcut (ESC) to close team details
   useEffect(() => {
@@ -320,13 +292,13 @@ export default function Rankings({ user, resetTrigger }) {
       }))
       .sort((a, b) => b.totalPoints - a.totalPoints);
     
-    // Add bestteam at the end with data from bestTeamData (real-time listener)
-    if (bestTeamData && bestTeamData.riders && bestTeamData.riders.length > 0) {
+    // Add bestteam at the end with data from local calculation (to ensure validity)
+    if (bestTeamCalculated && bestTeamCalculated.riders && bestTeamCalculated.riders.length > 0) {
+      // Use local calculation as it respects budget constraint
       const bestTeam = {
-        ...bestTeamData,
-        id: 'bestteam',
-        isVirtual: true,
-        totalPoints: bestTeamData.totalPoints || 0
+        ...bestTeamCalculated,
+        // Ensure points match the calculated sum
+        totalPoints: bestTeamCalculated.totalPoints || 0
       };
       // Calculate speeldag points for best team
       bestTeam.speeldagPoints = calculateSpeeldagPoints(bestTeam);
@@ -337,10 +309,10 @@ export default function Rankings({ user, resetTrigger }) {
     return userTeams;
   })();
 
-  // Get best team from stored metadata (calculated by Cloud Function)
+  // Get best team from stored metadata or local calc
   const getBestTeam = () => {
-    if (bestTeamData) {
-      return bestTeamData;
+    if (bestTeamCalculated) {
+      return bestTeamCalculated;
     }
     // Fallback if not yet calculated
     return {

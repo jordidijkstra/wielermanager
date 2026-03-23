@@ -112,3 +112,20 @@ export const getUserTeamBuildingDeadline = (user, races) => {
 
   return deadline;
 };
+
+export const getUserData = async (userId) => {
+  try {
+    const userRef = doc(db, 'users', userId);
+    const snap = await getDoc(userRef);
+    if (!snap.exists()) {
+      return null;
+    }
+    return {
+      id: snap.id,
+      ...snap.data()
+    };
+  } catch (err) {
+    console.error('Error fetching user data:', err);
+    return null;
+  }
+};

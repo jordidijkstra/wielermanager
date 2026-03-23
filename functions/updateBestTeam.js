@@ -33,42 +33,74 @@ async function recalculateBestTeam(triggerSource) {
     let team = [];
     let totalBudget = 0;
     let totalPoints = 0;
+    const ignoredRiderIds = new Set();
+    
+    // Helper to calculate current stats
+    const getStats = (t) => t.reduce((acc, r) => ({
+      cost: acc.cost + (r.price || 0),
+      points: acc.points + (r.points || 0)
+    }), { cost: 0, points: 0 });
 
-    // Greedy selection: add riders by points while staying under budget
-    for (const rider of availableRiders) {
-      const riderCost = rider.price || 0;
+    // Loop to ensure we get a valid team (MIN_RIDERS constraint) within budget
+    let iterations = 0;
+    const MAX_ITERATIONS = 100; // prevent infinite loops
+
+    while (iterations < MAX_ITERATIONS) {
+      iterations++;
       
-      if (totalBudget + riderCost <= BUDGET && team.length < MAX_RIDERS) {
-        team.push({
-          id: rider.id,
-          firstname: rider.firstname,
-          lastname: rider.lastname,
-          price: rider.price,
-          points: rider.points,
-          teamId: rider.teamId
-        });
-        totalBudget += riderCost;
-        totalPoints += rider.points || 0;
+      // 1. Try to fill team with available riders
+      for (const rider of availableRiders) {
+        if (team.some(t => t.id === rider.id) || ignoredRiderIds.has(rider.id)) continue;
+        
+        const currentStats = getStats(team);
+        const riderCost = rider.price || 0;
+        
+        if (currentStats.cost + riderCost <= BUDGET && team.length < MAX_RIDERS) {
+          team.push(rider);
+        }
       }
+      
+      // 2. Check if we met the constraint
+      if (team.length >= MIN_RIDERS) {
+        break; // Valid team found
+      }
+      
+      // 3. If not, remove most expensive rider to free up budget for cheaper ones
+      if (team.length === 0) {
+        console.warn("Could not find any valid team with MIN_RIDERS constraint");
+        break; 
+      }
+      
+      // Find most expensive in current team
+      const sortedByPrice = [...team].sort((a, b) => {
+        const priceDiff = (b.price || 0) - (a.price || 0);
+        if (priceDiff !== 0) return priceDiff;
+        return (a.points || 0) - (b.points || 0); // ascending points -> remove lower points first if price equal
+      });
+      
+      const mostExpensive = sortedByPrice[0];
+      
+      // Remove from team and ignore for future passes
+      team = team.filter(t => t.id !== mostExpensive.id);
+      ignoredRiderIds.add(mostExpensive.id);
+      
+      console.log(`Removed expensive rider ${mostExpensive.lastname} (${mostExpensive.price}) to make room for more riders. Team size: ${team.length}`);
     }
 
-    // If we have less than 14 riders, add more until we reach minimum
-    if (team.length < MIN_RIDERS) {
-      for (const rider of availableRiders) {
-        if (!team.find(t => t.id === rider.id) && team.length < MAX_RIDERS) {
-          team.push({
-            id: rider.id,
-            firstname: rider.firstname,
-            lastname: rider.lastname,
-            price: rider.price,
-            points: rider.points,
-            teamId: rider.teamId
-          });
-          totalPoints += rider.points || 0;
-        }
-        if (team.length >= MIN_RIDERS) break;
-      }
-    }
+    // Calculate final stats
+    const finalStats = getStats(team);
+    totalBudget = finalStats.cost;
+    totalPoints = finalStats.points;
+
+    // Map to result format
+    team = team.map(rider => ({
+      id: rider.id,
+      firstname: rider.firstname,
+      lastname: rider.lastname,
+      price: rider.price,
+      points: rider.points,
+      teamId: rider.teamId
+    }));
 
     // Sort team by points descending
     team = team.sort((a, b) => b.points - a.points);

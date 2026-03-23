@@ -62,8 +62,6 @@ export default function PointsTables() {
 
   return (
     <main className="points-tables-container">
-      <h1>Puntentabellen</h1>
-
       {/* Category Selector */}
       <div className="race-selector">
         <label htmlFor="category-dropdown">Selecteer een categorie:</label>

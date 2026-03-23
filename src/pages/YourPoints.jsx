@@ -1,18 +1,15 @@
 import { useState, useEffect } from 'react';
-import { doc, getDoc } from 'firebase/firestore';
-import { db } from '../firebase/config';
 import { useUserTeam } from '../hooks/useUserTeam';
 import { useCyclingTeams } from '../hooks/useCyclingTeams';
 import { useRaces } from '../hooks/useRaces';
-import { useResults } from '../hooks/useResults';
 import { getUserRaceTeams } from '../services/raceService';
+import { getUserData } from '../services/userService';
 import '../css/yourPoints.css';
 
 export default function YourPoints({ user }) {
   const { selectedRiders } = useUserTeam(user, 10000000);
   const { teams } = useCyclingTeams();
   const { races } = useRaces(user);
-  const { results } = useResults();
   const [userRaceTeams, setUserRaceTeams] = useState({});
   const [currentSpeeldagIndex, setCurrentSpeeldagIndex] = useState(null); // Start null, will be set after dates are sorted
   const [showAllRacers, setShowAllRacers] = useState(false);
@@ -27,16 +24,18 @@ export default function YourPoints({ user }) {
         // Convert array to object keyed by raceId for easy lookup
         const teamsMap = {};
         teams.forEach(team => {
-          teamsMap[team.raceId] = team.riderIds || [];
+          teamsMap[team.raceId] = {
+            riderIds: team.riderIds || [],
+            calculatedPoints: team.calculatedPoints || 0,
+            riderPoints: team.riderPoints || {}
+          };
         });
         setUserRaceTeams(teamsMap);
 
         // Load user's team name
-        const userRef = doc(db, 'users', user.uid);
-        const snap = await getDoc(userRef);
-        if (snap.exists()) {
-          const data = snap.data();
-          setTeamName(data.teamName || `${data.firstname} ${data.lastname}`);
+        const userData = await getUserData(user.uid);
+        if (userData) {
+          setTeamName(userData.teamName || `${userData.firstname} ${userData.lastname}`);
         }
       } catch (err) {
         console.error('Fout bij laden race teams:', err);
@@ -142,33 +141,24 @@ export default function YourPoints({ user }) {
   // Get selected rider IDs for a race or tour
   const getSelectedRiderIdsForRace = (raceId, tourId = null) => {
     // If this is a stage and there's a selected team for the main tour, use that
-    if (tourId != null && userRaceTeams[tourId]) {
-      return userRaceTeams[tourId];
+    const tourTeam = tourId != null && userRaceTeams[tourId];
+    if (tourTeam) {
+      return tourTeam.riderIds || [];
     }
     // Otherwise use the specific race team
-    return userRaceTeams[raceId] || [];
-  };
-
-  // Get points for each rider from race results
-  const getRiderPointsFromResults = (riderId, raceId) => {
-    // Find the result for this race
-    const raceResult = results.find(r => r.raceId === raceId);
-    if (!raceResult || !raceResult.entries) {
-      return 0;
-    }
-    
-    // Find this rider in the result entries
-    const entry = raceResult.entries.find(e => e.riderId === riderId);
-    return entry ? (entry.points || 0) : 0;
+    return userRaceTeams[raceId]?.riderIds || [];
   };
 
   const getPointsForSpeeldag = (speeldagRaces) => {
     let totalPts = 0;
     speeldagRaces.forEach(race => {
-      const selectedRiderIds = getSelectedRiderIdsForRace(race.id, race.tourId);
-      selectedRiderIds.forEach(riderId => {
-        totalPts += getRiderPointsFromResults(riderId, race.id);
-      });
+      // Use pre-calculated points stored in userRaceTeams
+      // Points are stored under the race ID (for stages too)
+      const raceId = race.id;
+      const teamData = userRaceTeams[raceId];
+      if (teamData && teamData.calculatedPoints) {
+        totalPts += teamData.calculatedPoints;
+      }
     });
     return totalPts;
   };
@@ -196,13 +186,25 @@ export default function YourPoints({ user }) {
     
     // Then, add earned points info for riders (including non-team members who earned)
     speeldagRaces.forEach(race => {
-      const raceResult = results.find(r => r.raceId === race.id);
-      if (raceResult && raceResult.entries) {
-        raceResult.entries.forEach(entry => {
-          if (entry.points > 0) {
-            if (riderMap.has(entry.riderId)) {
+      const raceId = race.id;
+      const teamData = userRaceTeams[raceId];
+      
+      // Use pre-calculated riderPoints
+      if (teamData && teamData.riderPoints) {
+        Object.entries(teamData.riderPoints).forEach(([riderIdStr, points]) => {
+          const riderId = parseInt(riderIdStr);
+          const pointsVal = Number(points) || 0;
+          
+          if (pointsVal > 0) {
+            if (riderMap.has(riderId)) {
               // Update earned points for team member
-              riderMap.get(entry.riderId).earnedPoints += entry.points;
+              const existing = riderMap.get(riderId);
+              existing.earnedPoints = (existing.earnedPoints || 0) + pointsVal;
+            } else if (showAllRacers) {
+              // TODO: If we want to show non-selected riders who scored, we'd need their rider object
+              // But we only have selectedRiders (user team). 
+              // Without fetching all riders or result data, we can't show "Other rider: 10 pts" easily.
+              // For now, only update existing team members.
             }
           }
         });
@@ -214,6 +216,10 @@ export default function YourPoints({ user }) {
         // Selected for this speeldag first
         if (a.isSelectedForSpeeldag !== b.isSelectedForSpeeldag) {
           return a.isSelectedForSpeeldag ? -1 : 1;
+        }
+        // Then by points (descending)
+        if (b.earnedPoints !== a.earnedPoints) {
+          return b.earnedPoints - a.earnedPoints;
         }
         // Then by price (team order)
         return b.riderObj.price - a.riderObj.price;

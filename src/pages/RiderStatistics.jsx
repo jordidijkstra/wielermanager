@@ -86,7 +86,9 @@ export default function RiderStatistics() {
   };
 
   // Beste mogelijke team: 14-30 renners met budget van 300 miljoen
-  const getBestTeam = () => {
+  const bestTeam = React.useMemo(() => {
+    if (!riders.length) return [];
+
     const BUDGET = 300000000; // 300 miljoen
     const MIN_RIDERS = 14;
     const MAX_RIDERS = 30;
@@ -98,31 +100,55 @@ export default function RiderStatistics() {
 
     // Greedy selectie: voeg renners toe naar aantal punten, zolang we onder budget blijven
     let team = [];
-    let totalBudget = 0;
+    let ignoredRiderIds = new Set();
+    
+    // Helper to calculate current cost
+    const getCost = (t) => t.reduce((sum, r) => sum + (r.price || 0), 0);
 
-    for (const rider of availableRiders) {
-      const riderCost = rider.price || 0;
+    // Loop to ensure we get a valid team (MIN_RIDERS constraint) within budget
+    let iterations = 0;
+    const MAX_ITERATIONS = 100; // safety break
+
+    while (iterations < MAX_ITERATIONS) {
+      iterations++;
       
-      // Voeg toe als we nog onder budget blijven EN we hebben nog plek
-      if (totalBudget + riderCost <= BUDGET && team.length < MAX_RIDERS) {
-        team.push(rider);
-        totalBudget += riderCost;
-      }
-    }
-
-    // Als we minder dan 14 renners hebben, voeg toe totdat we minimaal 14 hebben
-    if (team.length < MIN_RIDERS) {
+      // 1. Try to fill team
       for (const rider of availableRiders) {
-        if (!team.find(t => t.id === rider.id) && team.length < MAX_RIDERS) {
+        if (team.some(t => t.id === rider.id) || ignoredRiderIds.has(rider.id)) continue;
+        
+        const currentCost = getCost(team);
+        const riderCost = rider.price || 0;
+        
+        if (currentCost + riderCost <= BUDGET && team.length < MAX_RIDERS) {
           team.push(rider);
         }
-        if (team.length >= MIN_RIDERS) break;
       }
+      
+      // 2. Check constraints
+      if (team.length >= MIN_RIDERS) {
+        break; // Success
+      }
+      
+      if (team.length === 0) {
+        break; // Impossible
+      }
+      
+      // 3. Remove most expensive to make space
+      const sortedByPrice = [...team].sort((a, b) => {
+        const priceDiff = (b.price || 0) - (a.price || 0);
+        if (priceDiff !== 0) return priceDiff;
+        return (a.points || 0) - (b.points || 0);
+      });
+      
+      const mostExpensive = sortedByPrice[0];
+      
+      team = team.filter(t => t.id !== mostExpensive.id);
+      ignoredRiderIds.add(mostExpensive.id);
     }
 
     // Sorteer team op punten (aflopend)
     return team.sort((a, b) => b.points - a.points);
-  };
+  }, [riders]);
 
   const sortedRiders = getSortedAndFilteredRiders();
 
@@ -204,10 +230,10 @@ export default function RiderStatistics() {
       {activeTab === 'bestteam' && (
         <div className="riders-table-container">
           <h2>Beste Mogelijke Team (14-30 renners, Budget: €300M)</h2>
-          {getBestTeam().length > 0 ? (
+          {bestTeam.length > 0 ? (
             <>
               <div className="best-team-display">
-                {getBestTeam().map(rider => (
+                {bestTeam.map(rider => (
                   <div key={rider.id} className="best-team-rider">
                     <img 
                       src={getTeamJerseyPath(rider.teamId)}
@@ -228,15 +254,15 @@ export default function RiderStatistics() {
               <div className="best-team-summary">
                 <div className="summary-stat">
                   <span className="summary-label">Renners:</span>
-                  <span className="summary-value">{getBestTeam().length}</span>
+                  <span className="summary-value">{bestTeam.length}</span>
                 </div>
                 <div className="summary-stat">
                   <span className="summary-label">Totale prijs:</span>
-                  <span className="summary-value">€{getBestTeam().reduce((sum, rider) => sum + (rider.price || 0), 0).toLocaleString('nl-NL')}</span>
+                  <span className="summary-value">€{bestTeam.reduce((sum, rider) => sum + (rider.price || 0), 0).toLocaleString('nl-NL')}</span>
                 </div>
                 <div className="summary-stat">
                   <span className="summary-label">Totale punten:</span>
-                  <span className="summary-value">{getBestTeam().reduce((sum, rider) => sum + (rider.points || 0), 0)}</span>
+                  <span className="summary-value">{bestTeam.reduce((sum, rider) => sum + (rider.points || 0), 0)}</span>
                 </div>
               </div>
             </>

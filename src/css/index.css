@@ -30,9 +30,9 @@
 }
 body {
   font-family: "Oswald", sans-serif;
-  background: linear-gradient(180deg, #14213d 0%, #1a2b4f 50%, #14213d 100%);
+  background: linear-gradient(135deg, #e5e5e5 0%, #ffffff 50%, #e5e5e5 100%);
   background-attachment: fixed;
-  color: #e3e3e3;
+  color: #14213d;
   min-height: 100vh;
   font-size: 16px;
 }
