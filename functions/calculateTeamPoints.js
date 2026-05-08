@@ -95,7 +95,7 @@ exports.calculateTeamPointsOnResultChange = functions.region('europe-west1').fir
           raceResult.entries.forEach(entry => {
             const isInTeam = teamRiders.some(r => r.id === entry.riderId);
             const isSelected = selectedRiderIds.has(entry.riderId);
-            const points = entry.points || 0;
+            const points = Number(entry.points) || 0;
 
             if (isInTeam && isSelected) {
               totalPoints += points;
@@ -112,14 +112,14 @@ exports.calculateTeamPointsOnResultChange = functions.region('europe-west1').fir
             
             if (riderResultRef.exists) {
               const riderResultData = riderResultRef.data();
-              const raceLeaderPoints = riderResultData.raceLeaderPoints || 0;
+              const raceLeaderPoints = Number(riderResultData.raceLeaderPoints) || 0;
               
               if (raceLeaderPoints > 0 && isSelected) {
                 totalPoints += raceLeaderPoints;
               }
               
               // Update per-rider points to include race leader bonus
-              riderPoints[rider.id] = (riderPoints[rider.id] || 0) + raceLeaderPoints;
+              riderPoints[rider.id] = (Number(riderPoints[rider.id]) || 0) + raceLeaderPoints;
             }
           }
 
@@ -214,7 +214,7 @@ exports.calculateTeamPointsScheduled = functions.region('europe-west1').pubsub
             raceResult.entries.forEach(entry => {
               const isInTeam = teamRiders.some(r => r.id === entry.riderId);
               const isSelected = selectedRiderIds.has(entry.riderId);
-              const points = entry.points || 0;
+              const points = Number(entry.points) || 0;
 
               if (isInTeam && isSelected) {
                 totalPoints += points;
@@ -230,14 +230,14 @@ exports.calculateTeamPointsScheduled = functions.region('europe-west1').pubsub
               
               if (riderResultRef.exists) {
                 const riderResultData = riderResultRef.data();
-                const raceLeaderPoints = riderResultData.raceLeaderPoints || 0;
+                const raceLeaderPoints = Number(riderResultData.raceLeaderPoints) || 0;
                 
                 if (raceLeaderPoints > 0 && isSelected) {
                   totalPoints += raceLeaderPoints;
                 }
                 
                 // Update per-rider points to include race leader bonus
-                riderPoints[rider.id] = (riderPoints[rider.id] || 0) + raceLeaderPoints;
+                riderPoints[rider.id] = (Number(riderPoints[rider.id]) || 0) + raceLeaderPoints;
               }
             }
 

@@ -109,7 +109,7 @@ export const recalculateTeamPointsForRace = async (raceId, races) => {
         result.entries.forEach(entry => {
           const isInTeam = teamRiders.some(r => r.id === entry.riderId);
           const isSelected = selectedRiderIds.has(entry.riderId);
-          const points = entry.points || 0;
+          const points = Number(entry.points) || 0;
 
           if (isInTeam && isSelected) {
             totalPoints += points;

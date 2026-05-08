@@ -74,8 +74,8 @@ export const updateRidersPointsFromResults = async (raceResults, raceId = null) 
       const currentRiderDoc = await getDoc(riderRef);
       const currentRider = currentRiderDoc.exists() ? currentRiderDoc.data() : null;
       
-      const currentPoints = currentRider?.points || 0;
-      const newPoints = currentPoints + pointsToAdd;
+      const currentPoints = Number(currentRider?.points) || 0;
+      const newPoints = currentPoints + Number(pointsToAdd || 0);
       
       await setDoc(riderRef, {
         points: newPoints
@@ -132,8 +132,8 @@ export const removeRidersPointsFromResults = async (raceResults, raceId = null) 
       // Get current points
       const riderSnap = await getDoc(riderRef);
       if (riderSnap.exists()) {
-        const currentPoints = riderSnap.data().points || 0;
-        const newPoints = Math.max(0, currentPoints - pointsToRemove);
+        const currentPoints = Number(riderSnap.data().points) || 0;
+        const newPoints = Math.max(0, currentPoints - Number(pointsToRemove || 0));
         
         await setDoc(riderRef, { points: newPoints }, { merge: true });
         console.log(`✅ Punten verwijderd voor rider ${riderId}: ${currentPoints} - ${pointsToRemove} = ${newPoints}`);
@@ -236,7 +236,7 @@ export const getPointsForRaceLeaderCategory = async (raceLeaderCategoryId) => {
 
     const pointsCategoryData = pointsCategoryDoc.data();
     // Assume first position (index 0) contains the race leader points
-    const raceLeaderPoints = pointsCategoryData.points?.[0] || 0;
+    const raceLeaderPoints = Number(pointsCategoryData.points?.[0]) || 0;
 
     return raceLeaderPoints;
   } catch (error) {
@@ -298,7 +298,7 @@ export const setRaceLeaderPoints = async (riderId, raceLeaderPoints, raceId = nu
 
   try {
     const riderId_str = riderId.toString();
-    const pointsDifference = (raceLeaderPoints || 0) - (oldRaceLeaderPoints || 0);
+    const pointsDifference = (Number(raceLeaderPoints) || 0) - (Number(oldRaceLeaderPoints) || 0);
     
     // Update rider's total points if there's a difference
     if (pointsDifference !== 0) {
@@ -306,7 +306,7 @@ export const setRaceLeaderPoints = async (riderId, raceLeaderPoints, raceId = nu
       const currentRiderDoc = await getDoc(riderRef);
       const currentRider = currentRiderDoc.exists() ? currentRiderDoc.data() : null;
       
-      const currentPoints = currentRider?.points || 0;
+      const currentPoints = Number(currentRider?.points) || 0;
       const newPoints = currentPoints + pointsDifference;
       
       await setDoc(riderRef, {
@@ -319,7 +319,7 @@ export const setRaceLeaderPoints = async (riderId, raceLeaderPoints, raceId = nu
     // Update per-race race leader points
     const riderResultRef = doc(db, 'riders', riderId_str, 'riderResults', String(raceId));
     const existingData = await getDoc(riderResultRef);
-    const existingPoints = existingData.exists() ? (existingData.data().points || 0) : 0;
+    const existingPoints = existingData.exists() ? (Number(existingData.data().points) || 0) : 0;
     const existingRaceName = existingData.exists() ? existingData.data().raceName : raceName;
     
     // Set (replace) race leader points

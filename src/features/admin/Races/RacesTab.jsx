@@ -158,7 +158,7 @@ export default function RacesTab() {
       
       const emptyEntries = (points || []).map(pointValue => ({ 
         riderId: null, 
-        points: pointValue,
+        points: Number(pointValue) || 0,
         excelFullName: null
       }));
       

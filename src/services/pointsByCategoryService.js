@@ -55,16 +55,24 @@ export const getPointsByCategory = async (categoryId) => {
   }
 };
 
+const normalizePointValue = (value) => {
+  if (value && typeof value === 'object') {
+    return Number(value.points ?? value.value ?? 0) || 0;
+  }
+
+  return Number(value) || 0;
+};
+
 const formatPoints = (data) => {
   if (data.points && Array.isArray(data.points)) {
     // Sort op position als het objecten zijn
     if (data.points.length > 0 && typeof data.points[0] === 'object' && data.points[0].position) {
       return data.points
         .sort((a, b) => a.position - b.position)
-        .map(p => p.points);
+        .map(p => normalizePointValue(p));
     }
     // Anders retourneer ze gewoon (als het al een array van numbers is)
-    return data.points;
+    return data.points.map(point => normalizePointValue(point));
   }
   return [];
 };
@@ -89,10 +97,7 @@ export const getAllPointsPerCategory = async () => {
       let pointsArray = [];
       if (Array.isArray(data.points)) {
         pointsArray = data.points.map(p => {
-          if (typeof p === 'object' && p !== null) {
-            return parseInt(p.points || p.value || 0);
-          }
-          return parseInt(p || 0);
+          return normalizePointValue(p);
         });
       }
       
@@ -114,7 +119,7 @@ export const savePointsPerCategory = async (docId, categoryId, points) => {
   try {
     await setDoc(doc(db, 'pointsPerCategory', String(docId)), {
       categoryId: categoryId,
-      points: points
+      points: Array.isArray(points) ? points.map(point => normalizePointValue(point)) : []
     });
     
     // Invalidate cache
