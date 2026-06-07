@@ -51,7 +51,7 @@ export default function RaceTeamSelector({ user }) {
 
     const now = new Date();
     const raceDeadline = new Date(selectedRace.startDate);
-    raceDeadline.setHours(9, 0, 0, 0); // Deadline is 09:00 on race day
+    raceDeadline.setHours(10, 0, 0, 0); // Deadline is 09:00 on race day
 
     const userCreated = fullUser?.createdAt ? 
       (fullUser.createdAt.toDate ? fullUser.createdAt.toDate() : new Date(fullUser.createdAt)) 
@@ -192,7 +192,7 @@ export default function RaceTeamSelector({ user }) {
           if (race) {
             setSelectedRace(race);
             const deadline = new Date(race.startDate);
-            deadline.setHours(9, 0, 0, 0);
+            deadline.setHours(10, 0, 0, 0);
             setSelectedRaceDeadline(deadline);
           }
           break;
@@ -215,7 +215,7 @@ export default function RaceTeamSelector({ user }) {
 
     const now = new Date();
     const deadline = new Date(selectedRace.startDate);
-    deadline.setHours(9, 0, 0, 0); // Deadline is 09:00 on startDate
+    deadline.setHours(10, 0, 0, 0); // Deadline is 09:00 on startDate
     const deadlineHasPassed = deadline <= now;
 
     if (!deadlineHasPassed) return;
