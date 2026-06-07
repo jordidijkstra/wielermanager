@@ -53,7 +53,7 @@ export const isTeamEditingDeadlinePassed = (team, races) => {
 
   // Deadline = next race start date (9 AM on that day)
   const deadline = new Date(nextRace.startDate);
-  deadline.setHours(9, 0, 0, 0);
+  deadline.setHours(10, 0, 0, 0);
   
   const now = new Date();
   const isPassed = now > deadline;

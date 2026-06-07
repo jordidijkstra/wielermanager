@@ -13,7 +13,7 @@ export default function Rankings({ user, resetTrigger }) {
   
   const { 
     allTeams, 
-    allUsers, 
+    allUsers,
     allUserRaceTeams, 
     allRiders, 
     loading, 
