@@ -73,9 +73,9 @@ const RaceCountdown = memo(function RaceCountdown({ user }) {
       // Check if valid date
       if (isNaN(dateObj.getTime())) continue;
 
-      // Set deadline at 9:00 AM on that day
+      // Set deadline at 10:00 AM on that day
       const deadlineCandidate = new Date(dateObj);
-      deadlineCandidate.setHours(9, 0, 0, 0);
+      deadlineCandidate.setHours(10, 0, 0, 0);
 
       // If deadline is in the future
       if (deadlineCandidate >= now) {

@@ -47,7 +47,7 @@ export const autoFillRaceTeamsLocal = async () => {
       if (!race.startDate) return false;
       if (race.name && race.name.includes('Stage')) return false; // Exclude stages
       const deadline = new Date(race.startDate);
-      deadline.setHours(9, 0, 0, 0);
+      deadline.setHours(10, 0, 0, 0);
       const deadlineMinusOneDay = new Date(deadline);
       deadlineMinusOneDay.setDate(deadlineMinusOneDay.getDate() - 1);
       deadlineMinusOneDay.setHours(0, 0, 0, 0); // Start from 00:00 on the day before

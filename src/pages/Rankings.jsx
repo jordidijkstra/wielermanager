@@ -383,9 +383,9 @@ export default function Rankings({ user, resetTrigger }) {
     
     if (!firstRace || !firstRace.startDate) return false;
     
-    // Deadline is race day at 09:00
+    // Deadline is race day at 10:00
     const deadline = new Date(firstRace.startDate);
-    deadline.setHours(9, 0, 0, 0);
+    deadline.setHours(10, 0, 0, 0);
     
     return now > deadline;
   };
