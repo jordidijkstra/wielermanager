@@ -47,12 +47,12 @@ export const autoFillRaceTeamsLocal = async () => {
       if (!race.startDate) return false;
       if (race.name && race.name.includes('Stage')) return false; // Exclude stages
       const deadline = new Date(race.startDate);
-      deadline.setHours(10, 0, 0, 0);
+      deadline.setHours(17, 0, 0, 0);
       const deadlineMinusOneDay = new Date(deadline);
       deadlineMinusOneDay.setDate(deadlineMinusOneDay.getDate() - 1);
       deadlineMinusOneDay.setHours(0, 0, 0, 0); // Start from 00:00 on the day before
       const endOfRaceDay = new Date(deadline);
-      endOfRaceDay.setDate(endOfRaceDay.getDate() + 1);
+      endOfRaceDay.setDate(endOfRaceDay.getDate() + 3);
       endOfRaceDay.setHours(0, 0, 0, 0); // End at 00:00 on the day after (i.e., end of race day)
       const isInWindow = now >= deadlineMinusOneDay && now < endOfRaceDay;
       return isInWindow; // Autofill works from (deadline - 1 day at 00:00) until end of race day

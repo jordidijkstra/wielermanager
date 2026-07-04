@@ -35,7 +35,7 @@ exports.autoFillRaceTeams = functions.region('europe-west1').https.onRequest(asy
       if (race.name && race.name.includes('Stage')) return false; // Exclude stages
         
         const deadline = new Date(race.startDate);
-        deadline.setHours(10, 0, 0, 0); // Deadline is at 10:00 AM
+        deadline.setHours(17, 0, 0, 0); // Deadline is at 10:00 AM
         
         // Window starts 1 day before deadline at 00:00
         const windowStart = new Date(deadline);
@@ -224,7 +224,7 @@ exports.autoFillRaceTeamsScheduled = functions.region('europe-west1').pubsub
         if (race.name && race.name.includes('Stage')) return false; // Exclude stages
         
         const deadline = new Date(race.startDate);
-        deadline.setHours(10, 0, 0, 0); // Deadline is at 10:00 AM on race day
+        deadline.setHours(17, 0, 0, 0); // Deadline is at 10:00 AM on race day
         
         // Window starts 1 day before deadline at 00:00
         const windowStart = new Date(deadline);

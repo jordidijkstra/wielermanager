@@ -75,7 +75,7 @@ const RaceCountdown = memo(function RaceCountdown({ user }) {
 
       // Set deadline at 10:00 AM on that day
       const deadlineCandidate = new Date(dateObj);
-      deadlineCandidate.setHours(10, 0, 0, 0);
+      deadlineCandidate.setHours(17, 0, 0, 0);
 
       // If deadline is in the future
       if (deadlineCandidate >= now) {

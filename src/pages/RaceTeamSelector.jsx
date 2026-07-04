@@ -51,7 +51,7 @@ export default function RaceTeamSelector({ user }) {
 
     const now = new Date();
     const raceDeadline = new Date(selectedRace.startDate);
-    raceDeadline.setHours(10, 0, 0, 0); // Deadline is 10:00 on race day
+    raceDeadline.setHours(17, 0, 0, 0); // Deadline is 10:00 on race day
 
     const userCreated = fullUser?.createdAt ? 
       (fullUser.createdAt.toDate ? fullUser.createdAt.toDate() : new Date(fullUser.createdAt)) 
@@ -192,7 +192,7 @@ export default function RaceTeamSelector({ user }) {
           if (race) {
             setSelectedRace(race);
             const deadline = new Date(race.startDate);
-            deadline.setHours(10, 0, 0, 0);
+            deadline.setHours(17, 0, 0, 0);
             setSelectedRaceDeadline(deadline);
           }
           break;
@@ -215,7 +215,7 @@ export default function RaceTeamSelector({ user }) {
 
     const now = new Date();
     const deadline = new Date(selectedRace.startDate);
-    deadline.setHours(10, 0, 0, 0); // Deadline is 10:00 on startDate
+    deadline.setHours(17, 0, 0, 0); // Deadline is 10:00 on startDate
     const deadlineHasPassed = deadline <= now;
 
     if (!deadlineHasPassed) return;
@@ -351,7 +351,7 @@ export default function RaceTeamSelector({ user }) {
     
     // Check if deadline has passed (09:00 on startDate)
     const deadline = new Date(selectedRace.startDate);
-    deadline.setHours(10, 0, 0, 0);
+    deadline.setHours(17, 0, 0, 0);
     const now = new Date();
     if (deadline <= now) {
       alert('❌ De deadline voor deze race is verstreken. Je kunt de selectie niet meer wijzigen.');
@@ -386,7 +386,7 @@ export default function RaceTeamSelector({ user }) {
     
     const now = new Date();
     const raceDeadline = new Date(race.startDate);
-    raceDeadline.setHours(10, 0, 0, 0); // Deadline is 10:00 on race day
+    raceDeadline.setHours(17, 0, 0, 0); // Deadline is 10:00 on race day
     
     // Check if user registered after this race's standard deadline
     const userCreated = fullUser?.createdAt ? 
@@ -411,7 +411,7 @@ export default function RaceTeamSelector({ user }) {
       // Check deadline for this specific race
       if (race.startDate) {
         const raceDeadline = new Date(race.startDate);
-        raceDeadline.setHours(10, 0, 0, 0); // Deadline is 10:00 on race day
+        raceDeadline.setHours(17, 0, 0, 0); // Deadline is 10:00 on race day
         
         // Standard deadline: can build if before race deadline
         // NEW users get extended deadline: they can build until race start time
@@ -543,7 +543,7 @@ export default function RaceTeamSelector({ user }) {
     const hasSavedTeam = userRaceTeams?.some(rt => rt.raceId === race.id);
     const startDate = new Date(race.startDate);
     const deadline = new Date(race.startDate);
-    deadline.setHours(10, 0, 0, 0);
+    deadline.setHours(17, 0, 0, 0);
 
     return {
       id: race.id,
